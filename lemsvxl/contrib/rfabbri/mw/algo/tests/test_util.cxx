@@ -3,17 +3,23 @@
 #include <bmcsd/algo/bmcsd_algo_util.h>
 #include <bdifd/algo/bdifd_data.h>
 #include <vgl/vgl_distance.h>
+#include <dbdet/dbdet_config.h> # for HAS_BOOST
 
 
 static void  test_reprojection_errors();
+
+#ifdef HAS_BOOST
 static void  test_boost_iostreams();
+#endif
 
 MAIN( test_util )
 {
   START ("algo utilities");
 
   test_reprojection_errors();
+#ifdef HAS_BOOST
   test_boost_iostreams();
+#endif
 
   SUMMARY();
 }
@@ -171,6 +177,9 @@ void  test_reprojection_errors()
   }
 }
 
+// ---------------------------------------------------------------------------------
+
+#ifdef HAS_BOOST
 #include <fstream>
 #include <iostream>
 #include <boost/iostreams/filtering_streambuf.hpp>
@@ -187,3 +196,4 @@ void test_boost_iostreams()
     in.push(file);
     boost::iostreams::copy(in, cout);
 }
+#endif

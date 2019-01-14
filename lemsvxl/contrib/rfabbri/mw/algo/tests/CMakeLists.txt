@@ -1,5 +1,7 @@
 # This is /contrib/rfabbri/mw/algo/tests
 
+include_directories( ${PROJECT_BINARY_DIR}/brcv/seg )
+
 add_executable (mw_algo_test_all
    # Driver source and utilities
    test_driver.cxx
