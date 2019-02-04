@@ -1,9 +1,13 @@
+#include <ctime>
 #include <bdifd/bdifd_util.h>
 #include <bdifd/bdifd_analytic.h>
 #include <bdifd/bdifd_rig.h>
 #include "bdifd_data.h"
 #include <algorithm>
 #include <vsol/vsol_line_2d.h>
+#include <boost/random/uniform_on_sphere.hpp>
+#include <boost/random/variate_generator.hpp>
+#include <boost/random/mersenne_twister.hpp>
 
 void bdifd_data::
 max_err_reproj_perturb(
@@ -1815,6 +1819,31 @@ camera_olympus(
   return new vpgl_perspective_camera<double>(K, C2_in_world_vgl, vgl_rotation_3d<double>(Rhmg));
 }
 
+void bdifd_turntable::
+cameras_olympus_spherical(
+  std::vector<vpgl_perspective_camera<double> > *pcams,
+  const vpgl_calibration_matrix<double> &K)
+{
+  typedef boost::random::mt19937 gen_type;
+
+  // You can seed this your way as well, but this is my quick and dirty way.
+  gen_type rand_gen;
+  rand_gen.seed(static_cast<unsigned int>(std::time(0)));
+
+  // Create the distribution object.
+  boost::uniform_on_sphere<double> unif_sphere(3);
+
+  // This is what will actually supply drawn values.
+  boost::variate_generator<gen_type&, boost::uniform_on_sphere<double> > random_on_sphere(rand_gen, unif_sphere);
+
+  // Now you can draw a vector of drawn coordinates as such:
+  std::vector<double> r = random_on_sphere();
+
+  vgl_vector_3d<double> v(r[0], r[1], r[2]); 
+
+  std::cout << "Random point: " << v << std::endl;
+}
+
 //: convert from std::vector<bdifd_3rd_order_point_2d> 
 // to std::vector<vsol_line_2d_sptr>  and perturb if wanted
 void bdifd_data::
@@ -1992,3 +2021,4 @@ get_digital_camera_point_dataset(
       image_pts[v][ip] = cams[v].project(world_pts[ip]);
   }
 }
+

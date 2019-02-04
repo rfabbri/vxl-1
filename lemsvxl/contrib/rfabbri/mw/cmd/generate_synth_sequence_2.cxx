@@ -13,6 +13,8 @@
 
 // Generate a more complete synthetic sequence of curves
 // for the Public // https://github.com/rfabbri/synthcurves-multiview-3d-dataset/#curves
+//
+// This version 3 consists random spherical sampling.
 // 
 // See also
 // https://github.com/rfabbri/synthcurves-multiview-3d-dataset
