@@ -474,8 +474,8 @@ git branch -D vxd-master-integration
 #### 2b. Cherrypick
 ```bash
 git fetch vxl
+git branch -D vxl-integration
 git checkout -b vxl-integration vxl-master
-git checkout vxl-integration
 # merge changes from master using subtree (_adapt_ to pick the commits you want)
 
 git cherry-pick -x --strategy=subtree -Xsubtree=vxl/ master
