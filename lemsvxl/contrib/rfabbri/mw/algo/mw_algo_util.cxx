@@ -266,7 +266,7 @@ mw_algo_util::
 dbdet_load_edg_ascii_separate_files(
     std::string imgs_fname, std::string pts_fname, std::string tgts_fname, 
     bool bSubPixel, double scale,
-    dbdet_edgemap_sptr &edgels)
+    dbdet_edgemap_sptr &edge_map)
 {
   vnl_matrix<double> pts, tgts;
   
@@ -291,7 +291,8 @@ dbdet_load_edg_ascii_separate_files(
   }
   
   unsigned npts = pts.rows();
-  std::cout << "pts " << pts_fname << " size: " << pts.rows() << "\ntgts " << tgts_fname << " size: " << tgts.rows() << std::endl;
+  std::cout << "pts " << pts_fname << " size: " << pts.rows() 
+            << "\ntgts " << tgts_fname << " size: " << tgts.rows() << std::endl;
   assert(pts.size() == tgts.size());
 
   vsol_box_2d bbox;
@@ -301,8 +302,24 @@ dbdet_load_edg_ascii_separate_files(
   }
   std::cout << "===== File " << pts_fname << std::endl;
   std::cout << "Bounding box: " << bbox << std::endl;
+  
+  unsigned w=bbox.width(),h=bbox.height();
+  unsigned numGeometry = npts;
+
+  // edge_map 
+  edge_map = new dbdet_edgemap(static_cast<int>(w*scale), static_cast<int>(h*scale));
+  edge_map->edgels.reserve(numGeometry);
+  
+  double x, y;
+  double dir, conf=1, uncer=0;
+
+  for (unsigned i=0; i < npts; ++i) {
+    edge_map->insert(new dbdet_edgel(vgl_point_2d<double>(pts.get(i,0)*scale, pts.get(i,1)*scale), 
+            atan2(tgts.get(i,1),tgts.get(i,0)),
+            conf,
+            0.0, 
+            uncer));
+  }
 
   return true;
-
-  // width = bounding box
 }
