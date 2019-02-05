@@ -242,3 +242,67 @@ extract_edgel_chain(const vsol_polyline_2d &pts, dbdet_edgel_chain *ec)
     ec->edgels[i] = e;
   }
 }
+
+/*
+ * Loads from a simple matlab-like text representation:
+ *
+ * pts_fname (say frame_0014-pts-2D.txt) line by line  npts x 2  
+ *      x0 y0
+ *      x1 y1
+ *      x2 y2
+ *      ...
+ *      
+ * tgts_fname (say frame_0014-tgts-2D.txt)
+ *      tx0 ty0
+ *      tx1 ty1
+ *      tx2 ty2
+ *      ...
+ * Such that norm of each line is 1
+ * 
+ * (used, eg, in ric's synthcurves-multiview-3d dataset)
+ */
+bool 
+mw_algo_util::
+dbdet_load_edg_ascii_separate_files(
+    std::string imgs_fname, std::string pts_fname, std::string tgts_fname, 
+    bool bSubPixel, double scale,
+    dbdet_edgemap_sptr &edgels)
+{
+  vnl_matrix<double> pts, tgts;
+  
+  // myreadv_ascii(pts_fname, pts);
+  {
+  std::ifstream infp(pts_fname.c_str(), std::ios::in);
+  if (!infp) {
+    std::cerr << " Error opening file  " << pts_fname << std::endl;
+    return false;
+  }
+  pts.read_ascii(infp);
+  }
+  
+  //myreadv_ascii(tgts_fname, tgts);
+  {
+  std::ifstream infp(tgts_fname.c_str(), std::ios::in);
+  if (!infp) {
+    std::cerr << " Error opening file  " << tgts_fname << std::endl;
+    return false;
+  }
+  tgts.read_ascii(infp);
+  }
+  
+  unsigned npts = pts.rows();
+  std::cout << "pts " << pts_fname << " size: " << pts.rows() << "\ntgts " << tgts_fname << " size: " << tgts.rows() << std::endl;
+  assert(pts.size() == tgts.size());
+
+  vsol_box_2d bbox;
+
+  for (unsigned i=0; i < npts; ++i) { 
+    bbox.add_point(pts.get(i,0), pts.get(i,1));
+  }
+  std::cout << "===== File " << pts_fname << std::endl;
+  std::cout << "Bounding box: " << bbox << std::endl;
+
+  return true;
+
+  // width = bounding box
+}

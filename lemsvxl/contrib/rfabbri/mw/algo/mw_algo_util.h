@@ -14,6 +14,7 @@
 #include <vsol/vsol_box_2d.h>
 #include <dbdet/dbdet_frenet_keypoint.h>
 #include <dbdet/sel/dbdet_edgel.h>
+#include <dbdet/edge/dbdet_edgemap_sptr.h>
 #include <bdifd/bdifd_camera.h>
 #include <bdifd/bdifd_rig.h>
 
@@ -144,6 +145,11 @@ public:
   }
 
   static void extract_edgel_chain(const vsol_polyline_2d &pts, dbdet_edgel_chain *ec);
+  
+  static bool dbdet_load_edg_ascii_separate_files(
+      std::string imgs_fname, std::string pts_fname, std::string tgts_fname, 
+      bool bSubPixel, double scale,
+      dbdet_edgemap_sptr &edgels);
 };
 
 inline bdifd_3rd_order_point_2d mw_algo_util::
