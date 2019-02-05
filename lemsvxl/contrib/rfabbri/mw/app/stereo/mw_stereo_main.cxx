@@ -135,7 +135,7 @@ get_fname_vector(std::string pattern, std::vector<std::string> *fnames)
 {
    vul_sequence_filename_map map(pattern);
    for (int i = 0; i < map.get_nviews(); ++i) {
-     std::cerr << "reading name: " << map.name(i) << std::endl;
+     // std::cerr << "reading name: " << map.name(i) << std::endl;
      fnames->push_back(map.name(i));
    }
 }
