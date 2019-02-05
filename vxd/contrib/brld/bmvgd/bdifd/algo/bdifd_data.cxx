@@ -1,10 +1,13 @@
 #include <ctime>
+#include <iomanip>
+#include <sstream>
 #include <bdifd/bdifd_util.h>
 #include <bdifd/bdifd_analytic.h>
 #include <bdifd/bdifd_rig.h>
 #include "bdifd_data.h"
 #include <algorithm>
 #include <vsol/vsol_line_2d.h>
+#include <vul/vul_file.h>
 #include <boost/random/uniform_on_sphere.hpp>
 #include <boost/random/variate_generator.hpp>
 #include <boost/random/mersenne_twister.hpp>
@@ -1836,12 +1839,23 @@ cameras_olympus_spherical(
   // This is what will actually supply drawn values.
   boost::variate_generator<gen_type&, boost::uniform_on_sphere<double> > random_on_sphere(rand_gen, unif_sphere);
 
-  // Now you can draw a vector of drawn coordinates as such:
-  std::vector<double> r = random_on_sphere();
+  
+  std::string dir("./out-tmp");
+  vul_file::make_directory(dir);
+  std::string fname_centers = dir + std::string("/") + "C.txt";
+  std::ofstream fp_centers;
 
-  vgl_vector_3d<double> v(r[0], r[1], r[2]); 
-
-  std::cout << "Random point: " << v << std::endl;
+  fp_centers.open(fname_centers.c_str());
+  if (!fp_centers) {
+    std::cerr << "generate_synth_sequence: error, unable to open file name " << fname_centers << std::endl;
+    return;
+  }
+  fp_centers << std::setprecision(20);
+  for (unsigned i=0; i < 200; ++i) {
+      // Now you can draw a vector of drawn coordinates as such:
+      std::vector<double> r = random_on_sphere();
+      fp_centers << r[0] << " " << r[1]  << " " << r[2] << std::endl;
+  }
 }
 
 //: convert from std::vector<bdifd_3rd_order_point_2d> 

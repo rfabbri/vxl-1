@@ -44,6 +44,9 @@ main(int argc, char **argv)
     cam_vpgl[i] = *P;
     delete P;
   }
+
+  
+  bdifd_turntable::cameras_olympus_spherical(&cam_vpgl, K);
 #if 0
 
   // write the cameras out
