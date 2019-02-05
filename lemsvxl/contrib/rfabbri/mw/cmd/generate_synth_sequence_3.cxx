@@ -34,7 +34,7 @@ main(int argc, char **argv)
   std::vector<vpgl_perspective_camera<double> > cam_vpgl;
   std::vector<bdifd_camera> cam_gt;
   
-  bdifd_turntable::cameras_olympus_spherical(&cam_vpgl, K);
+  bdifd_turntable::cameras_olympus_spherical(&cam_vpgl, K, true);
   unsigned nviews = cam_vpgl.size();
   cam_gt.resize(nviews);
 

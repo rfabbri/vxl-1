@@ -1825,11 +1825,14 @@ camera_olympus(
 void bdifd_turntable::
 cameras_olympus_spherical(
   std::vector<vpgl_perspective_camera<double> > *pcams,
-  const vpgl_calibration_matrix<double> &K)
+  const vpgl_calibration_matrix<double> &K,
+  bool enforce_minimum_separation)
 {
   typedef boost::random::mt19937 gen_type;
   std::vector<vpgl_perspective_camera<double> > &cams = *pcams;
   unsigned nviews=100;
+  double minsep = (15./180.)*vnl_math::pi;
+  assert(nviews != 0);
 
   // You can seed this your way as well, but this is my quick and dirty way.
   gen_type rand_gen;
@@ -1841,34 +1844,60 @@ cameras_olympus_spherical(
   // This is what will actually supply drawn values.
   boost::variate_generator<gen_type&, boost::uniform_on_sphere<double> > random_on_sphere(rand_gen, unif_sphere);
   boost::variate_generator<gen_type&, boost::uniform_on_sphere<double> > random_on_sphere_2(rand_gen, unif_sphere);
-
   
-  std::string dir("./out-tmp");
-  vul_file::make_directory(dir);
-  std::string fname_centers = dir + std::string("/") + "C.txt";
-  std::ofstream fp_centers;
+//  std::string dir("./out-tmp");
+//  vul_file::make_directory(dir);
+//  std::string fname_centers = dir + std::string("/") + "C.txt";
+//  std::ofstream fp_centers;
 
-  fp_centers.open(fname_centers.c_str());
-  if (!fp_centers) {
-    std::cerr << "generate_synth_sequence: error, unable to open file name " << fname_centers << std::endl;
-    return;
-  }
-  fp_centers << std::setprecision(20);
-  for (unsigned i=0; i < nviews; ++i) {
+//  fp_centers.open(fname_centers.c_str());
+//  if (!fp_centers) {
+//    std::cerr << "generate_synth_sequence: error, unable to open file name " << fname_centers << std::endl;
+//    return;
+//  }
+//  fp_centers << std::setprecision(20);
+//  fp_centers << r[0] << " " << r[1]  << " " << r[2] << std::endl;
+  
+  unsigned i=0;
+  unsigned ntrials=0;
+  do {
       // Now you can draw a vector of drawn coordinates as such:
       std::vector<double> r = random_on_sphere();
-      fp_centers << r[0] << " " << r[1]  << " " << r[2] << std::endl;
+      bdifd_vector_3d z(-r[0],-r[1],-r[2]);
       
-      // z direction
-      vnl_double_3x3 R;
-      bdifd_vector_3d z;
-      z[0] = -r[0];
-      z[1] = -r[1];
-      z[2] = -r[2];
+      if (enforce_minimum_separation) {
+        ntrials++;
+        bool need_resample = false;
+        for (unsigned j=0; j < cams.size() && !need_resample; ++j) {
+          vgl_point_3d<double> C_tmp = cams[j].get_camera_center();
+          bdifd_vector_3d C_vector_tmp(C_tmp.x(),C_tmp.y(), C_tmp.z());
+          
+//          std::cout << "Angle: " << angle(-z,C_vector_tmp) << " Minsep: " << minsep << std::endl;
+//          std::cout << "ntrials " << ntrials << std::endl;
+          if (angle(-z,C_vector_tmp) < minsep) {
+            if (ntrials > 100000) {
+              std::cerr << "PROBLEM: Unable to reduce separation\n";
+              break;
+            } else {
+//              std::cerr << "Trying again" << std::endl;
+              need_resample = true;
+            }
+          }
+        }
+        if (need_resample)
+          continue;
+      }
+      
+//      std::cerr << "YES!" << std::endl;
+      ntrials = 0;
+      
       double camera_to_object = 1.128036301860739e+03;
+      
       vgl_point_3d<double> C(camera_to_object*r[0],camera_to_object*r[1],camera_to_object*r[2]);
 
-      // x direction obtained by sampling 3D unit vector and orthogonalizing
+      // x direction obtained by sampling 3D unit vector again, and orthogonalizing
+      // if direction is to be kept, can do this with orthogonalizing usual x
+      // dir
       r = random_on_sphere_2();
       bdifd_vector_3d x;
       x[0] = r[0];
@@ -1879,6 +1908,7 @@ cameras_olympus_spherical(
       x.normalize();
 
       bdifd_vector_3d y = vnl_cross_3d(z,x);
+      vnl_double_3x3 R;
       
       R[0][0] = x[0];
       R[0][1] = x[1];
@@ -1893,11 +1923,10 @@ cameras_olympus_spherical(
       R[2][2] = z[2];
       
       vgl_h_matrix_3d<double> Rhmg(R,bdifd_vector_3d(0,0,0));
-      std::cout <<std::setprecision(20)<< R << std::endl;
       assert(Rhmg.is_euclidean());
       cams.push_back(vpgl_perspective_camera<double>(K, C, vgl_rotation_3d<double>(Rhmg)));
-      // XXX
-  }
+      ++i;
+  } while (i < nviews);
 }
 
 //: convert from std::vector<bdifd_3rd_order_point_2d> 

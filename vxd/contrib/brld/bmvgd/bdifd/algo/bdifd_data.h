@@ -161,7 +161,8 @@ public:
   // with cameras poiting to center
   static void cameras_olympus_spherical(
       std::vector<vpgl_perspective_camera<double> > *pcams,
-      const vpgl_calibration_matrix<double> &K);
+      const vpgl_calibration_matrix<double> &K,
+      bool enforce_minimum_separation=false);
 };
 
 
