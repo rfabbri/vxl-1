@@ -23,7 +23,6 @@ main(int argc, char **argv)
   unsigned  crop_origin_x_ = 450;
   unsigned  crop_origin_y_ = 1750;
   double x_max_scaled = 500;
-  unsigned nviews=20;
 
   std::string dir("./out-tmp");
   std::string prefix("frame_");
@@ -34,20 +33,14 @@ main(int argc, char **argv)
   vpgl_calibration_matrix<double> K(Kmatrix);
   std::vector<vpgl_perspective_camera<double> > cam_vpgl;
   std::vector<bdifd_camera> cam_gt;
-  cam_vpgl.resize(nviews);
+  
+  bdifd_turntable::cameras_olympus_spherical(&cam_vpgl, K);
+  unsigned nviews = cam_vpgl.size();
   cam_gt.resize(nviews);
 
   for (unsigned i=0; i < nviews; ++i) {
-    vpgl_perspective_camera<double> *P;
-    P = bdifd_turntable::camera_olympus(6*i, K);
-    cam_gt[i].set_p(*P);
-    cam_vpgl[i] = *P;
-    delete P;
+    cam_gt[i].set_p(cam_vpgl[i]);
   }
-
-  
-  bdifd_turntable::cameras_olympus_spherical(&cam_vpgl, K);
-#if 0
 
   // write the cameras out
 
@@ -209,6 +202,5 @@ main(int argc, char **argv)
 
   //csk.write_dir_format(dir+std::string("/csk"));
 
-#endif
   return 0;
 }

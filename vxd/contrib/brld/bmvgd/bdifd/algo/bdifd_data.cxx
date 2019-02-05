@@ -1828,6 +1828,8 @@ cameras_olympus_spherical(
   const vpgl_calibration_matrix<double> &K)
 {
   typedef boost::random::mt19937 gen_type;
+  std::vector<vpgl_perspective_camera<double> > &cams = *pcams;
+  unsigned nviews=100;
 
   // You can seed this your way as well, but this is my quick and dirty way.
   gen_type rand_gen;
@@ -1838,6 +1840,7 @@ cameras_olympus_spherical(
 
   // This is what will actually supply drawn values.
   boost::variate_generator<gen_type&, boost::uniform_on_sphere<double> > random_on_sphere(rand_gen, unif_sphere);
+  boost::variate_generator<gen_type&, boost::uniform_on_sphere<double> > random_on_sphere_2(rand_gen, unif_sphere);
 
   
   std::string dir("./out-tmp");
@@ -1851,10 +1854,49 @@ cameras_olympus_spherical(
     return;
   }
   fp_centers << std::setprecision(20);
-  for (unsigned i=0; i < 200; ++i) {
+  for (unsigned i=0; i < nviews; ++i) {
       // Now you can draw a vector of drawn coordinates as such:
       std::vector<double> r = random_on_sphere();
       fp_centers << r[0] << " " << r[1]  << " " << r[2] << std::endl;
+      
+      // z direction
+      vnl_double_3x3 R;
+      bdifd_vector_3d z;
+      z[0] = -r[0];
+      z[1] = -r[1];
+      z[2] = -r[2];
+      double camera_to_object = 1.128036301860739e+03;
+      vgl_point_3d<double> C(camera_to_object*r[0],camera_to_object*r[1],camera_to_object*r[2]);
+
+      // x direction obtained by sampling 3D unit vector and orthogonalizing
+      r = random_on_sphere_2();
+      bdifd_vector_3d x;
+      x[0] = r[0];
+      x[1] = r[1];
+      x[2] = r[2];
+
+      x = x - (dot_product(x,z))*z;
+      x.normalize();
+
+      bdifd_vector_3d y = vnl_cross_3d(z,x);
+      
+      R[0][0] = x[0];
+      R[0][1] = x[1];
+      R[0][2] = x[2];
+      
+      R[1][0] = y[0];
+      R[1][1] = y[1];
+      R[1][2] = y[2];
+      
+      R[2][0] = z[0];
+      R[2][1] = z[1];
+      R[2][2] = z[2];
+      
+      vgl_h_matrix_3d<double> Rhmg(R,bdifd_vector_3d(0,0,0));
+      std::cout <<std::setprecision(20)<< R << std::endl;
+      assert(Rhmg.is_euclidean());
+      cams.push_back(vpgl_perspective_camera<double>(K, C, vgl_rotation_3d<double>(Rhmg)));
+      // XXX
   }
 }
 
