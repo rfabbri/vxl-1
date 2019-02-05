@@ -8,9 +8,10 @@
 #include <algorithm>
 #include <vsol/vsol_line_2d.h>
 #include <vul/vul_file.h>
-#include <boost/random/uniform_on_sphere.hpp>
 #include <boost/random/variate_generator.hpp>
 #include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_on_sphere.hpp>
+#include <boost/random/normal_distribution.hpp>
 
 void bdifd_data::
 max_err_reproj_perturb(
@@ -1826,7 +1827,8 @@ void bdifd_turntable::
 cameras_olympus_spherical(
   std::vector<vpgl_perspective_camera<double> > *pcams,
   const vpgl_calibration_matrix<double> &K,
-  bool enforce_minimum_separation)
+  bool enforce_minimum_separation,
+  bool perturb)
 {
   typedef boost::random::mt19937 gen_type;
   std::vector<vpgl_perspective_camera<double> > &cams = *pcams;
@@ -1840,10 +1842,13 @@ cameras_olympus_spherical(
 
   // Create the distribution object.
   boost::uniform_on_sphere<double> unif_sphere(3);
+  boost::normal_distribution<double> nd(0.0, 1);
 
   // This is what will actually supply drawn values.
   boost::variate_generator<gen_type&, boost::uniform_on_sphere<double> > random_on_sphere(rand_gen, unif_sphere);
   boost::variate_generator<gen_type&, boost::uniform_on_sphere<double> > random_on_sphere_2(rand_gen, unif_sphere);
+  boost::variate_generator<gen_type&, boost::normal_distribution<double> > random01(rand_gen, nd);
+  
   
 //  std::string dir("./out-tmp");
 //  vul_file::make_directory(dir);
@@ -1864,6 +1869,13 @@ cameras_olympus_spherical(
       // Now you can draw a vector of drawn coordinates as such:
       std::vector<double> r = random_on_sphere();
       bdifd_vector_3d z(-r[0],-r[1],-r[2]);
+      
+      if (perturb) {
+        std::cout << "z before " << z << std::endl;
+        z += bdifd_vector_3d(0.01*random01(),0.01*random01(),0.01*random01());
+        z.normalize(); 
+        std::cout << "z after " << z << std::endl;
+      }
       
       if (enforce_minimum_separation) {
         ntrials++;
@@ -1892,6 +1904,10 @@ cameras_olympus_spherical(
       ntrials = 0;
       
       double camera_to_object = 1.128036301860739e+03;
+      if (perturb)
+        camera_to_object += random01()*10;
+
+      std::cout << "Cam to object: " << camera_to_object << std::endl;
       
       vgl_point_3d<double> C(camera_to_object*r[0],camera_to_object*r[1],camera_to_object*r[2]);
 
