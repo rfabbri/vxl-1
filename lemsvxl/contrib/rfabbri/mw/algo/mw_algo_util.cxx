@@ -314,7 +314,9 @@ dbdet_load_edg_ascii_separate_files(
   double dir, conf=1, uncer=0;
 
   for (unsigned i=0; i < npts; ++i) {
-    edge_map->insert(new dbdet_edgel(vgl_point_2d<double>(pts.get(i,0)*scale, pts.get(i,1)*scale), 
+    edge_map->insert(new dbdet_edgel(vgl_point_2d<double>(
+            pts.get(i,0),
+            pts.get(i,1)), 
             atan2(tgts.get(i,1),tgts.get(i,0)),
             conf,
             0.0, 
