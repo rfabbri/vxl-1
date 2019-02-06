@@ -31,6 +31,8 @@
 #include <vpgld/pro/vpgld_camera_storage.h>
 #include <dbdet/pro/dbdet_sel_storage.h>
 #include <dbdet/pro/dbdet_edgemap_storage.h>
+#include <dbdet/vis/dbdet_edgemap_tableau_sptr.h>
+#include <dbdet/vis/dbdet_edgemap_tableau.h>
 #include <dbdet/pro/dbdet_keypoint_storage.h>   
 #include <dbkpr/pro/dbkpr_corr3d_storage.h>  
 #include <bmcsd/pro/bmcsd_discrete_corresp_storage.h>
@@ -192,6 +194,7 @@ load_edgemaps_into_frames_ascii(
     MANAGER->next_frame();
 
   MANAGER->add_new_view(view_ids[1], true);
+  MANAGER->display_current_frame();
   MANAGER->add_new_view(view_ids[2], true);
   MANAGER->display_current_frame();
 
@@ -202,6 +205,9 @@ load_edgemaps_into_frames_ascii(
     vgui_selector_tableau &selector = *(views[v]->selector());
     selector.set_active("frame_00" + std::to_string(view_ids[v]) + "-pts-2D.txt");
     selector.active_to_top();
+    dbdet_edgemap_tableau_sptr emt;
+    emt.vertical_cast(selector.active_tableau());
+    emt->set_cur_edgel(620);
   }
 
 //  MANAGER->display_current_frame();

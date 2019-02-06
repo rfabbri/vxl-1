@@ -74,6 +74,8 @@ public:
   void set_cur_edgel(unsigned id);
 
 private:
+  // to be used in overlay_redraw
+  void highlight_edgel_overlay(unsigned id);
 
   dbdet_edgemap_sptr edgemap_;  ///< the edge map class
 

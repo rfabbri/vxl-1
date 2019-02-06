@@ -15,6 +15,7 @@
 #include <vgui/vgui_dialog.h>
 #include <vgui/vgui_projection_inspector.h>
 #include <vgl/vgl_distance.h>
+#include <vnl/vnl_random.h>
 
 #include <gl2ps/gl2ps.h>
 
@@ -221,7 +222,7 @@ dbdet_edgemap_tableau::dbdet_edgemap_tableau():
   display_points_(false),
   point_size_(5.0),
   line_width_(1.0),
-  line_length_(1.0),
+  line_length_(2.0),
   curr_color_(0.0,0.0,1.0),
   threshold_(0.0),
   d2f_thresh_(0.0),
@@ -336,12 +337,15 @@ bool dbdet_edgemap_tableau::handle( const vgui_event & e )
 
    // return true;
   }
+
+  highlight_edgel_overlay(620);
+  highlight_edgel_overlay(3011);
+  highlight_edgel_overlay(3389);
+  // was overlay draw before, now do all the time.
   //if edgel selected, draw the groups it forms
   if (cur_edgel)
   {
-    if (cur_edgel->strength>=threshold_ &&
-        std::fabs(cur_edgel->deriv) >= d2f_thresh_)
-    {
+    std::cout << "select: " << cur_edgel->id << std::endl;
       glColor3f( 1.0-curr_color_[0], 1.0-curr_color_[1], 1.0-curr_color_[2] );
       glLineWidth (line_width_);
       glBegin( GL_LINE_STRIP );
@@ -351,11 +355,26 @@ bool dbdet_edgemap_tableau::handle( const vgui_event & e )
       glVertex2d(cur_edgel->pt.x() + 0.5*line_length_*std::cos(cur_edgel->tangent),
                  cur_edgel->pt.y() + 0.5*line_length_*std::sin(cur_edgel->tangent));
       glEnd();
-    }
     return true;
   }
 
   return false;
+}
+
+void dbdet_edgemap_tableau::highlight_edgel_overlay(unsigned id)
+{
+    dbdet_edgel* e;  ///< currently selected edgel
+    e = edgemap_->edgels[id];
+    std::cout << "highlight: " << e->id << std::endl;
+    glColor3f( 1.0-curr_color_[0], 1.0-curr_color_[1]+0.2, 1.0-curr_color_[2] );
+    glLineWidth (2*line_width_);
+    glBegin( GL_LINE_STRIP );
+    glVertex2d(e->pt.x() - 0.5*2*line_length_*std::cos(e->tangent),
+    e->pt.y() - 0.5*2*line_length_*std::sin(e->tangent));
+      
+    glVertex2d(e->pt.x() + 0.5*line_length_*std::cos(e->tangent),
+               e->pt.y() + 0.5*line_length_*std::sin(e->tangent));
+    glEnd();
 }
 
 void dbdet_edgemap_tableau::draw_edgels()
@@ -391,7 +410,18 @@ void dbdet_edgemap_tableau::draw_edgels()
           //glVertex2d(e->pt.x(), e->pt.y());
           //glEnd();
 
-          glColor3f( curr_color_[0], curr_color_[1], curr_color_[2] );
+          if (e == edgemap_->edgels[620]){
+            glLineWidth(4); 
+            glColor3f(0.9,0.7,0.5);
+          } else if (e == edgemap_->edgels[3011]) {
+            glLineWidth(4); 
+            glColor3f(0.7,0.9,0.5);
+          } else if (e == edgemap_->edgels[3389]) {
+            glLineWidth(4); 
+            glColor3f(0.8,0.8,0.7);
+          } else
+            glColor3f( curr_color_[0], curr_color_[1], curr_color_[2] );
+          
           glBegin( GL_LINE_STRIP );
           glVertex2d(e->pt.x() - 0.5*line_length_*std::cos(e->tangent),
                      e->pt.y() - 0.5*line_length_*std::sin(e->tangent));
@@ -399,8 +429,6 @@ void dbdet_edgemap_tableau::draw_edgels()
           glVertex2d(e->pt.x() + 0.5*line_length_*std::cos(e->tangent),
                      e->pt.y() + 0.5*line_length_*std::sin(e->tangent));
           glEnd();
-
-          
         }
 
         if (display_uncertainty_ && e->uncertainty >0.0)
