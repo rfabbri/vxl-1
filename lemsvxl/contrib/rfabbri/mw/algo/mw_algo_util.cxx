@@ -303,7 +303,9 @@ dbdet_load_edg_ascii_separate_files(
   std::cout << "===== File " << pts_fname << std::endl;
   std::cout << "Bounding box: " << bbox << std::endl;
   
-  unsigned w=bbox.width(),h=bbox.height();
+  assert(bbox.get_max_x() > 0); 
+  assert(bbox.get_max_y() > 0); 
+  unsigned w=bbox.get_max_x(),h=bbox.get_max_y();
   unsigned numGeometry = npts;
 
   // edge_map 

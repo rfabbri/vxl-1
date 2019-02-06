@@ -20,9 +20,11 @@
 int
 main(int argc, char **argv)
 {
-  unsigned  crop_origin_x_ = 450;
-  unsigned  crop_origin_y_ = 1750;
-  double x_max_scaled = 500;
+  unsigned  crop_origin_x_ = 400;
+  //unsigned  crop_origin_y_ = 1750;
+  unsigned  crop_origin_y_ = 900;
+  double x_max_scaled = 500; // final image can be considered 500x800 after crop and scale, 
+  // but can consider 500x600 if care is taken with bounding boxes of the data
 
   std::string dir("./out-tmp");
   std::string prefix("frame_");
@@ -110,6 +112,8 @@ main(int argc, char **argv)
         if (k == 0)
           fp_crv_id << i << std::endl;
         xi[j] = new vsol_point_2d(crv2d[i][k][j].gama[0], crv2d[i][k][j].gama[1]);
+        assert(crv2d[i][k][j].gama[0] > 0);
+        assert(crv2d[i][k][j].gama[1] > 0);
         fp_pts2d << crv2d[i][k][j].gama[0] << " " << crv2d[i][k][j].gama[1] << std::endl;
       }
       polys[i] = new vsol_polyline_2d(xi);

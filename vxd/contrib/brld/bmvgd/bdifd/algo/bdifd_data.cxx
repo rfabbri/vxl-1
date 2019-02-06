@@ -1697,6 +1697,12 @@ internal_calib_olympus(vnl_double_3x3 &m, double x_max_scaled, unsigned  crop_x,
 //  double mm_per_pixel_y;
 
   // KK(1:2,3) = KK(1:2,3) - crop_rect(:,1);
+  // Principal point is (0.86019451514668e3, 1.41278081044646e3)
+  // Obtained from calib toolbox and used here as a ref of real cam.
+  //
+  // This is approx (860,1412) so dimensions of image is:
+  // is 2*[0.86019451514668e3, 1.41278081044646e3] = 1720  2826
+
   double principal_point_x = 0.86019451514668e3- crop_x;
   double principal_point_y = 1.41278081044646e3- crop_y;
 

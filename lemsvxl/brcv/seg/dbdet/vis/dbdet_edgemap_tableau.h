@@ -71,6 +71,8 @@ public:
 
   void display_image_grid();
 
+  void set_cur_edgel(unsigned id);
+
 private:
 
   dbdet_edgemap_sptr edgemap_;  ///< the edge map class
@@ -98,6 +100,7 @@ private:
   int local_zoom_factor;
   bool display_image_grid_;
   bool display_uncertainty_;
+  int id_to_highlight; // edgel to display
 };
 
 

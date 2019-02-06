@@ -229,6 +229,7 @@ dbdet_edgemap_tableau::dbdet_edgemap_tableau():
   l1_(1.0), l2_(1.0), mix_thresh_(1.0),
   left_click_(vgui_event_condition(vgui_LEFT, vgui_MODIFIER_NULL, true)),
   cur_edgel(0),
+  id_to_highlight(-1),
   display_bars(false),
   bars(new dbdet_edgemap_parameter_bars(this)),
   local_zoom_factor(1),
@@ -253,6 +254,12 @@ bool dbdet_edgemap_tableau::handle( const vgui_event & e )
   glScalef(local_zoom_factor, local_zoom_factor, 1);
   glTranslatef(0.5, 0.5, 0);
 
+  if (id_to_highlight >= 0 && id_to_highlight != cur_edgel->id) {
+    set_cur_edgel(id_to_highlight);
+    return true;
+  }
+    
+
   if (e.type == vgui_MOTION)
   {
     // Get X,Y position to display on status bar:
@@ -268,26 +275,30 @@ bool dbdet_edgemap_tableau::handle( const vgui_event & e )
   {
     float ix, iy;
     vgui_projection_inspector().window_to_image_coordinates(e.wx, e.wy, ix, iy);
+    std::cout << "clicked\n";
 
     // I) Find edgel closest to ix,iy
     // a) find the cell that this point belongs to
     int xx = dbdet_round(ix);
     int yy = dbdet_round(iy);
 
-    //std::cout << "ix,iy: " << ix << "," << iy << std::endl;
+    std::cout << "ix,iy: " << ix << "," << iy << std::endl;
+    std::cout << "edgemap_->width(): " << edgemap_->width() << std::endl;
+    std::cout << "edgemap_->height(): " << edgemap_->height() << std::endl;
 
     //reset cur_edgel
     cur_edgel = 0;
 
     // b) find the closest edgel in the neighboring cells
     double dmin = std::numeric_limits<double>::infinity();
-    for (int xcell = xx-2; xcell <= xx+2; xcell++){
-      for (int ycell = yy-2; ycell <= yy+2; ycell++){
+    for (int xcell = xx-10; xcell <= xx+10; xcell++){
+      for (int ycell = yy-10; ycell <= yy+10; ycell++){
         if (xcell < 0 || ycell < 0 || xcell >= (int)edgemap_->width() || ycell >= (int)edgemap_->height()) 
           continue;
 
         for (unsigned i=0; i<edgemap_->cell(xcell, ycell).size(); i++){
           dbdet_edgel* edgel = edgemap_->cell(xcell, ycell)[i];
+          std::cout << "Found candidate" << std::endl;
 
           double dx = edgel->pt.x() - (double)ix; 
           double dy = edgel->pt.y() - (double)iy; 
@@ -314,29 +325,6 @@ bool dbdet_edgemap_tableau::handle( const vgui_event & e )
     return true;
   }
 
-  //actually draw the selected edgel
-  if( e.type == vgui_OVERLAY_DRAW ) 
-  {
-    //if edgel selected, draw the groups it forms
-    if (cur_edgel)
-    {
-      if (cur_edgel->strength>=threshold_ &&
-          std::fabs(cur_edgel->deriv) >= d2f_thresh_)
-      {
-        glColor3f( 1.0-curr_color_[0], 1.0-curr_color_[1], 1.0-curr_color_[2] );
-        glLineWidth (line_width_);
-        glBegin( GL_LINE_STRIP );
-        glVertex2d(cur_edgel->pt.x() - 0.5*line_length_*std::cos(cur_edgel->tangent),
-                   cur_edgel->pt.y() - 0.5*line_length_*std::sin(cur_edgel->tangent));
-        
-        glVertex2d(cur_edgel->pt.x() + 0.5*line_length_*std::cos(cur_edgel->tangent),
-                   cur_edgel->pt.y() + 0.5*line_length_*std::sin(cur_edgel->tangent));
-        glEnd();
-      }
-    }
-
-    return true;
-  }
 
   //handle standard display
   if( e.type == vgui_DRAW )
@@ -345,6 +333,25 @@ bool dbdet_edgemap_tableau::handle( const vgui_event & e )
       display_image_grid();
 
     draw_edgels();
+
+   // return true;
+  }
+  //if edgel selected, draw the groups it forms
+  if (cur_edgel)
+  {
+    if (cur_edgel->strength>=threshold_ &&
+        std::fabs(cur_edgel->deriv) >= d2f_thresh_)
+    {
+      glColor3f( 1.0-curr_color_[0], 1.0-curr_color_[1], 1.0-curr_color_[2] );
+      glLineWidth (line_width_);
+      glBegin( GL_LINE_STRIP );
+      glVertex2d(cur_edgel->pt.x() - 0.5*line_length_*std::cos(cur_edgel->tangent),
+                 cur_edgel->pt.y() - 0.5*line_length_*std::sin(cur_edgel->tangent));
+      
+      glVertex2d(cur_edgel->pt.x() + 0.5*line_length_*std::cos(cur_edgel->tangent),
+                 cur_edgel->pt.y() + 0.5*line_length_*std::sin(cur_edgel->tangent));
+      glEnd();
+    }
     return true;
   }
 
@@ -522,7 +529,24 @@ dbdet_edgemap_tableau::get_popup(const vgui_popup_params& /*params*/, vgui_menu 
                new dbdet_edgemap_tableau_toggle_command(this, &display_bars));
 
   submenu.add( "Set Local Zoom Factor", new dbdet_edgemap_tableau_set_int_params_command(this, "Zoom Factor", &local_zoom_factor));
+  
+  submenu.add( "Highlight id", new dbdet_edgemap_tableau_set_int_params_command(this, "Id", &id_to_highlight));
 
   //add this submenu to the popup menu
   menu.add("Tableau Options", submenu);
+}
+
+void dbdet_edgemap_tableau::
+set_cur_edgel(unsigned id)
+{
+  cur_edgel = edgemap_->edgels[id];
+  std::cout << "Edgel " << cur_edgel->id << " : (x, y, theta, strength) = (";
+  std::cout << cur_edgel->pt.x() << ", " << cur_edgel->pt.y() << ", " ;
+  std::cout << cur_edgel->tangent << ", " << cur_edgel->strength << ")" << std::endl; 
+  std::cout << "L Attr: " << cur_edgel->left_app->print_info() << std::endl;
+  std::cout << "R Attr: " << cur_edgel->right_app->print_info() << std::endl;
+  
+  // hightlight the selected edgel
+  post_overlay_redraw();
+  post_redraw();
 }
