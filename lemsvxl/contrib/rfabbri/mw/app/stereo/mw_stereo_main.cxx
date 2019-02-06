@@ -185,6 +185,7 @@ load_edgemaps_into_frames_ascii(
   
   MANAGER->first_frame();
 
+  // XXX hardcoded views
   std::vector<int> view_ids;
   view_ids.push_back(42);
   view_ids.push_back(54);
@@ -205,9 +206,9 @@ load_edgemaps_into_frames_ascii(
     vgui_selector_tableau &selector = *(views[v]->selector());
     selector.set_active("frame_00" + std::to_string(view_ids[v]) + "-pts-2D.txt");
     selector.active_to_top();
-    dbdet_edgemap_tableau_sptr emt;
-    emt.vertical_cast(selector.active_tableau());
-    emt->set_cur_edgel(620);
+//    dbdet_edgemap_tableau_sptr emt;
+//    emt.vertical_cast(selector.active_tableau());
+//    emt->set_cur_edgel(620);
   }
 
 //  MANAGER->display_current_frame();

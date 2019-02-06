@@ -18,6 +18,7 @@
 #include <vgui/vgui_event_condition.h>
 
 #include <vnl/vnl_vector_fixed.h>
+#include <vnl/vnl_random.h>
 
 #include "dbdet_edgemap_tableau_sptr.h"
 #include <dbdet/edge/dbdet_edgemap_sptr.h>
@@ -75,7 +76,7 @@ public:
 
 private:
   // to be used in overlay_redraw
-  void highlight_edgel_overlay(unsigned id);
+  void highlight_edgel_overlay(unsigned id, unsigned color_id);
 
   dbdet_edgemap_sptr edgemap_;  ///< the edge map class
 

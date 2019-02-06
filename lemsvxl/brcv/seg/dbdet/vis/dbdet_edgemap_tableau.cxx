@@ -15,11 +15,19 @@
 #include <vgui/vgui_dialog.h>
 #include <vgui/vgui_projection_inspector.h>
 #include <vgl/vgl_distance.h>
-#include <vnl/vnl_random.h>
 
 #include <gl2ps/gl2ps.h>
 
 #include "dbdet_edgemap_tableau.h"
+
+
+static float rgbmap[4][3] = {
+  {0.8500 ,  0.3250  , 0.0980}, // red
+  {0.9290 ,  0.6940  , 0.1250}, // yellow
+  {0.1940 ,  0.5840  , 0.1560}, // green
+  {0.4660 ,  0.6740  , 0.1880}
+};
+
 
 class dbdet_edgemap_tableau_toggle_command : public vgui_command
 {
@@ -338,9 +346,9 @@ bool dbdet_edgemap_tableau::handle( const vgui_event & e )
    // return true;
   }
 
-  highlight_edgel_overlay(620);
-  highlight_edgel_overlay(3011);
-  highlight_edgel_overlay(3389);
+  highlight_edgel_overlay(620,0); // corner of cube
+  highlight_edgel_overlay(3011,1);  // tight helix, less torsion
+  highlight_edgel_overlay(3389,2); // open helix
   // was overlay draw before, now do all the time.
   //if edgel selected, draw the groups it forms
   if (cur_edgel)
@@ -361,19 +369,19 @@ bool dbdet_edgemap_tableau::handle( const vgui_event & e )
   return false;
 }
 
-void dbdet_edgemap_tableau::highlight_edgel_overlay(unsigned id)
+void dbdet_edgemap_tableau::highlight_edgel_overlay(unsigned id, unsigned color_id)
 {
     dbdet_edgel* e;  ///< currently selected edgel
     e = edgemap_->edgels[id];
     std::cout << "highlight: " << e->id << std::endl;
-    glColor3f( 1.0-curr_color_[0], 1.0-curr_color_[1]+0.2, 1.0-curr_color_[2] );
+    glColor3f(rgbmap[color_id][0],rgbmap[color_id][1],rgbmap[color_id][2]);
     glLineWidth (2*line_width_);
     glBegin( GL_LINE_STRIP );
-    glVertex2d(e->pt.x() - 0.5*2*line_length_*std::cos(e->tangent),
-    e->pt.y() - 0.5*2*line_length_*std::sin(e->tangent));
+    glVertex2d(e->pt.x() - 0.5*6*line_length_*std::cos(e->tangent),
+    e->pt.y() - 0.5*6*line_length_*std::sin(e->tangent));
       
-    glVertex2d(e->pt.x() + 0.5*line_length_*std::cos(e->tangent),
-               e->pt.y() + 0.5*line_length_*std::sin(e->tangent));
+    glVertex2d(e->pt.x() + 0.5*line_length_*6*std::cos(e->tangent),
+               e->pt.y() + 0.5*line_length_*6*std::sin(e->tangent));
     glEnd();
 }
 
@@ -410,6 +418,7 @@ void dbdet_edgemap_tableau::draw_edgels()
           //glVertex2d(e->pt.x(), e->pt.y());
           //glEnd();
 
+          /*
           if (e == edgemap_->edgels[620]){
             glLineWidth(4); 
             glColor3f(0.9,0.7,0.5);
@@ -420,6 +429,7 @@ void dbdet_edgemap_tableau::draw_edgels()
             glLineWidth(4); 
             glColor3f(0.8,0.8,0.7);
           } else
+          */
             glColor3f( curr_color_[0], curr_color_[1], curr_color_[2] );
           
           glBegin( GL_LINE_STRIP );
