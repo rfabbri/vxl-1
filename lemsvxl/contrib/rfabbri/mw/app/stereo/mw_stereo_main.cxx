@@ -17,7 +17,9 @@
 //#include <mw/app/ctspheres_app.h>
 #include <bvis1/bvis1_macros.h>
 #include <bvis1/bvis1_manager.h>
+#include <vgui/vgui_selector_tableau.h>
 #include <bvis1/bvis1_displayer_sptr.h>
+#include <bvis1/bvis1_view_tableau.h>
 #include <vidpro1/vidpro1_process_manager_sptr.h>
 #include <vidpro1/vidpro1_process_manager.h>
 #include <vidpro1/vidpro1_repository.h>
@@ -178,7 +180,32 @@ load_edgemaps_into_frames_ascii(
     MANAGER->add_to_display(es);
     MANAGER->next_frame();
   }
+  
   MANAGER->first_frame();
+
+  std::vector<int> view_ids;
+  view_ids.push_back(42);
+  view_ids.push_back(54);
+  view_ids.push_back(62);
+
+  for (unsigned i=0; i < view_ids[0]; ++i)
+    MANAGER->next_frame();
+
+  MANAGER->add_new_view(view_ids[1], true);
+  MANAGER->add_new_view(view_ids[2], true);
+  MANAGER->display_current_frame();
+
+  std::vector< bvis1_view_tableau_sptr > views;
+  views = MANAGER->get_views();
+  // make curves active
+  for (unsigned v=0; v < views.size(); ++v) {
+    vgui_selector_tableau &selector = *(views[v]->selector());
+    selector.set_active("frame_00" + std::to_string(view_ids[v]) + "-pts-2D.txt");
+    selector.active_to_top();
+  }
+
+//  MANAGER->display_current_frame();
+  MANAGER->post_redraw();
 }
 
 

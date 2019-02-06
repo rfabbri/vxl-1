@@ -1892,7 +1892,9 @@ cameras_olympus_spherical(
           
 //          std::cout << "Angle: " << angle(-z,C_vector_tmp) << " Minsep: " << minsep << std::endl;
 //          std::cout << "ntrials " << ntrials << std::endl;
-          if (angle(-z,C_vector_tmp) < minsep) {
+          double angle_distance_along_unit_sphere = angle(-z,C_vector_tmp);
+          assert(angle_distance_along_unit_sphere < vnl_math::pi);
+          if (angle_distance_along_unit_sphere < minsep || vnl_math::pi - angle_distance_along_unit_sphere < minsep ) {
             if (ntrials > 100000) {
               std::cerr << "PROBLEM: Unable to reduce separation\n";
               break;
