@@ -373,7 +373,12 @@ void dbdet_edgemap_tableau::highlight_edgel_overlay(unsigned id, unsigned color_
 {
     dbdet_edgel* e;  ///< currently selected edgel
     e = edgemap_->edgels[id];
+    
+    std::cout << "=== Tableau" << this->name() << std::endl;
     std::cout << "highlight: " << e->id << std::endl;
+    std::cout << "Edgel " << e->id << " : (x, y, theta, strength) = (";
+    std::cout << e->pt.x() << ", " << e->pt.y() << ", " ;
+    std::cout << e->tangent << ", " << e->strength << ")" << std::endl; 
     glColor3f(rgbmap[color_id][0],rgbmap[color_id][1],rgbmap[color_id][2]);
     glLineWidth (2*line_width_);
     glBegin( GL_LINE_STRIP );
