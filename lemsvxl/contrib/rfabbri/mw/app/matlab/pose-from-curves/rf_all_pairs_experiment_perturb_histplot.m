@@ -25,7 +25,7 @@ for tp = 1:n_theta_perts
 
     set(h,'color',mycolor);
     set(h,'linewidth',2);
-    set(h,'marker',mymarker(mod(p,n_markers)));
+    % set(h,'marker',mymarker(mod(p,n_markers)+1));
     M{end+1} = ['\Delta_{pos} = ' num2str(perturb_levels(p))...
                 ', \Delta_\theta = ', num2str(theta_perturbs_deg(tp))];
   end

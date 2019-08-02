@@ -162,3 +162,6 @@ xlabel('point-tangent id');
 % Hist plot ------------------------------------------------
 
 rf_all_pairs_experiment_perturb_histplot;
+
+% Box plot ------------------------------------------------
+rf_all_pairs_experiment_perturb_boxplot;
