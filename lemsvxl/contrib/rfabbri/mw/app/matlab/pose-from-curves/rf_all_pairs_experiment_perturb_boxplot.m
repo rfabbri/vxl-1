@@ -1,4 +1,5 @@
 % ---------
+%load('/home/rfabbri/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/working-state-synthetic-ransac_results-paper.mat')
 % 
 
 
@@ -16,9 +17,9 @@ for p=1:n_theta_perts
 end
 
 
-delta = linspace(-.1,.1,n_theta_perts);  % define offsets to distinguish plots
+delta = linspace(-.25,.25,n_theta_perts);  % define offsets to distinguish plots
 %delta = zeros(1:n_theta_perts)+;
-width = .1;  % small width to minimize overlap
+width = .08;  % small width to minimize overlap
 %legWidth = 1.8; % make room for legend
 
 
@@ -42,7 +43,7 @@ for tp = 1:n_theta_perts
     'positions', positions, 'widths', width, 'labels', X, 'colors', [0.5 0.5 0.5],...
     'symbol','.');
   %set(findobj(gcf,'tag','Box'), 'Color', red);
-  nbx = size(ax.Children,1) - n_bx
+  nbx = size(ax.Children,1) - nbx;
 
   h = get(bx(5,:),{'XData','YData'});
   np = size(h,1)
@@ -91,6 +92,22 @@ set(m, 'color', [0.9 0.9 0.9], 'markerfacecolor',[0.9 0.9 0.9], 'markeredgecolor
 % grey bg on
 % overlap boxen
 
+
+lines = findobj(gcf, 'Tag', 'Upper Whisker');
+
+mx = -inf;
+for il=1:size(lines,1)
+txt = '10';
+  l = lines(il);
+  x = min(l.XData);
+  y = max(l.YData);
+  if (x < mx)
+    mx = x
+  end
+  tp = n_theta_perts - floor((il-1)/n_perturbs);
+  text(x-0.01,0-0.2,num2str(theta_perturbs_deg(tp)), 'HorizontalAlignment', 'center', 'Fontsize', 8, 'color', [0.7 0.7 0.7])
+end
+text(x-0.123,0-0.2,'\Delta_\theta = ', 'HorizontalAlignment', 'center', 'Fontsize', 8, 'color', [0.7 0.7 0.7])
 
 return
 % ------------------------
