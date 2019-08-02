@@ -1,8 +1,17 @@
 % ---------
-%load('/home/rfabbri/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/working-state-synthetic-ransac_results-paper.mat')
+clear all;
+load('/home/rfabbri/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/working-state-synthetic-ransac_results-paper.mat')
 % 
+% Remove theta zero
+%n_theta_perts = n_theta_perts - 1;
+%theta_perturbs_deg = theta_perturbs_deg(2:end);
 
+n_perturbs = n_perturbs -1;
+perturb_levels = perturb_levels(2:end);
 
+for tp=1:n_theta_perts
+  all_errs{tp} = all_errs{tp}(2:end,:);
+end
 
 % ------------------------------------------------------------------------------
 X={};
@@ -12,7 +21,7 @@ for p=1:n_perturbs
 end
 
 T={};
-for p=1:n_theta_perts
+for tp=1:n_theta_perts
   T{end+1} = ['\Delta_\theta = ', num2str(theta_perturbs_deg(tp))];
 end
 
@@ -34,13 +43,22 @@ xlabel('\Delta_{pos}');
 ylabel('reprojection error');
 title('Error distribution for different noise levels');
 
+color = min(lines(n_theta_perts)+0.2,1);
+%color = color([2 1 3:end],:)
+
+
+%color = [233 83 62; 235 120 34; 0 136 195; 197 51 107; 0 125 28]/255;
+
+%ecolor = max(color - 0.2,0);
+ecolor = color;
+
 ax = gca;
 ticks = zeros(1,tp);
 for tp = 1:n_theta_perts
   positions = (1:n_perturbs) + delta(tp);
   nbx = size(ax.Children,1);
   bx = boxplot(all_errs{tp}', ...
-    'positions', positions, 'widths', width, 'labels', X, 'colors', [0.5 0.5 0.5],...
+    'positions', positions, 'widths', width, 'labels', X, 'colors', ecolor(tp,:),...
     'symbol','.');
   %set(findobj(gcf,'tag','Box'), 'Color', red);
   nbx = size(ax.Children,1) - nbx;
@@ -50,7 +68,7 @@ for tp = 1:n_theta_perts
   hp = hggroup;
   set(hp, 'tag','boxen')
   for k=1:np
-     patch(h{k,1},h{k,2},[0.6 0.6 0.6], 'edgecolor',[0.5 0.5 0.5]-0.05, 'linewidth', 1.2,'tag', 'ricbox', 'parent', hp);%, 'facealpha',0.5);
+     patch(h{k,1},h{k,2},color(tp,:), 'edgecolor', ecolor(tp,:), 'linewidth', 1.5,'tag', 'ricbox', 'parent', hp);%, 'facealpha',0.3);
 %     ax.Children = ax.Children([end 1:end-1]);
 %     ax.Children = ax.Children([2:end 1]);
   end
@@ -73,7 +91,7 @@ set(gca,'xtick',1:n_perturbs)
 set(gca,'xticklabel',X)
 
 lines = findobj(gcf, 'type', 'line', 'Tag', 'Median');
-set(lines, 'Color', 'k', 'linewidth', 3);
+set(lines, 'Color', [0.3 0.3 0.3], 'linewidth', 3);
 
 lines = findobj(gcf, 'Tag', 'Upper Whisker');
 set(lines, 'lineStyle', '-');
@@ -94,10 +112,10 @@ set(m, 'color', [0.9 0.9 0.9], 'markerfacecolor',[0.9 0.9 0.9], 'markeredgecolor
 
 
 lines = findobj(gcf, 'Tag', 'Upper Whisker');
+mlines = findobj(gcf, 'Tag', 'Median');
 
 mx = -inf;
 for il=1:size(lines,1)
-txt = '10';
   l = lines(il);
   x = min(l.XData);
   y = max(l.YData);
@@ -105,78 +123,21 @@ txt = '10';
     mx = x
   end
   tp = n_theta_perts - floor((il-1)/n_perturbs);
-  text(x-0.01,0-0.2,num2str(theta_perturbs_deg(tp)), 'HorizontalAlignment', 'center', 'Fontsize', 8, 'color', [0.7 0.7 0.7])
+  text(x-0.01,0-0.2,num2str(theta_perturbs_deg(tp)), 'HorizontalAlignment', 'center', 'Fontsize', 8, 'color', color(tp,:)*0.8)
+  set(mlines(il), 'Color', ecolor(tp,:)*0.7);
 end
-text(x-0.123,0-0.2,'\Delta_\theta = ', 'HorizontalAlignment', 'center', 'Fontsize', 8, 'color', [0.7 0.7 0.7])
+text(max(lines(1).XData)+0.45,0-0.23,'\leftarrow \Delta_\theta', 'HorizontalAlignment', 'right', 'Fontsize', 12, 'color', 'k')
 
-return
-% ------------------------
-% to be called after rf_all_pairs_experiment_perturb
-figure
-clf
-hold on;
-M={};
-for tp = 1%:n_theta_perts
-  for p=1:n_perturbs
-    if (tp==1 | p == 1)
-      disp('skipping 0 err');
-      continue;
-    end
+%set(gca,'box','off')
+xlim([0.5 3.5]);
+ylim([-0.4 6]);
+set(gca,'yminortick','on')
+set(gca,'plotboxaspectractio',[1 0.7857 0.7857])
 
-    boxplot(all_errs{tp}');
+%set(groot,'defaultAxesTickLabelInterpreter','latex');  
+%set(groot,'defaulttextinterpreter','latex');
+%set(groot,'defaultLegendInterpreter','latex');
+%set(groot, 'defaultAxesTickLabelInterpreter','latex'); set(groot, 'defaultLegendInterpreter','latex');
 
-
-    
-    mycolor = rand(1,3)*0.7;
-    mycolor(1) = min(mycolor(1)+rand()*0.4,1);
-    mycolor(2) = min(mycolor(2)+rand()*0.2,1);
-    mycolor(3) = min(mycolor(3)+rand()*0.1,1);
-
-    x_err = [0:0.2:7];
-%    hi = histc(all_errs{tp}(p,:), x_err);
-%    h = plot(x_err, hi/maxcount);
-
-%    [hi,xout] = hist(all_errs{tp}(p,:),80);
-%    h = plot(xout,hi/maxcount);
-
-    set(h,'color',mycolor);
-    set(h,'linewidth',2);
-    M{end+1} = ['\Delta_{pos} = ' num2str(perturb_levels(p))...
-                ', \Delta_\theta = ', num2str(theta_perturbs_deg(tp))];
-  end
-end
-title('Error distribution for different noise levels');
-ylabel('frequency');
-xlabel('reprojection error');
-h=legend(M);
-set(h,'Interpreter','tex');
-
-
-
-
-
-return
-
-figure('Color', 'w');
-c = colormap(lines(3));
-
-
-A = randn(60,7);        % some data
-A(:,4) = NaN;           % this is the trick for boxplot
-C = [c; ones(1,3); c];  % this is the trick for coloring the boxes
-
-
-% regular plot
-boxplot(A, 'colors', C, 'plotstyle', 'compact', ...
-    'labels', {'','ASIA','','','','USA',''}); % label only two categories
-hold on;
-for ii = 1:3
-    plot(NaN,1,'color', c(ii,:), 'LineWidth', 4);
-end
-
-title('BOXPLOT');
-ylabel('MPG');
-xlabel('ORIGIN');
-legend({'SUV', 'SEDAN', 'SPORT'});
-
-set(gca, 'XLim', [0 8], 'YLim', [-5 5]);
+%yyaxis right 
+%set(gca, 'YTick', 0, 'YTickLabel', '\Delta_{\theta}')
