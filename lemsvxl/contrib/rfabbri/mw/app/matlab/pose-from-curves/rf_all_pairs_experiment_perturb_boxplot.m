@@ -37,11 +37,10 @@ figure
 hold on
 grid on
 set(gca,'XGrid','off')
-set(groot, 'defaultAxesTickLabelInterpreter','latex'); set(groot, 'defaultLegendInterpreter','latex');
+set(groot, 'defaultAxesTickLabelInterpreter','tex'); set(groot, 'defaultLegendInterpreter','latex');
 
 xlabel('\Delta_{pos}');
 ylabel('reprojection error');
-title('Error distribution for different noise levels');
 
 color = min(lines(n_theta_perts)+0.2,1);
 %color = color([2 1 3:end],:)
@@ -98,6 +97,11 @@ set(lines, 'lineStyle', '-');
 lines = findobj(gcf, 'Tag', 'Lower Whisker');
 set(lines, 'lineStyle', '-');
 
+lines = findobj(gcf, 'Tag', 'Upper Adjacent Value');
+set(lines, 'linewidth', 0.5);
+lines = findobj(gcf, 'Tag', 'Lower Adjacent Value');
+set(lines, 'linewidth', 0.7);
+
 m = findobj(gcf, 'Tag', 'Outliers');
 set(m, 'color', [0.9 0.9 0.9], 'markerfacecolor',[0.9 0.9 0.9], 'markeredgecolor', [0.7 0.7 0.7], 'markersize',1);
 
@@ -123,16 +127,20 @@ for il=1:size(lines,1)
     mx = x
   end
   tp = n_theta_perts - floor((il-1)/n_perturbs);
-  text(x-0.01,0-0.2,num2str(theta_perturbs_deg(tp)), 'HorizontalAlignment', 'center', 'Fontsize', 8, 'color', color(tp,:)*0.8)
+  text(x,0-0.2,num2str(theta_perturbs_deg(tp)), 'HorizontalAlignment', 'center', 'Fontsize', 8, 'color', color(tp,:)*0.8)
+  %text(x+0.015,0-0.2,[num2str(theta_perturbs_deg(tp)) '^\circ'], 'HorizontalAlignment', 'center', 'Fontsize', 8, 'color', color(tp,:)*0.8)
   set(mlines(il), 'Color', ecolor(tp,:)*0.7);
 end
-text(max(lines(1).XData)+0.45,0-0.23,'\leftarrow \Delta_\theta', 'HorizontalAlignment', 'right', 'Fontsize', 12, 'color', 'k')
+text(min(lines(end).XData)-0.178,0-0.235,'\Delta_\theta \rightarrow', 'HorizontalAlignment', 'right', 'Fontsize', 12, 'color', 'k')
 
 %set(gca,'box','off')
 xlim([0.5 3.5]);
 ylim([-0.4 6]);
 set(gca,'yminortick','on')
-set(gca,'plotboxaspectractio',[1 0.7857 0.7857])
+set(gca,'plotboxaspectratio',[1 0.7857 0.7857])
+ax = gca;
+ax.YRuler.Axle.ColorData = uint8([0.6*ones(1,3)*255 255]');
+ax.XRuler.Axle.ColorData = uint8([0.6*ones(1,3)*255 255]');
 
 %set(groot,'defaultAxesTickLabelInterpreter','latex');  
 %set(groot,'defaulttextinterpreter','latex');
@@ -141,3 +149,4 @@ set(gca,'plotboxaspectractio',[1 0.7857 0.7857])
 
 %yyaxis right 
 %set(gca, 'YTick', 0, 'YTickLabel', '\Delta_{\theta}')
+%title('Error distribution for different noise levels');
