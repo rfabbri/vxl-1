@@ -1,6 +1,8 @@
 # This is bmvgd/bdifd/algo/CMakeLists.txt
 # Brown Multiview Differential Geometry Algorithms Library
 
+project(bdifd_algo)
+
 set(bdifd_algo_sources
   bdifd_data.cxx bdifd_data.h
   bdifd_transfer.cxx bdifd_transfer.h
@@ -21,6 +23,9 @@ else ( Boost_FOUND )
   #message("FOUND NO")
   target_link_libraries(bdifd_algo bdifd)
 endif( Boost_FOUND )
+
+configure_file( ${bdifd_algo_SOURCE_DIR}/bdifd_algo_config.h.in
+                ${bdifd_algo_BINARY_DIR}/bdifd_algo_config.h )
 
 
 if( BUILD_TESTING )
