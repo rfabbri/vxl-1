@@ -43,6 +43,8 @@ end
 % TODO rewrite to use txt dataset
 rf_synthetic_point_tangent_curves;  
 
+
+
 %perturb_levels = [0 0.1 0.5 1 2];
 %theta_perturbs_deg = [0 0.1 0.5 1 2 5 7 10];
 perturb_levels = [0 0.5 1 2];

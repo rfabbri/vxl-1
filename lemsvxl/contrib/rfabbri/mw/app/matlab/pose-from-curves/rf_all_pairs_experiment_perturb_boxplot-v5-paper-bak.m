@@ -1,17 +1,7 @@
 % ---------
 clear all;
-
-% by default this loads all state variables
-% plus the data for fig 10 (synth w/o badj)
 load('/home/rfabbri/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/working-state-synthetic-ransac_results-paper.mat')
-
-badj=true;
-
-if badj
-  % load this for fig 11 (synth w/badj)
-  load('/home/rfabbri/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work/all_pairs_experiment_perturb-maxcount_1100-ransac.mat')
-end
-
+% 
 % Remove theta zero
 %n_theta_perts = n_theta_perts - 1;
 %theta_perturbs_deg = theta_perturbs_deg(2:end);
@@ -146,11 +136,8 @@ text(min(lines(end).XData)-0.178,0-0.235,'\Delta_\theta \rightarrow', 'Horizonta
 %set(gca,'box','off')
 xlim([0.5 3.5]);
 ylim([-0.4 6]);
-set(gca,'plotboxaspectratio',[1 0.7857 0.7857])
-%if badj
-%  ylim([-0.4 3]);
-%end
 set(gca,'yminortick','on')
+set(gca,'plotboxaspectratio',[1 0.7857 0.7857])
 ax = gca;
 ax.YRuler.Axle.ColorData = uint8([0.6*ones(1,3)*255 255]');
 ax.XRuler.Axle.ColorData = uint8([0.6*ones(1,3)*255 255]');
