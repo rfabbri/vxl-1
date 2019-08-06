@@ -1,4 +1,6 @@
 #include <vul/vul_arg.h>
+#include <vul/vul_file.h>
+#include <vul/vul_sequence_filename_map.h>
 #include <buld/buld_arg.h>
 #include <vnl/vnl_vector.h>
 #include <vgui/vgui.h>
@@ -15,7 +17,9 @@
 //#include <mw/app/ctspheres_app.h>
 #include <bvis1/bvis1_macros.h>
 #include <bvis1/bvis1_manager.h>
+#include <vgui/vgui_selector_tableau.h>
 #include <bvis1/bvis1_displayer_sptr.h>
+#include <bvis1/bvis1_view_tableau.h>
 #include <vidpro1/vidpro1_process_manager_sptr.h>
 #include <vidpro1/vidpro1_process_manager.h>
 #include <vidpro1/vidpro1_repository.h>
@@ -27,6 +31,8 @@
 #include <vpgld/pro/vpgld_camera_storage.h>
 #include <dbdet/pro/dbdet_sel_storage.h>
 #include <dbdet/pro/dbdet_edgemap_storage.h>
+#include <dbdet/vis/dbdet_edgemap_tableau_sptr.h>
+#include <dbdet/vis/dbdet_edgemap_tableau.h>
 #include <dbdet/pro/dbdet_keypoint_storage.h>   
 #include <dbkpr/pro/dbkpr_corr3d_storage.h>  
 #include <bmcsd/pro/bmcsd_discrete_corresp_storage.h>
@@ -38,6 +44,7 @@
 #include <bvis1/displayer/bvis1_image_displayer.h>
 #include <bvis1/displayer/bvis1_vsol2D_displayer.h>
 #include <bvis1/displayer/bvis1_vtol_displayer.h>
+#include <bvis1/bvis1_util.h>
 #include <dbdet/vis/dbdet_sel_displayer.h>
 #include <dbdet/vis/dbdet_edgemap_displayer.h>
 #include <dbdet/vis/dbdet_keypoint_displayer.h>
@@ -112,6 +119,7 @@
 #include <mw/pro/dbdet_compute_linked_curves_process.h>
 #include <mw/pro/mw_extend_corresp_process.h>
 #include <mw/pro/dbmcs_nearest_edgels_process.h>
+#include <mw/algo/mw_algo_util.h>
 #include <dbdet/vis/dbdet_bvis1_util.h>
 
 #ifdef HAS_BGUI3D
@@ -120,6 +128,124 @@
 #endif
 
 #define MANAGER bvis1_manager::instance()
+
+bool 
+on_ascii_dataset() {
+  return vul_file::exists("crv-ids.txt");
+} 
+
+void
+get_fname_vector(std::string pattern, std::vector<std::string> *fnames)
+{
+   vul_sequence_filename_map map(pattern);
+   for (int i = 0; i < map.get_nviews(); ++i) {
+     // std::cerr << "reading name: " << map.name(i) << std::endl;
+     fnames->push_back(map.name(i));
+   }
+}
+
+void
+load_edgemaps_into_frames_ascii(
+    const std::vector<std::string> &imgs_fnames,
+    const std::vector<std::string> &pts_fnames,
+    const std::vector<std::string> &tgts_fnames
+    )
+{
+  assert(pts_fnames.size() == tgts_fnames.size());
+  assert(pts_fnames.size() == imgs_fnames.size());
+  
+  for (unsigned v=0; v < pts_fnames.size(); ++v) {
+    std::cout << "Reading " << pts_fnames[v] << std::endl;
+    bool bSubPixel = true;
+    double scale=1.0;
+    dbdet_edgemap_sptr em;
+
+    bool retval = mw_algo_util::dbdet_load_edg_ascii_separate_files(
+        imgs_fnames[v],
+        pts_fnames[v],
+        tgts_fnames[v],
+        bSubPixel,
+        scale,
+        em);
+
+    if (!retval) {
+      std::cerr << "Could not open edge file (and correp tgt file)" << pts_fnames[v] << std::endl;
+      return;
+    }
+    std::cout << "N edgels: " << em->num_edgels() << std::endl;
+
+    dbdet_edgemap_storage_sptr es = dbdet_edgemap_storage_new();
+    es->set_edgemap(em);
+    es->set_name(pts_fnames[v]);
+
+    MANAGER->repository()->store_data(es);
+    MANAGER->add_to_display(es);
+    MANAGER->next_frame();
+  }
+  
+  MANAGER->first_frame();
+
+  // XXX hardcoded views
+  std::vector<int> view_ids;
+  view_ids.push_back(42);
+  view_ids.push_back(54);
+  view_ids.push_back(62);
+
+  for (unsigned i=0; i < view_ids[0]; ++i)
+    MANAGER->next_frame();
+
+  MANAGER->add_new_view(view_ids[1], true);
+  MANAGER->display_current_frame();
+  MANAGER->add_new_view(view_ids[2], true);
+  MANAGER->display_current_frame();
+
+  std::vector< bvis1_view_tableau_sptr > views;
+  views = MANAGER->get_views();
+  // make curves active
+  for (unsigned v=0; v < views.size(); ++v) {
+    vgui_selector_tableau &selector = *(views[v]->selector());
+    selector.set_active("frame_00" + std::to_string(view_ids[v]) + "-pts-2D.txt");
+    selector.active_to_top();
+//    dbdet_edgemap_tableau_sptr emt;
+//    emt.vertical_cast(selector.active_tableau());
+//    emt->set_cur_edgel(620);
+  }
+
+//  MANAGER->display_current_frame();
+  MANAGER->post_redraw();
+}
+
+
+
+/*
+ * for eg synthdata dataset, where all images and edgels are in ascii format
+ */
+void 
+load_edg_data_ascii(
+    const std::vector<std::string> &imgs_orig, 
+    bool repeat_img)
+{
+  std::vector<std::string> imgs(imgs_orig);
+  unsigned nframes = imgs.size();
+  std::vector<std::string> pts(imgs_orig);
+  std::vector<std::string> tgts(imgs_orig);
+  
+  std::cout << "nframes = " << nframes << std::endl;
+  for (unsigned i=0; i < nframes; ++i) {
+    MANAGER->add_new_frame();
+    if (repeat_img && imgs.size() < nframes && imgs.size())
+      imgs.push_back(imgs.front());
+    imgs[i] += std::string(".png");
+    pts[i] += std::string("-pts-2D.txt");
+    tgts[i] += std::string("-tgts-2D.txt");
+  }
+  MANAGER->first_frame();
+
+  bvis1_util::load_imgs_into_frames(imgs, true);
+  load_edgemaps_into_frames_ascii(imgs, pts, tgts);
+
+  MANAGER->post_redraw();
+}
 
 int main(int argc, char** argv)
 {
@@ -247,11 +373,27 @@ int main(int argc, char** argv)
   win->get_adaptor()->set_tableau( bvis1_manager::instance() );
   win->show();
 
-  dbdet_bvis1_util::load_img_edg(a_imgs.value_, a_edges.value_, a_frags.value_, a_repeat_img.value_);
-  load_cams_into_frames(a_cams.value_, bmcsd_util::BMCS_3X4);
+  // If we are on a .txt dataset, guess that and open it
 
-  // XXX remove
-  mw_load_mcs_instance();
+  if (on_ascii_dataset() && !a_cams.set() && !a_imgs.set() && !a_edges.set() && !a_frags.set()) {
+    std::cerr << "Loading ascii dataset (such as mcs synth) \n";
+    std::vector<std::string> cam_fnames, img_fnames, pt_fnames, tgt_fnames;
+//    get_fname_vector("frame_####.extrinsic", &cam_fnames);
+    get_fname_vector("frame_####.png", &img_fnames);
+  //  get_fname_vector("frame_####-pts-2D.txt", &pt_fnames);
+//    get_fname_vector("frame_####-tgts-2D.txt", &tgt_fnames);
+    load_edg_data_ascii(img_fnames,false);
+
+//    load_cams_into_frames(cam_fnames, bmcsd_util::BMCS_INTRINSIC_EXTRINSIC);
+  } else {
+    dbdet_bvis1_util::load_img_edg(a_imgs.value_, a_edges.value_, a_frags.value_, a_repeat_img.value_);
+    load_cams_into_frames(a_cams.value_, bmcsd_util::BMCS_3X4);
+    // XXX remove
+    mw_load_mcs_instance();
+  }
+
 
   return vgui::run(); 
 }
+
+

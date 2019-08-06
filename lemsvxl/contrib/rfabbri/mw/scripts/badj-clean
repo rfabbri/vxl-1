@@ -1,0 +1,1 @@
+rm badj/*.wrl badj/stats.txt badj/*projmatrix badj/*.dat

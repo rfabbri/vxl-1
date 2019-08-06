@@ -1,9 +1,17 @@
+#include <ctime>
+#include <iomanip>
+#include <sstream>
 #include <bdifd/bdifd_util.h>
 #include <bdifd/bdifd_analytic.h>
 #include <bdifd/bdifd_rig.h>
 #include "bdifd_data.h"
 #include <algorithm>
 #include <vsol/vsol_line_2d.h>
+#include <vul/vul_file.h>
+#include <boost/random/variate_generator.hpp>
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_on_sphere.hpp>
+#include <boost/random/normal_distribution.hpp>
 
 void bdifd_data::
 max_err_reproj_perturb(
@@ -1689,6 +1697,12 @@ internal_calib_olympus(vnl_double_3x3 &m, double x_max_scaled, unsigned  crop_x,
 //  double mm_per_pixel_y;
 
   // KK(1:2,3) = KK(1:2,3) - crop_rect(:,1);
+  // Principal point is (0.86019451514668e3, 1.41278081044646e3)
+  // Obtained from calib toolbox and used here as a ref of real cam.
+  //
+  // This is approx (860,1412) so dimensions of image is:
+  // is 2*[0.86019451514668e3, 1.41278081044646e3] = 1720  2826
+
   double principal_point_x = 0.86019451514668e3- crop_x;
   double principal_point_y = 1.41278081044646e3- crop_y;
 
@@ -1813,6 +1827,130 @@ camera_olympus(
   vgl_h_matrix_3d<double> Rhmg(R_world_to_cam2,bdifd_vector_3d(0,0,0));
 
   return new vpgl_perspective_camera<double>(K, C2_in_world_vgl, vgl_rotation_3d<double>(Rhmg));
+}
+
+void bdifd_turntable::
+cameras_olympus_spherical(
+  std::vector<vpgl_perspective_camera<double> > *pcams,
+  const vpgl_calibration_matrix<double> &K,
+  bool enforce_minimum_separation,
+  bool perturb)
+{
+  typedef boost::random::mt19937 gen_type;
+  std::vector<vpgl_perspective_camera<double> > &cams = *pcams;
+  unsigned nviews=100;
+  double minsep = (15./180.)*vnl_math::pi;
+  assert(nviews != 0);
+
+  // You can seed this your way as well, but this is my quick and dirty way.
+  gen_type rand_gen;
+  rand_gen.seed(static_cast<unsigned int>(std::time(0)));
+
+  // Create the distribution object.
+  boost::uniform_on_sphere<double> unif_sphere(3);
+  boost::normal_distribution<double> nd(0.0, 1);
+
+  // This is what will actually supply drawn values.
+  boost::variate_generator<gen_type&, boost::uniform_on_sphere<double> > random_on_sphere(rand_gen, unif_sphere);
+  boost::variate_generator<gen_type&, boost::uniform_on_sphere<double> > random_on_sphere_2(rand_gen, unif_sphere);
+  boost::variate_generator<gen_type&, boost::normal_distribution<double> > random01(rand_gen, nd);
+  
+  
+//  std::string dir("./out-tmp");
+//  vul_file::make_directory(dir);
+//  std::string fname_centers = dir + std::string("/") + "C.txt";
+//  std::ofstream fp_centers;
+
+//  fp_centers.open(fname_centers.c_str());
+//  if (!fp_centers) {
+//    std::cerr << "generate_synth_sequence: error, unable to open file name " << fname_centers << std::endl;
+//    return;
+//  }
+//  fp_centers << std::setprecision(20);
+//  fp_centers << r[0] << " " << r[1]  << " " << r[2] << std::endl;
+  
+  unsigned i=0;
+  unsigned ntrials=0;
+  do {
+      // Now you can draw a vector of drawn coordinates as such:
+      std::vector<double> r = random_on_sphere();
+      bdifd_vector_3d z(-r[0],-r[1],-r[2]);
+      
+      if (perturb) {
+        std::cout << "z before " << z << std::endl;
+        z += bdifd_vector_3d(0.01*random01(),0.01*random01(),0.01*random01());
+        z.normalize(); 
+        std::cout << "z after " << z << std::endl;
+      }
+      
+      if (enforce_minimum_separation) {
+        ntrials++;
+        bool need_resample = false;
+        for (unsigned j=0; j < cams.size() && !need_resample; ++j) {
+          vgl_point_3d<double> C_tmp = cams[j].get_camera_center();
+          bdifd_vector_3d C_vector_tmp(C_tmp.x(),C_tmp.y(), C_tmp.z());
+          
+//          std::cout << "Angle: " << angle(-z,C_vector_tmp) << " Minsep: " << minsep << std::endl;
+//          std::cout << "ntrials " << ntrials << std::endl;
+          double angle_distance_along_unit_sphere = angle(-z,C_vector_tmp);
+          assert(angle_distance_along_unit_sphere < vnl_math::pi);
+          if (angle_distance_along_unit_sphere < minsep || vnl_math::pi - angle_distance_along_unit_sphere < minsep ) {
+            if (ntrials > 100000) {
+              std::cerr << "PROBLEM: Unable to reduce separation\n";
+              break;
+            } else {
+//              std::cerr << "Trying again" << std::endl;
+              need_resample = true;
+            }
+          }
+        }
+        if (need_resample)
+          continue;
+      }
+      
+//      std::cerr << "YES!" << std::endl;
+      ntrials = 0;
+      
+      double camera_to_object = 1.128036301860739e+03;
+      if (perturb)
+        camera_to_object += random01()*10;
+
+      std::cout << "Cam to object: " << camera_to_object << std::endl;
+      
+      vgl_point_3d<double> C(camera_to_object*r[0],camera_to_object*r[1],camera_to_object*r[2]);
+
+      // x direction obtained by sampling 3D unit vector again, and orthogonalizing
+      // if direction is to be kept, can do this with orthogonalizing usual x
+      // dir
+      r = random_on_sphere_2();
+      bdifd_vector_3d x;
+      x[0] = r[0];
+      x[1] = r[1];
+      x[2] = r[2];
+
+      x = x - (dot_product(x,z))*z;
+      x.normalize();
+
+      bdifd_vector_3d y = vnl_cross_3d(z,x);
+      vnl_double_3x3 R;
+      
+      R[0][0] = x[0];
+      R[0][1] = x[1];
+      R[0][2] = x[2];
+      
+      R[1][0] = y[0];
+      R[1][1] = y[1];
+      R[1][2] = y[2];
+      
+      R[2][0] = z[0];
+      R[2][1] = z[1];
+      R[2][2] = z[2];
+      
+      vgl_h_matrix_3d<double> Rhmg(R,bdifd_vector_3d(0,0,0));
+      assert(Rhmg.is_euclidean());
+      cams.push_back(vpgl_perspective_camera<double>(K, C, vgl_rotation_3d<double>(Rhmg)));
+      ++i;
+  } while (i < nviews);
 }
 
 //: convert from std::vector<bdifd_3rd_order_point_2d> 
@@ -1992,3 +2130,4 @@ get_digital_camera_point_dataset(
       image_pts[v][ip] = cams[v].project(world_pts[ip]);
   }
 }
+

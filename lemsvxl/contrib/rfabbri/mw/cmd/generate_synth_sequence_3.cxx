@@ -13,8 +13,6 @@
 
 // Generate a more complete synthetic sequence of curves
 // for the Public // https://github.com/rfabbri/synthcurves-multiview-3d-dataset/#curves
-//
-// This version 3 consists random spherical sampling.
 // 
 // See also
 // https://github.com/rfabbri/synthcurves-multiview-3d-dataset
@@ -22,11 +20,11 @@
 int
 main(int argc, char **argv)
 {
-  unsigned  crop_origin_x_ = 450;
-  unsigned  crop_origin_y_ = 1750;
-//    double x_max_scaled = 255;
-  double x_max_scaled = 500;
-  unsigned nviews=20;
+  unsigned  crop_origin_x_ = 400;
+  //unsigned  crop_origin_y_ = 1750;
+  unsigned  crop_origin_y_ = 900;
+  double x_max_scaled = 500; // final image can be considered 500x800 after crop and scale, 
+  // but can consider 500x600 if care is taken with bounding boxes of the data
 
   std::string dir("./out-tmp");
   std::string prefix("frame_");
@@ -37,17 +35,13 @@ main(int argc, char **argv)
   vpgl_calibration_matrix<double> K(Kmatrix);
   std::vector<vpgl_perspective_camera<double> > cam_vpgl;
   std::vector<bdifd_camera> cam_gt;
-  cam_vpgl.resize(nviews);
+  
+  bdifd_turntable::cameras_olympus_spherical(&cam_vpgl, K, true, true);
+  unsigned nviews = cam_vpgl.size();
   cam_gt.resize(nviews);
 
-  static vnl_random myrand;
-
   for (unsigned i=0; i < nviews; ++i) {
-    vpgl_perspective_camera<double> *P;
-    P = bdifd_turntable::camera_olympus(6*i, K);
-    cam_gt[i].set_p(*P);
-    cam_vpgl[i] = *P;
-    delete P;
+    cam_gt[i].set_p(cam_vpgl[i]);
   }
 
   // write the cameras out
@@ -118,6 +112,8 @@ main(int argc, char **argv)
         if (k == 0)
           fp_crv_id << i << std::endl;
         xi[j] = new vsol_point_2d(crv2d[i][k][j].gama[0], crv2d[i][k][j].gama[1]);
+        assert(crv2d[i][k][j].gama[0] > 0);
+        assert(crv2d[i][k][j].gama[1] > 0);
         fp_pts2d << crv2d[i][k][j].gama[0] << " " << crv2d[i][k][j].gama[1] << std::endl;
       }
       polys[i] = new vsol_polyline_2d(xi);

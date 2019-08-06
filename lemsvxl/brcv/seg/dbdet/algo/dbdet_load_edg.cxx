@@ -591,4 +591,5 @@ bool dbdet_save_edg_gzip(std::string filename, dbdet_edgemap_sptr edgemap)
 
   return true;
 }
+
 #endif

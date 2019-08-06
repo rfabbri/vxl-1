@@ -18,6 +18,7 @@
 #include <vgui/vgui_event_condition.h>
 
 #include <vnl/vnl_vector_fixed.h>
+#include <vnl/vnl_random.h>
 
 #include "dbdet_edgemap_tableau_sptr.h"
 #include <dbdet/edge/dbdet_edgemap_sptr.h>
@@ -71,7 +72,11 @@ public:
 
   void display_image_grid();
 
+  void set_cur_edgel(unsigned id);
+
 private:
+  // to be used in overlay_redraw
+  void highlight_edgel_overlay(unsigned id, unsigned color_id);
 
   dbdet_edgemap_sptr edgemap_;  ///< the edge map class
 
@@ -98,6 +103,7 @@ private:
   int local_zoom_factor;
   bool display_image_grid_;
   bool display_uncertainty_;
+  int id_to_highlight; // edgel to display
 };
 
 
