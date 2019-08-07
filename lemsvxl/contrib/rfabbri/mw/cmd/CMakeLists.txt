@@ -67,8 +67,9 @@ if ( OpenMVG_FOUND )
   
   add_executable(pnp ${pnp_sources})
   target_link_libraries(pnp
-    openMVG_multiview
-    mw
+    PRIVATE
+      OpenMVG::openMVG_multiview
+      mw
   )
   #message("FOUND YEAH" "${Boost_LIBRARIES}" "${Boost_INCLUDE_DIRS}" )
 else ()
