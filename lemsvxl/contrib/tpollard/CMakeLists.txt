@@ -8,7 +8,7 @@ add_subdirectory( gui )
 add_subdirectory( bvaml )
 
 # Appearance modeling
-add_subdirectory( baml )
+# add_subdirectory( baml )
 
 # Misc code and apps
 add_subdirectory( btpl )
