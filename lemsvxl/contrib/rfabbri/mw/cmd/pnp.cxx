@@ -132,7 +132,7 @@ main(int argc, char **argv)
 {
   std::string world_points_file( "world_pts.txt" );
   std::string image_points_file( "image_pts.txt" );
-  std::string RT_out_file_prefix( "camera_RT-" ); // rot and transl
+  std::string RT_out_file_prefix( "camera_RT-out-" ); // rot and transl
 
   // Input ---------------------------------------------------------------------
   // 
