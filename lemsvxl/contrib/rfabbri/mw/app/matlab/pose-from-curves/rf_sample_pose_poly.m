@@ -1,5 +1,5 @@
 function [fvalue,A,B,C,E,F,G,H,J,K,L] = rf_sample_pose_poly(t)
-% samples polynomial; the vector version of rf_pose_from_point_tangents_2_fn_t_for_root
+% samples/evaluates pose polynomial; 
 
 % function of t part:
 global A0 A1 A2

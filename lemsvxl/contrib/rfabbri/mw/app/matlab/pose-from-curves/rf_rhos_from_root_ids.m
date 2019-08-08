@@ -1,6 +1,7 @@
 function [rhos1,rhos1_minus,rhos1_plus,rhos2,rhos2_minus,rhos2_plus, ts] = rf_rhos_from_root_ids(t_vector, root_ids)
 % input root_ids is the output from rf_find_bounded_roots
 % TODO: output rho2 too.
+% usually called inside rf_pose_from_point_tangents_root_find_function_any.m
 
 global alpha beta theta
 
