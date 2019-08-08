@@ -1,3 +1,9 @@
+/*
+ * App to run p3p algo
+ *
+ * test it by going to pnp-test-input/simplest-case and calling pnp executable
+ *
+ */
 #include <vul/vul_arg.h>
 #include <buld/buld_arg.h>
 #include <vul/vul_file.h>
