@@ -122,7 +122,7 @@ bool computePosesNordberg(
 using namespace openMVG;
 
 int 
-main(int argc, char** argv)
+main(int argc, char **argv)
 {
   std::string world_points_file( "world_pts.txt" );
   std::string image_points_file( "image_pts.txt" );
@@ -130,7 +130,7 @@ main(int argc, char** argv)
 
   // Input ---------------------------------------------------------------------
   // 
-  // Read the world points. Not too fast, just prototyping.
+  // Read the world points. Not very efficient, just prototyping.
   // 
   std::vector<vgl_point_3d<double> > world_points;
   {
@@ -179,6 +179,7 @@ main(int argc, char** argv)
     pts3D(0,c) = world_points[c].x();
     pts3D(1,c) = world_points[c].y();
     pts3D(2,c) = world_points[c].z();
+    std::cerr << "image:\n " << image_points[c] << "\n world:" << world_points[c] << std::endl;
   }
   
   std::vector<std::tuple<Mat3, Vec3>> rt_sols;
@@ -191,7 +192,7 @@ main(int argc, char** argv)
     std::string fname = RT_out_file_prefix + std::to_string(s);
     std::ofstream c_rc_ofs(fname.c_str());
     c_rc_ofs << std::setprecision(20);
-    c_rc_ofs << std::get<0>(rt_sols[s]) << std::get<1>(rt_sols[s]);
+    c_rc_ofs << std::get<0>(rt_sols[s]) << std::endl << std::get<1>(rt_sols[s]);
   }
   
   return 0;
