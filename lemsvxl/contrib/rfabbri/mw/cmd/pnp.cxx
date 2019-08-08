@@ -197,8 +197,8 @@ main(int argc, char **argv)
   for (unsigned s=0; s < rt_sols.size(); ++s)  {
     std::string fname = RT_out_file_prefix + std::to_string(s);
     std::ofstream c_rc_ofs(fname.c_str());
-    c_rc_ofs << std::setprecision(20);
-    c_rc_ofs << std::get<0>(rt_sols[s]) << std::endl << std::get<1>(rt_sols[s]);
+    c_rc_ofs << std::setprecision(20)
+             << std::get<0>(rt_sols[s]) << std::endl << std::get<1>(rt_sols[s]);
   }
   
   return 0;
