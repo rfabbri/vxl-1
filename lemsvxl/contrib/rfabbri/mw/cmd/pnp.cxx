@@ -209,7 +209,7 @@ main(int argc, char **argv)
     std::string fname = RT_out_file_prefix + std::to_string(s) + ".txt";
     std::ofstream c_rc_ofs(fname.c_str());
     c_rc_ofs << std::setprecision(20)
-             << std::get<0>(rt_sols[s]) << std::endl << std::get<1>(rt_sols[s]);
+             << std::get<0>(rt_sols[s]) << std::endl << std::get<1>(rt_sols[s]).transpose();
   }
   
   return 0;
