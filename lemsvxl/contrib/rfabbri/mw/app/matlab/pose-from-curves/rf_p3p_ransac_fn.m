@@ -37,8 +37,8 @@ while samplesTaken < N
     %compute model    
     tic
     [Rots, Transls, degen] = rf_p3p_root_find_function_any(...
-    gama_pert(id1,:)', tgt_pert(id1,:)', gama_pert(id2,:)', tgt_pert(id2,:)',...
-    Gama_all(id1,:)', Tgt_all(id1,:)', Gama_all(id2,:)', Tgt_all(id2,:)');
+    gama_pert(id1,:)', gama_pert(id2,:)', ...
+    Gama_all(id1,:)',, Gama_all(id2,:)', Tgt_all(id2,:)');
     toc
 
     num_sols = length(Rots);

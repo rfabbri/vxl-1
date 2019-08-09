@@ -74,9 +74,33 @@ for p = 1:n_perturbs
   gama_pert(:,2) = gama_pert(:,2)./gama_pert(:,3);
   gama_pert(:,3) = gama_pert(:,3)./gama_pert(:,3);
 
+  % P3P ------------------------------------------------------------------------
   dThreshRansac = perturb_levels(p)+1;
   [Rot,Transl] = rf_p3p_ransac_fn(...
   ids1, gama_pert, Gama_all, K_gt, gama_pert_img, dThreshRansac);
+  % P3P END --------------------------------------------------------------------
+
+  % We report reproj. errors on the entire perturbed ground truth:
+  pert_errors_no_badj(p,:) = rf_reprojection_error(K_gt*[Rot Transl],...
+           gama_pert_img, Gama_all);
+
+  if b_adj
+    % input for bundle adjustment.
+    unix('./clean');
+    save('image_pts.txt','gama_pert_img','-ascii','-double');
+    save('world_pts.txt','Gama_all','-ascii','-double');
+    
+    % save cam.
+    RC = [Rot;(-Rot'*Transl)'];
+    save('camera_RC.txt','RC','-ascii','-double');
+    save('camera_K.txt','K_gt','-ascii','-double');
+
+    % run bundle adjustment.
+    retval = unix('dbccl_refine_pose_app');
+    if retval
+      error('something wrong with refine pose app.');
+    end
+  
   
   % We report reproj. errors on the entire perturbed ground truth:
   pert_errors(p,:) = rf_reprojection_error(K_gt*[Rot Transl],...
