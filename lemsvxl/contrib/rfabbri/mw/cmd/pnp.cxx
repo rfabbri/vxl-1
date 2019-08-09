@@ -4,15 +4,15 @@
  * test it by going to pnp-test-input/simplest-case and calling pnp executable
  *
  */
-#include <vul/vul_arg.h>
-#include <buld/buld_arg.h>
-#include <vul/vul_file.h>
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
 #include <cstdio>
-#include <vector>
+#include <chrono>
+#include <vul/vul_arg.h>
+#include <buld/buld_arg.h>
+#include <vul/vul_file.h>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_distance.h>
@@ -126,6 +126,7 @@ bool computePosesNordberg(
 
 
 using namespace openMVG;
+using namespace std::chrono;
 
 int 
 main(int argc, char **argv)
@@ -189,16 +190,26 @@ main(int argc, char **argv)
   }
   
   std::vector<std::tuple<Mat3, Vec3>> rt_sols;
+  
+  high_resolution_clock::time_point t1 = high_resolution_clock::now();
+  // ---------------------------------------------------------------------------
   euclidean_resection::computePosesNordberg(pts2D, pts3D, rt_sols);
+  // ---------------------------------------------------------------------------
+  high_resolution_clock::time_point t2 = high_resolution_clock::now();
+  auto duration = duration_cast<microseconds>(t2 - t1).count();
+  {
+  std::ofstream time_ofs("time");
+  time_ofs << duration << std::endl;
+  }
 
   // Output --------------------------------------------------------------------
 
   std::cerr << "Number of solutions: " <<  rt_sols.size() << std::endl;
   for (unsigned s=0; s < rt_sols.size(); ++s)  {
-    std::string fname = RT_out_file_prefix + std::to_string(s);
+    std::string fname = RT_out_file_prefix + std::to_string(s) + ".txt";
     std::ofstream c_rc_ofs(fname.c_str());
-    c_rc_ofs << std::setprecision(20);
-    c_rc_ofs << std::get<0>(rt_sols[s]) << std::endl << std::get<1>(rt_sols[s]);
+    c_rc_ofs << std::setprecision(20)
+             << std::get<0>(rt_sols[s]) << std::endl << std::get<1>(rt_sols[s]).transpose();
   }
   
   return 0;
