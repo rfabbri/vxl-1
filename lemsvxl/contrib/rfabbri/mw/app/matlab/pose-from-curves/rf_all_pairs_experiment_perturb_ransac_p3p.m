@@ -74,13 +74,11 @@ for p = 1:n_perturbs
   gama_pert(:,2) = gama_pert(:,2)./gama_pert(:,3);
   gama_pert(:,3) = gama_pert(:,3)./gama_pert(:,3);
 
+  % P3P ------------------------------------------------------------------------
   dThreshRansac = perturb_levels(p)+1;
-  
-%  [Rot,Transl] = rf_pose_from_point_tangents_ransac_fn(...
-%  ids1, gama_pert, tgt_pert, Gama_all, Tgt_all, K_gt, gama_pert_img, dThreshRansac);
-
-  [Rot,Transl] = rf_pose_from_point_tangents_p3p_fn(...
+  [Rot,Transl] = rf_p3p_ransac_fn(...
   ids1, gama_pert, Gama_all, K_gt, gama_pert_img, dThreshRansac);
+  % P3P END --------------------------------------------------------------------
 
   % We report reproj. errors on the entire perturbed ground truth:
   pert_errors_no_badj(p,:) = rf_reprojection_error(K_gt*[Rot Transl],...
@@ -102,14 +100,8 @@ for p = 1:n_perturbs
     if retval
       error('something wrong with refine pose app.');
     end
-
-    % read results
-    rc = load('camera_RC_refined.txt');
-    Rot = rc(1:3,1:3);
-    C = rc(4,:)';
-    Transl = -Rot*C;
-  end
-
+  
+  
   % We report reproj. errors on the entire perturbed ground truth:
   pert_errors(p,:) = rf_reprojection_error(K_gt*[Rot Transl],...
            gama_pert_img, Gama_all);
@@ -119,7 +111,7 @@ for p = 1:n_perturbs
         num2str(n_perturbs*n_theta_perts) '('...
         num2str(100*total_iter/(n_perturbs*n_theta_perts)) '%)']);
 end
-all_errs{end+1} = pert_errors;
+all_errs{end+1} = pert_errors; % used to store more than one entry for tangent pert
 all_errs_no_badj{end+1} = pert_errors_no_badj;
 
 % usually drops into ~/lib/matlab

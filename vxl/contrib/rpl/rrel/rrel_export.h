@@ -1,24 +1,42 @@
+
 #ifndef RREL_EXPORT_H
 #define RREL_EXPORT_H
 
-#include <vxl_config.h> // get BUILD_SHARED_LIBS
+#ifdef RREL_STATIC_DEFINE
+#  define RREL_EXPORT
+#  define RREL_NO_EXPORT
+#else
+#  ifndef RREL_EXPORT
+#    ifdef rrel_EXPORTS
+        /* We are building this library */
+#      define RREL_EXPORT __attribute__((visibility("default")))
+#    else
+        /* We are using this library */
+#      define RREL_EXPORT __attribute__((visibility("default")))
+#    endif
+#  endif
 
-#ifndef BUILD_SHARED_LIBS  // if not a shared build
-# define rrel_EXPORT
-#else  // this is a shared build
-# ifdef rrel_EXPORTS  // if building this library
-#  if defined(_WIN32) || defined(WIN32)
-#   define rrel_EXPORT __declspec(dllexport)
-#  else
-#   define rrel_EXPORT
+#  ifndef RREL_NO_EXPORT
+#    define RREL_NO_EXPORT __attribute__((visibility("hidden")))
 #  endif
-# else // we are using this library and it is built shared
-#  if defined(_WIN32) || defined(WIN32)
-#   define rrel_EXPORT __declspec(dllimport)
-#  else
-#   define rrel_EXPORT
-#  endif
-# endif
 #endif
 
+#ifndef RREL_DEPRECATED
+#  define RREL_DEPRECATED __attribute__ ((__deprecated__))
 #endif
+
+#ifndef RREL_DEPRECATED_EXPORT
+#  define RREL_DEPRECATED_EXPORT RREL_EXPORT RREL_DEPRECATED
+#endif
+
+#ifndef RREL_DEPRECATED_NO_EXPORT
+#  define RREL_DEPRECATED_NO_EXPORT RREL_NO_EXPORT RREL_DEPRECATED
+#endif
+
+#if 0 /* DEFINE_NO_DEPRECATED */
+#  ifndef RREL_NO_DEPRECATED
+#    define RREL_NO_DEPRECATED
+#  endif
+#endif
+
+#endif /* RREL_EXPORT_H */

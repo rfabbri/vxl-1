@@ -1,4 +1,7 @@
+% This is usually called from rf_pose_from_point_tangents_root_find_function_any.m
+%
 % Input: gama1, gama2, tgt1, tgt2, Gama1, Gama2, Tgt1, Tgt2
+% ----------------------------------------------------------------------------
 
 % dummy input ---------------------------
 %gama1 = rand(1,3);
@@ -96,6 +99,9 @@ beta = sqrt(t25);
 t24 = 2*a1 / (den1 + den2);
 
 alpha = sqrt(t24);
+
+
+% Coefficient code adapted from Maple ::: can be further cleaned up but works
 
 A0 = a4 * a4 * g12 * g12 + a4 * a4 * g11 * g11 + a4 * a4 + 2.0 * a2 * pow(g11, ...
 3.0) * g21 * beta * beta * sin(theta) * cos(theta) + 2.0 * a2 * g21 * g11 * ...

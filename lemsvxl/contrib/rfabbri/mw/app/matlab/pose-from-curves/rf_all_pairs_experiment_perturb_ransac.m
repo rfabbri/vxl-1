@@ -1,6 +1,8 @@
 clear all;
 
 cd /home/rfabbri/cprg/vxlprg/lemsvxlsrc-git2/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work
+% when creating a new work floder, copy the "clean" script over
+
 maxcount = 1100;  % how many ransac-like iterations (how many random samples)
 %maxcount = 3;
 b_adj = true;

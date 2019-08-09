@@ -1,3 +1,5 @@
+% to be called from rf_pose_from_point_tangents_root_find_function_any.m
+
 % Lambdas:
 
 lambdas1 = cell(length(ts),1);
@@ -44,7 +46,7 @@ for i=1:length(ts)
     % be sure it's close to 1:
     det(Rots{end});
 
-    % force orthogonality
+    % force orthogonality (not needed anymore)
 %    [U,S,V]=svd(Rots{end});
 %    Rots{end} = U*V';
 

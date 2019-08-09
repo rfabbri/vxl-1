@@ -4,7 +4,8 @@ function [fvalue,A,B,C,E,F,G,H,J,K,L] = rf_pose_from_point_tangents_2_fn_t_for_r
 %perturb = -2.55e7;
 perturb = 0;
 % same as  rf_pose_from_point_tangents_2_fn_t, but polynomial value might be
-% perturbed by max of (perturb) so that roots appear for noisy data.
+% perturbed by max of (perturb) so that roots appear for noisy data. This wasn't
+% used in the end.
 %
 % function of t part:
 global A0 A1 A2

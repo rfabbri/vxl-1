@@ -1,4 +1,5 @@
 function [fvalue,A,B,C,E,F,G,H,J,K,L] = rf_pose_from_point_tangents_2_fn_t(t)
+% Author: Ricardo Fabbri
 % function of t part:
 global A0 A1 A2
 global B0 B1 B2 B3
