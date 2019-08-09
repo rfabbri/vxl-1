@@ -3,10 +3,10 @@
 %% Simply runs on completely random data.
 
 % always work from this folder
-cd /home/rfabbri/cprg/vxlprg/lemsvxlsrc-git2/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work
+cd /home/rfabbri/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work
 
 display('--------------------------------------')
-display('--- demo point pairs with tangents ---')
+display('---   demo fast p3p from OpenMVG   ---')
 display('--------------------------------------')
 %% Functions
 v2skew =@(v) [0,-v(3),v(2);v(3),0,-v(1);-v(2),v(1),0]; % from vector to skew matrix
@@ -24,10 +24,11 @@ x  = (R_tilde*X' + T_tilde*ones(1,3))'
 gamas = x./(x(:,3)*[1,1,1]);
 gamas = gamas(:,1:2);
 %% call P3P
-[Rots,Transls] = rf_p3p_root_find_function_any(gamas,Gamas);
+[Rots,Transls,rtime] = rf_p3p_root_find_function_any(gamas,Gamas);
 %% check rotation and translation
+disp(['run time = ' num2str(rtime) ' microseconds'])
 N = length(Rots);
-number_of_solutions=N
+number_of_solutions=N;
 for n = 1:N
     dR = norm(skew2v(Rots{n}*R_tilde'));
     dT = norm(Transls{n}-T_tilde);
