@@ -215,6 +215,9 @@ else ( USE_Boost )
   set( Boost_FOUND FALSE )
 endif( USE_Boost )
 
+option(USE_OpenMVG "Use OpenMVG SfM libraries" NO)
+# curently only used in mw/cmd/CMakeLists.txt
+
 #required by dbul library
 include( ${LEMS_CMAKE_DIR}/UseOctave.cmake )
 

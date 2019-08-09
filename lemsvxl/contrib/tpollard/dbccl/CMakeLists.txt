@@ -15,12 +15,12 @@ add_library( dbccl
 target_link_libraries( dbccl vcl vgl vnl vil vidl1 vgl_algo vil_algo vpgl )
 set( DBCCL_INCLUDE_DIR ${dbccl_SOURCE_DIR} )
 
-add_executable ( dbccl_manual_app dbccl_manual_app.cxx )
+# add_executable ( dbccl_manual_app dbccl_manual_app.cxx )
 #add_executable ( dbccl_manual_app_rewrite dbccl_manual_app_rewrite.cxx )
 add_executable ( dbccl_refine_pose_app dbccl_refine_pose_app.cxx )
-target_link_libraries( dbccl_manual_app vcl vgl vnl vpgl vpgl_algo vul )
+# target_link_libraries( dbccl_manual_app vcl vgl vnl vpgl vpgl_algo vul )
 #target_link_libraries( dbccl_manual_app_rewrite vcl vgl vnl vpgl vpgl_algo vul )
 target_link_libraries( dbccl_refine_pose_app vcl vgl vnl vpgl vpgl_algo vul )
 
-add_subdirectory(tests)
-add_subdirectory(pro)
+#add_subdirectory(tests)
+#add_subdirectory(pro)

@@ -28,6 +28,10 @@ set(badj_sources
    badj.cxx
 )
 
+set(pnp_sources
+   pnp.cxx
+)
+
 add_executable(mcr ${mcr_stereo_sources})
 target_link_libraries(mcr mw_pro bmcsd_algo sdetd_io sdetd_algo)
 
@@ -50,3 +54,24 @@ add_executable(badj ${badj_sources})
 target_link_libraries(badj bmcsd vpgld_io vpgld_algo vpgl_algo buld vul)
 
 
+if (USE_OpenMVG)
+  # set(Boost_USE_STATIC_LIBS   OFF)
+  find_package(OpenMVG REQUIRED)
+  # find_package( Boost 1.35.0 COMPONENTS iostreams)
+endif()
+
+if ( OpenMVG_FOUND )
+  MESSAGE("OpenMVG includes: " ${OPENMVG_INCLUDE_DIRS})
+  #include_directories(${OPENMVG_INCLUDE_DIRS}/third_party)
+  include_directories( ${OPENMVG_INCLUDE_DIRS} )
+  
+  add_executable(pnp ${pnp_sources})
+  target_link_libraries(pnp
+    PRIVATE
+      OpenMVG::openMVG_multiview
+      mw
+  )
+  #message("FOUND YEAH" "${Boost_LIBRARIES}" "${Boost_INCLUDE_DIRS}" )
+else ()
+  #message("FOUND NO")
+endif()
