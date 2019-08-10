@@ -23,16 +23,16 @@ ids2 = zeros(maxcount,1);
 
 scount=0;
 while scount < maxcount
-  id1 = randint(1,1,[1 nsamples_pool]);
+  id1 = randi([1 nsamples_pool],1,1);
   while (~isempty(find(ids1 == id1)))
-    id1 = randint(1,1,[1 nsamples_pool]);
+    id1 = randi([1 nsamples_pool],1,1);
   end
   scount = scount + 1;
   ids1(scount) = id1;
 
-  id2 = randint(1,1,[1 nsamples_pool]);
+  id2 = randi([1 nsamples_pool],1,1);
   while (id2 ~= id1 & ~isempty(find(ids2 == id2)))
-    id2 = randint(1,1,[1 nsamples_pool]);
+    id2 = randi([1 nsamples_pool],1,1);
   end
   ids2(scount) = id2;
 end

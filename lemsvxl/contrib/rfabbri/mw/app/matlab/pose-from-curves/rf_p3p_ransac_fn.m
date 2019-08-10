@@ -24,14 +24,14 @@ vsolve_time=zeros(1,N);
 while samplesTaken < N
     %select samples
 
-    corr_id1 = randint(1,1,[1 num_corresps]);
-    corr_id2 = randint(1,1,[1 num_corresps]);
+    corr_id1 = randi([1 num_corresps],1,1);
+    corr_id2 = randi([1 num_corresps],1,1);
     while corr_id2 == corr_id1
-      corr_id2 = randint(1,1,[1 num_corresps]);
+      corr_id2 = randi([1 num_corresps],1,1);
     end
-    corr_id3 = randint(1,1,[1 num_corresps]);
+    corr_id3 = randi([1 num_corresps],1,1);
     while corr_id3 == corr_id1 | corr_id3 == corr_id2
-      corr_id3 = randint(1,1,[1 num_corresps]);
+      corr_id3 = randi([1 num_corresps],1,1);
     end
 
     samplesTaken = samplesTaken + 1;
