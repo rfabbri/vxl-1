@@ -1,10 +1,11 @@
-reps = 10;
+reps = 10000;
 t=zeros(1,reps);
 for i=1:reps
   demo
   t(i) = solve_time
 end
 
-save('time-random-rf_time_experiment-p2pt','t'):
+[stat,cpuinfo]=unix('cat /proc/cpuinfo');
+save('time-random-rf_time_experiment-p2pt','t', 'cpuinfo'):
 
 % boxplot
