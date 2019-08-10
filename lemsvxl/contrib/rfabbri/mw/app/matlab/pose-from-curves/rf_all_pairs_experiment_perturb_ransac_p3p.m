@@ -1,15 +1,17 @@
 clear all;
 
 cd /home/rfabbri/cprg/vxlprg/lemsvxlsrc-git2/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work
-maxcount = 1100;  % how many ransac-like iterations (how many random samples)
+%maxcount = 1100;  % how many ransac-like iterations (how many random samples)
 %maxcount = 3;
 b_adj = true;
 
 % TODO rewrite to use my static dataset
-[gama_all_img, gama_b_all_img, fmatrix, ...
-proj1, proj2,...
-tgt_all_img, tgt_b_all_img, ...
-Gama_all, Tgt_all] = synthetic_data('36,77');
+%[gama_all_img, gama_b_all_img, fmatrix, ...
+%proj1, proj2,...
+%tgt_all_img, tgt_b_all_img, ...
+%Gama_all, Tgt_all] = synthetic_data('36,77');
+
+load('/home/rfabbri/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/working-state-synthetic-ransac_results-paper.mat')
 
 nsamples_pool = max(size(gama_all_img));
 
@@ -19,47 +21,48 @@ end
 
 clear gama_all_img gama_b_all_img fmatrix  proj1 proj2 tgt_all_img tgt_b_all_img Gama_all Tgt_all;
 
-ids1 = zeros(maxcount,1);
-ids2 = zeros(maxcount,1);
-ids3 = zeros(maxcount,1);
-
-scount=0;
-while scount < maxcount
-  % id1 represents a permutation of 1..nsamples_pool
-  id1 = randint(1,1,[1 nsamples_pool]);    
-  while (~isempty(find(ids1 == id1)))
-    id1 = randint(1,1,[1 nsamples_pool]);
-  end
-  scount = scount + 1;
-  ids1(scount) = id1;
-
-%  id2 = randint(1,1,[1 nsamples_pool]);
-%  while (id2 ~= id1 & ~isempty(find(ids2 == id2)))
-%    id2 = randint(1,1,[1 nsamples_pool]);
-%  end
-%  ids2(scount) = id2;
-%  
-%  id3 = randint(1,1,[1 nsamples_pool]);
-%  while (id3 ~= id3 & ~isempty(find(ids3 == id3)))
-%    id3 = randint(1,1,[1 nsamples_pool]);
-%  end
-%  ids3(scount) = id3;
-end
+%%%%% Commented out to reproduce ECCV12 data to compare against p2pt -----------
+%%%%% ids1 = zeros(maxcount,1);
+%%%%% ids2 = zeros(maxcount,1);
+%%%%% ids3 = zeros(maxcount,1);
+%%%%% 
+%%%%% scount=0;
+%%%%% while scount < maxcount
+%%%%%   % id1 represents a permutation of 1..nsamples_pool
+%%%%%   id1 = randint(1,1,[1 nsamples_pool]);    
+%%%%%   while (~isempty(find(ids1 == id1)))
+%%%%%     id1 = randint(1,1,[1 nsamples_pool]);
+%%%%%   end
+%%%%%   scount = scount + 1;
+%%%%%   ids1(scount) = id1;
+%%%%% 
+%%%%% %  id2 = randint(1,1,[1 nsamples_pool]);
+%%%%% %  while (id2 ~= id1 & ~isempty(find(ids2 == id2)))
+%%%%% %    id2 = randint(1,1,[1 nsamples_pool]);
+%%%%% %  end
+%%%%% %  ids2(scount) = id2;
+%%%%% %  
+%%%%% %  id3 = randint(1,1,[1 nsamples_pool]);
+%%%%% %  while (id3 ~= id3 & ~isempty(find(ids3 == id3)))
+%%%%% %    id3 = randint(1,1,[1 nsamples_pool]);
+%%%%% %  end
+%%%%% %  ids3(scount) = id3;
+%%%%% end
 
 
 % TODO rewrite to use txt dataset
-rf_synthetic_point_tangent_curves;  
+%%%%% rf_synthetic_point_tangent_curves;  
 
 %perturb_levels = [0 0.1 0.5 1 2];
 %theta_perturbs_deg = [0 0.1 0.5 1 2 5 7 10];
-perturb_levels = [0 0.5 1 2];
+%%%% perturb_levels = [0 0.5 1 2];
 
-n_perturbs = length(perturb_levels);
+%n_perturbs = length(perturb_levels);
 total_iter=0;
 
 % same format as P2Pt
-all_errs = {};
-all_errs_no_badj = {};
+all_errs_p3p = {};
+all_errs_p3p_no_badj = {};
 
 pert_errors = zeros(n_perturbs, nsamples_pool);
 
@@ -76,8 +79,7 @@ for p = 1:n_perturbs
 
   % P3P ------------------------------------------------------------------------
   dThreshRansac = perturb_levels(p)+1;
-  [Rot,Transl] = rf_p3p_ransac_fn(...
-  ids1, gama_pert, Gama_all, K_gt, gama_pert_img, dThreshRansac);
+  [Rot,Transl] = rf_p3p_ransac_fn(ids1, gama_pert, Gama_all, K_gt, gama_pert_img, dThreshRansac);
   % P3P END --------------------------------------------------------------------
 
   % We report reproj. errors on the entire perturbed ground truth:
@@ -111,12 +113,13 @@ for p = 1:n_perturbs
         num2str(n_perturbs*n_theta_perts) '('...
         num2str(100*total_iter/(n_perturbs*n_theta_perts)) '%)']);
 end
-all_errs{end+1} = pert_errors; % used to store more than one entry for tangent pert
-all_errs_no_badj{end+1} = pert_errors_no_badj;
+all_errs_p3p{end+1} = pert_errors; % used to store more than one entry for tangent pert
+all_errs_p3p_no_badj{end+1} = pert_errors_no_badj;
+all_errs = all_errs_p3p;
+all_errs_no_badj = all_errs_p3p_no_badj;
 
-% usually drops into ~/lib/matlab
-save(['all_pairs_experiment_perturb-maxcount_' num2str(maxcount) '-ransac.mat'],...
-      'all_errs','ids1','ids2','perturb_levels','theta_perturbs_deg','ids1','ids2');
+save(['all_pairs_experiment_perturb-maxcount_' num2str(maxcount) '-ransac-p3p.mat'],...
+      'all_errs','all_errs_no_badj','ids1','ids2','perturb_levels','theta_perturbs_deg','ids1','ids2');
 
 % Raw plot ------------------------------------------------
 %figure;
@@ -129,7 +132,7 @@ save(['all_pairs_experiment_perturb-maxcount_' num2str(maxcount) '-ransac.mat'],
 %    mycolor(2) = min(mycolor(2)+rand()*0.2,1);
 %    mycolor(3) = min(mycolor(3)+rand()*0.1,1);
 
-%    h = plot(all_errs{tp}(p,:));
+%    h = plot(all_errs_p3p{tp}(p,:));
 %    set(h,'color',mycolor);
 %    set(h,'linewidth',2);
 %  end
