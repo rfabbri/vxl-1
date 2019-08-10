@@ -1,9 +1,9 @@
 %% Check 2 x 1 1/2 points SRS, following Fabbri et al. 2019
 %% Special thanks to anonymous reviewer for this short demo
 %% Simply runs on completely random data.
-display('--------------------------------------')
-display('--- demo point pairs with tangents ---')
-display('--------------------------------------')
+%display('--------------------------------------')
+%display('--- demo point pairs with tangents ---')
+%display('--------------------------------------')
 %% Functions
 v2skew =@(v) [0,-v(3),v(2);v(3),0,-v(1);-v(2),v(1),0]; % from vector to skew matrix
 v2Rot  =@(v) expm(v2skew(v)); % from vector to rotation
@@ -25,33 +25,39 @@ Tgt1  = T(1,:)';
 Tgt2  = T(2,:)';
 % points and neighbours, path on tangent
 epsi = 0.1;
-Y = [X;X+epsi*T]
+Y = [X;X+epsi*T];
 % four points Gamma in camera system
-y  = (R_tilde*Y' + T_tilde*ones(1,4))'
+y  = (R_tilde*Y' + T_tilde*ones(1,4))';
 % two camera points (last element = 1)
 gama  = y(:,1:3)./(y(:,3)*[1,1,1]);
-gama1 = gama(1,:)'
-gama2 = gama(2,:)'
+gama1 = gama(1,:)';
+gama2 = gama(2,:)';
 % camera tangents (last element = 0)
 tgt1 =[(gama(3,:)-gama(1,:))'];
 tgt2 =[(gama(4,:)-gama(2,:))'];
 % normalization (not necessary, taken care by G's, reduces # of solutions)
-tgt1 = tgt1/norm(tgt1)
-tgt2 = tgt2/norm(tgt2)
+tgt1 = tgt1/norm(tgt1);
+tgt2 = tgt2/norm(tgt2);
 %% call P2P
 tic
 [Rots,Transls,degen] = rf_pose_from_point_tangents_root_find_function_any(gama1,tgt1,gama2,tgt2,Gama1,Tgt1,Gama2,Tgt2);
-solve_time = toc
+solve_time = toc;
 %% check rotation and translation
 N = length(Rots);
-number_of_solutions=N
+number_of_solutions=N;
+fail=1;
+dRbest = -1;
+dTbest = -1;
 for n = 1:N
     dR = norm(skew2v(Rots{n}*R_tilde'));
     dT = norm(Transls{n}-T_tilde);
     if dR+dT < 10^-4 
-        display([num2str(n),'th solution'])
-        display(['dR =',num2str(dR)]);
-        display(['dT =',num2str(dT)]);
+%        display([num2str(n),'th solution'])
+%        display(['dR =',num2str(dR)]);
+%        display(['dT =',num2str(dT)]);
         %vectors_vR_vT = [calc_v_from_S(Rots{n}*R_tilde'),Transls{n}-T_tilde]
+        fail=0;
+        dRbest = dR;
+        dTbest = dT;
     end
 end
