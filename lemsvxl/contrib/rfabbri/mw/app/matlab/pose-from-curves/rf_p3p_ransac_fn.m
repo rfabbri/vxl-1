@@ -36,6 +36,7 @@ while samplesTaken < N
    
     %compute model    
     tic
+    function [Rots, Transls, runtime] = rf_p3p_root_find_function_any(gamas,Gamas)
     [Rots, Transls, degen] = rf_p3p_root_find_function_any(...
     gama_pert(id1,:)', gama_pert(id2,:)', ...
     Gama_all(id1,:)',, Gama_all(id2,:)', Tgt_all(id2,:)');

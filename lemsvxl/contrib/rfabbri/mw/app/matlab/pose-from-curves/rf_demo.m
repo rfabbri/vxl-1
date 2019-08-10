@@ -1,6 +1,8 @@
 %% Check 2 x 1 1/2 points SRS, following Fabbri et al. 2019
 %% Special thanks to anonymous reviewer for this short demo
 %% Simply runs on completely random data.
+% always work from this folder
+cd('$HOME/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work')
 %display('--------------------------------------')
 %display('--- demo point pairs with tangents ---')
 %display('--------------------------------------')

@@ -3,11 +3,11 @@
 %% Simply runs on completely random data.
 
 % always work from this folder
-cd /home/rfabbri/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work
+cd('$HOME/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work/p3p')
 
-display('--------------------------------------')
-display('---   demo fast p3p from OpenMVG   ---')
-display('--------------------------------------')
+%display('--------------------------------------')
+%display('---   demo fast p3p from OpenMVG   ---')
+%display('--------------------------------------')
 %% Functions
 v2skew =@(v) [0,-v(3),v(2);v(3),0,-v(1);-v(2),v(1),0]; % from vector to skew matrix
 v2Rot  =@(v) expm(v2skew(v)); % from vector to rotation
