@@ -43,6 +43,7 @@ tic
 [Rots,Transls,degen] = rf_pose_from_point_tangents_root_find_function_any(gama1,tgt1,gama2,tgt2,Gama1,Tgt1,Gama2,Tgt2);
 solve_time = toc;
 %% check rotation and translation
+% disp(['run time = ' num2str(rtime) ' seconds'])
 N = length(Rots);
 number_of_solutions=N;
 fail=1;
