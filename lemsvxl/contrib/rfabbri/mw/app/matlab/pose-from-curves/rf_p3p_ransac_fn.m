@@ -1,7 +1,7 @@
-function [bestRot,bestTransl,bestResErr,bestResErrVec]=rf_pose_from_point_tangents_ransac_fn(...
-ids1, gama_pert, tgt_pert, Gama_all, Tgt_all, K_gt, gama_pert_img, dThresh)
+function [bestRot,bestTransl,bestResErr,bestResErrVec,vsolve_time]=rf_p3p_ransac_fn(...
+ids1, gama_pert, Gama_all, K_gt, gama_pert_img, dThresh)
 
-if nargin < 8
+if nargin < 6
   dThresh = 1.5; % inlier distance threshold
 end
 
@@ -20,6 +20,7 @@ samplesTaken = 0;
 bestResErr = Inf;
 maxInliers = 0;
 num_corresps = size(ids1,1);
+vsolve_time=zeros(1,N);
 while samplesTaken < N
     %select samples
 
@@ -28,23 +29,25 @@ while samplesTaken < N
     while corr_id2 == corr_id1
       corr_id2 = randint(1,1,[1 num_corresps]);
     end
+    corr_id3 = randint(1,1,[1 num_corresps]);
+    while corr_id3 == corr_id1 | corr_id3 == corr_id2
+      corr_id3 = randint(1,1,[1 num_corresps]);
+    end
 
     samplesTaken = samplesTaken + 1;
 
     id1 = ids1(corr_id1);
     id2 = ids1(corr_id2);
+    id3 = ids1(corr_id3);
    
     %compute model    
-    tic
-    function [Rots, Transls, runtime] = rf_p3p_root_find_function_any(gamas,Gamas)
-    [Rots, Transls, degen] = rf_p3p_root_find_function_any(...
-    gama_pert(id1,:)', gama_pert(id2,:)', ...
-    Gama_all(id1,:)',, Gama_all(id2,:)', Tgt_all(id2,:)');
-    toc
+    idtriplet =  [id1 id2 id3];
+    [Rots,Transls,solve_time] = rf_p3p_root_find_function_any(gama_pert(idtriplet, 1:2),Gama_all(idtriplet,:))
+    vsolve_time(samples_taken) = solve_time;
 
     num_sols = length(Rots);
     for i=1:num_sols
-        %determine inliers
+        % determine inliers
         errors = rf_reprojection_error(K_gt*[Rots{i} Transls{i}],...
                  gama_pert_img(ids1,:), Gama_all(ids1,:));
 

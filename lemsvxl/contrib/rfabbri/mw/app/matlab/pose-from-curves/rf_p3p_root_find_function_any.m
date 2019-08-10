@@ -1,4 +1,5 @@
 function [Rots, Transls, runtime] = rf_p3p_root_find_function_any(gamas,Gamas)
+  % see rf_demo_p3p for sample usage
   % write points ---------------------------------------------------------------
   assert(size(gamas,1) == 3 && size(gamas,2) == 2);
   assert(size(Gamas,1) == 3 && size(Gamas,2) == 3);

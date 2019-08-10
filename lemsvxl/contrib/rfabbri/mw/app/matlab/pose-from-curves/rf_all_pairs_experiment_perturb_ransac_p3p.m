@@ -59,11 +59,8 @@ clear gama_all_img gama_b_all_img fmatrix  proj1 proj2 tgt_all_img tgt_b_all_img
 
 %n_perturbs = length(perturb_levels);
 total_iter=0;
-
-% same format as P2Pt
-all_errs_p3p = {};
+all_errs_p3p = {}; % same format as P2Pt
 all_errs_p3p_no_badj = {};
-
 pert_errors = zeros(n_perturbs, nsamples_pool);
 
 for p = 1:n_perturbs
@@ -98,11 +95,17 @@ for p = 1:n_perturbs
     save('camera_K.txt','K_gt','-ascii','-double');
 
     % run bundle adjustment.
-    retval = unix('dbccl_refine_pose_app');
+    retval = unix('$HOME/cprg/vxlprg/lemsvpe/lemsvxl-bin/bin/dbccl_refine_pose_app');  % lemsvxl/contrib/tpollard/dbccl
     if retval
       error('something wrong with refine pose app.');
     end
-  
+
+    % read results
+    rc = load('camera_RC_refined.txt');
+    Rot = rc(1:3,1:3);
+    C = rc(4,:)';
+    Transl = -Rot*C;
+  end
   
   % We report reproj. errors on the entire perturbed ground truth:
   pert_errors(p,:) = rf_reprojection_error(K_gt*[Rot Transl],...
@@ -119,7 +122,7 @@ all_errs = all_errs_p3p;
 all_errs_no_badj = all_errs_p3p_no_badj;
 
 save(['all_pairs_experiment_perturb-maxcount_' num2str(maxcount) '-ransac-p3p.mat'],...
-      'all_errs','all_errs_no_badj','ids1','ids2','perturb_levels','theta_perturbs_deg','ids1','ids2');
+      'all_errs','all_errs_no_badj','ids1','perturb_levels','theta_perturbs_deg','ids1');
 
 % Raw plot ------------------------------------------------
 %figure;
