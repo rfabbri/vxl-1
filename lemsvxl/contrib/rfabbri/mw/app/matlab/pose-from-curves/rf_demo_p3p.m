@@ -3,7 +3,7 @@
 %% Simply runs on completely random data.
 
 % always work from this folder
-cd('$HOME/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work/p3p')
+%cd('~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work/basic-random/p3p')
 
 %display('--------------------------------------')
 %display('---   demo fast p3p from OpenMVG   ---')

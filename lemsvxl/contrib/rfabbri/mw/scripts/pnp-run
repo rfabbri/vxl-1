@@ -8,7 +8,7 @@
 
 # Usecase 0: same machine, just set work folder. This is what I use in CCV
 
-cd $HOME/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work
+#cd $HOME/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work
 $HOME/cprg/vxlprg/lemsvpe/lemsvxl-bin/bin/pnp
 
 

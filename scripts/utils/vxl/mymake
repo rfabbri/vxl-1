@@ -7,7 +7,7 @@
 
 case $# in
 #       0)  ls *.c *.h *.cpp *.cxx *.txx *.m *.sci *.sce *.sh 2>/tmp/my---null;;
-       0)  MYMAKEOPTS="-j9 -k" ;;
+       0)  MYMAKEOPTS="-j17 -k" ;;
        *)  MYMAKEOPTS="" ;;
 esac
 

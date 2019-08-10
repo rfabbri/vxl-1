@@ -1,5 +1,5 @@
 % always work from this folder
-cd /gpfs_home/rfabbri/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work/basic_random
+cd /gpfs_home/rfabbri/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work/basic-random
 %cd /users/rfabbri/src/diffgeom2pose/work
 %cd /home/rfabbri/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work
 
