@@ -1,6 +1,6 @@
 clear all;
 
-cd /home/rfabbri/cprg/vxlprg/lemsvxlsrc-git2/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work
+cd ('~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work')
 %maxcount = 1100;  % how many ransac-like iterations (how many random samples)
 %maxcount = 3;
 b_adj = true;
@@ -11,15 +11,15 @@ b_adj = true;
 %tgt_all_img, tgt_b_all_img, ...
 %Gama_all, Tgt_all] = synthetic_data('36,77');
 
-load('/home/rfabbri/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/working-state-synthetic-ransac_results-paper.mat')
+load('~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/working-state-synthetic-ransac_results-paper.mat')
 
-nsamples_pool = max(size(gama_all_img));
+nsamples_pool = max(size(gama_all));
 
 if (maxcount > nsamples_pool)
   error('maxcount too high');
 end
 
-clear gama_all_img gama_b_all_img fmatrix  proj1 proj2 tgt_all_img tgt_b_all_img Gama_all Tgt_all;
+%clear gama_all_img gama_b_all_img fmatrix  proj1 proj2 tgt_all_img tgt_b_all_img Gama_all Tgt_all;
 
 %%%%% Commented out to reproduce ECCV12 data to compare against p2pt -----------
 %%%%% ids1 = zeros(maxcount,1);
