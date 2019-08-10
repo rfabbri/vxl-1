@@ -10,6 +10,7 @@ for i=1:reps
 end
 
 [stat,cpuinfo]=unix('cat /proc/cpuinfo');
-save('time-random-rf_time_experiment-p2pt','t', 'cpuinfo');
+p = mfilename('fullpath')
+save('time-random-rf_time_experiment-p2pt','t', 'cpuinfo','p');
 
 % boxplot
