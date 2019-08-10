@@ -1,0 +1,27 @@
+#!/bin/sh
+#
+# Just sets working folder to call cmd/pnp
+#
+# You can edit / uncomment for some usecases:
+
+
+
+# Usecase 0: same machine, just set work folder. This is what I use in CCV
+
+cd $HOME/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work
+$HOME/cprg/vxlprg/lemsvpe/lemsvxl-bin/bin/pnp
+
+
+# ------------------------------------------------------------------------------
+# Usecase 1: this script is called by matlab, and this script calls a binary
+#
+# This is usually called by matlab on a virtual machine,
+# to run pnp on the native host, so that accurate timings are obtained
+# without polluting the native host with matlab malware outside the vm
+#
+# The working folder is on the VM and is mounted on the native host.
+
+#cd /Users/rfabbri/mnt/ub/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work
+
+# pnp is a symlink, optional just for clarity
+#/Users/rfabbri/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/cmd/pnp
