@@ -2,7 +2,8 @@
 %% Special thanks to anonymous reviewer for this short demo
 %% Simply runs on completely random data.
 
-% always work from this folder
+% always work from this folder if calling directly.
+% comment out when called by script
 %cd('~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work/basic-random/p3p')
 
 %display('--------------------------------------')
