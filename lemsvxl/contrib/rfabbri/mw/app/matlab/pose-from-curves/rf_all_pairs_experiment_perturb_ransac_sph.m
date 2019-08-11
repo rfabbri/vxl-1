@@ -4,21 +4,10 @@ cd ('~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curve
 % when creating a new work floder, copy the "clean" script over
 
 maxcount = 1000;  % how many ransac-like iterations (how many random samples)
-%was like this before PAMI: maxcount = 1100;  % how many ransac-like iterations (how many random samples)
-% but this maxcount is also the one used here:
-% load('~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/working-state-synthetic-ransac_results-paper.mat')
 %maxcount = 3;
 b_adj = true;
 
-% TODO rewrite to use my static dataset
-%%%% DOING XXX I didn't have to rewrite or rerun this script yet since I already
-%%%%% had results for it saved. 
-%%%% [gama_all_img, gama_b_all_img, fmatrix, ...
-%%%% proj1, proj2,...
-%%%% tgt_all_img, tgt_b_all_img, ...
-%%%% Gama_all, Tgt_all] = synthetic_data('36,77');
-
-load('~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/working-state-synthetic-ransac_results-paper.mat')
+[gama_all_img, tgt_all_img, Gama_all, Tgt_all, K_gt, R, C] = synthetic_data_sph()
 
 nsamples_pool = max(size(gama_all));
 
@@ -26,39 +15,37 @@ if (maxcount > nsamples_pool)
   error('maxcount too high');
 end
 
-%%%%clear gama_all_img gama_b_all_img fmatrix  proj1 proj2 tgt_all_img tgt_b_all_img Gama_all Tgt_all;
+clear gama_all_img gama_b_all_img fmatrix  proj1 proj2 tgt_all_img tgt_b_all_img Gama_all Tgt_all;
 
-%%%%% Commented out to reproduce ECCV12 data to compare against p2pt -----------
-%%%% ids1 = zeros(maxcount,1);
-%%%% ids2 = zeros(maxcount,1);
-%%%% 
-%%%% scount=0;
-%%%% while scount < maxcount
-%%%%   id1 = randi([1 nsamples_pool],1,1);
-%%%%   while (~isempty(find(ids1 == id1)))
-%%%%     id1 = randi([1 nsamples_pool],1,1);
-%%%%   end
-%%%%   scount = scount + 1;
-%%%%   ids1(scount) = id1;
-%%%% 
-%%%%   id2 = randi([1 nsamples_pool],1,1);
-%%%%   while (id2 ~= id1 & ~isempty(find(ids2 == id2)))
-%%%%     id2 = randi([1 nsamples_pool],1,1);
-%%%%   end
-%%%%   ids2(scount) = id2;
-%%%% end
+ids1 = zeros(maxcount,1);
+ids2 = zeros(maxcount,1);  % not really used
 
+scount=0;
+while scount < maxcount
+  id1 = randi([1 nsamples_pool],1,1);
+  while (~isempty(find(ids1 == id1)))
+    id1 = randi([1 nsamples_pool],1,1);
+  end
+  scount = scount + 1;
+  ids1(scount) = id1;
+
+  id2 = randi([1 nsamples_pool],1,1);
+  while (id2 ~= id1 & ~isempty(find(ids2 == id2)))
+    id2 = randi([1 nsamples_pool],1,1);
+  end
+  ids2(scount) = id2;
+end
 
 
-% TODO rewrite to use txt dataset
-%%%% rf_synthetic_point_tangent_curves;  
+K_gt_inv = inv(K_gt);
+tgt_all_img_v = [cos(tgt_all_img) sin(tgt_all_img)];
 
 %perturb_levels = [0 0.1 0.5 1 2];
 %theta_perturbs_deg = [0 0.1 0.5 1 2 5 7 10];
-%%%% perturb_levels = [0 0.5 1 2];
-%%%% theta_perturbs_deg = [0 0.5 1 5 10];
+perturb_levels = [0 0.5 1 2];
+theta_perturbs_deg = [0 0.5 1 5 10];
 
-%%%%n_perturbs = length(perturb_levels);
+n_perturbs = length(perturb_levels);
 n_theta_perts = length(theta_perturbs_deg);
 total_iter=0;
 
@@ -69,7 +56,6 @@ for tp = 1:n_theta_perts
   tgt_pert  = perturb_tangent(tgt_all_img_v, theta_perturbs_deg(tp)*pi/180);
 
   % transform to world coordinates
-
   tgt1_2d_pt = tgt_pert + gama_all_img(:,1:2);
   tgt1_2d_pt_normal = K_gt_inv*[tgt1_2d_pt ones(size(tgt1_2d_pt,1),1)]';
   tgt1_2d_pt_normal = tgt1_2d_pt_normal';
@@ -146,7 +132,7 @@ for tp = 1:n_theta_perts
 end
 
 % usually drops into ~/lib/matlab
-save(['all_pairs_experiment_perturb-maxcount_' num2str(maxcount) '-ransac.mat'],...
+save(['all_pairs_experiment_perturb-maxcount_' num2str(maxcount) '-ransac-sph.mat'],...
       'all_errs','ids1','ids2','perturb_levels','theta_perturbs_deg','ids1','ids2');
 
 % % Raw plot ------------------------------------------------

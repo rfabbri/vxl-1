@@ -6,12 +6,14 @@ cd ('~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curve
 b_adj = true;
 
 % TODO rewrite to use my static dataset
-%[gama_all_img, gama_b_all_img, fmatrix, ...
-%proj1, proj2,...
-%tgt_all_img, tgt_b_all_img, ...
-%Gama_all, Tgt_all] = synthetic_data('36,77');
+%%%% Four comments %%%% = using the value loaded from .mat file
+%%%%[gama_all_img, gama_b_all_img, fmatrix, ...
+%%%%proj1, proj2,...
+%%%%tgt_all_img, tgt_b_all_img, ...
+%%%%Gama_all, Tgt_all] = synthetic_data('36,77');
 
 load('~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/working-state-synthetic-ransac_results-paper.mat')
+% maxcount = 1000 from this load
 
 nsamples_pool = max(size(gama_all));
 
@@ -19,7 +21,7 @@ if (maxcount > nsamples_pool)
   error('maxcount too high');
 end
 
-%clear gama_all_img gama_b_all_img fmatrix  proj1 proj2 tgt_all_img tgt_b_all_img Gama_all Tgt_all;
+%%%%%clear gama_all_img gama_b_all_img fmatrix  proj1 proj2 tgt_all_img tgt_b_all_img Gama_all Tgt_all;
 
 %%%%% Commented out to reproduce ECCV12 data to compare against p2pt -----------
 %%%%% ids1 = zeros(maxcount,1);
@@ -57,7 +59,7 @@ end
 %theta_perturbs_deg = [0 0.1 0.5 1 2 5 7 10];
 %%%% perturb_levels = [0 0.5 1 2];
 
-%n_perturbs = length(perturb_levels);
+%%%%%n_perturbs = length(perturb_levels);
 total_iter=0;
 all_errs_p3p = {}; % same format as P2Pt
 all_errs_p3p_no_badj = {};
