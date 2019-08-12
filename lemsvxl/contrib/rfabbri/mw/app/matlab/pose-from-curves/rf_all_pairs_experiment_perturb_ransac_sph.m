@@ -8,7 +8,12 @@ cd ('~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curve
 %[gama_all_img, tgt_all_img, Gama_all, Tgt_all, K_gt, R_gt, C_gt] = synthetic_data_sph();
 %save('synthetic_data_sph.mat', 'gama_all_img', 'tgt_all_img', 'Gama_all', 'Tgt_all', 'K_gt', 'R_gt', 'C_gt');
 
+
 load('synthetic_data_sph.mat');
+
+synthetic_data_sph_normalized;
+
+
 
 nsamples_pool = max(size(Gama_all));
 maxcount = nsamples_pool;
@@ -41,13 +46,12 @@ all_errs_no_badj_views = {};
 nviews = size(R_gt, 3);
 for v=1:nviews
   K_gt_inv = inv(K_gt(:,:,v));
-  tgt_all_img_v = [cos(tgt_all_img(:,:,v)) sin(tgt_all_img(:,:,v))];
   total_iter=0;
   all_errs = {};
   all_errs_no_badj = {};
   for tp = 1:n_theta_perts
     pert_errors = zeros(n_perturbs, nsamples_pool);
-    tgt_pert = perturb_tangent(tgt_all_img_v, theta_perturbs_deg(tp)*pi/180);
+    tgt_pert = perturb_tangent(tgt_all_img(:,:,v), theta_perturbs_deg(tp)*pi/180);
 
     % transform to world coordinates
     tgt1_2d_pt = tgt_pert + gama_all_img(:,1:2,v);
