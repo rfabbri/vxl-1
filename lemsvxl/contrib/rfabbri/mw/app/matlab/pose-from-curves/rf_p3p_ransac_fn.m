@@ -43,7 +43,7 @@ while samplesTaken < N
     %compute model    
     idtriplet =  [id1 id2 id3];
     [Rots,Transls,solve_time] = rf_p3p_root_find_function_any(gama_pert(idtriplet, 1:2),Gama_all(idtriplet,:))
-    vsolve_time(samples_taken) = solve_time;
+    vsolve_time(samplesTaken) = solve_time;
 
     num_sols = length(Rots);
     for i=1:num_sols
