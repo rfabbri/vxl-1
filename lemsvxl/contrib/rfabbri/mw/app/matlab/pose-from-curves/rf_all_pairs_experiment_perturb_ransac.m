@@ -1,56 +1,64 @@
 clear all;
 
-cd /home/rfabbri/cprg/vxlprg/lemsvxlsrc-git2/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work
+cd ('~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work')
 % when creating a new work floder, copy the "clean" script over
 
-maxcount = 1100;  % how many ransac-like iterations (how many random samples)
+maxcount = 1000;  % how many ransac-like iterations (how many random samples)
+%was like this before PAMI: maxcount = 1100;  % how many ransac-like iterations (how many random samples)
+% but this maxcount is also the one used here:
+% load('~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/working-state-synthetic-ransac_results-paper.mat')
 %maxcount = 3;
 b_adj = true;
 
 % TODO rewrite to use my static dataset
-[gama_all_img, gama_b_all_img, fmatrix, ...
-proj1, proj2,...
-tgt_all_img, tgt_b_all_img, ...
-Gama_all, Tgt_all] = synthetic_data('36,77');
+%%%% DOING XXX I didn't have to rewrite or rerun this script yet since I already
+%%%%% had results for it saved. 
+%%%% [gama_all_img, gama_b_all_img, fmatrix, ...
+%%%% proj1, proj2,...
+%%%% tgt_all_img, tgt_b_all_img, ...
+%%%% Gama_all, Tgt_all] = synthetic_data('36,77');
 
-nsamples_pool = max(size(gama_all_img));
+load('~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/working-state-synthetic-ransac_results-paper.mat')
+
+nsamples_pool = max(size(gama_all));
 
 if (maxcount > nsamples_pool)
   error('maxcount too high');
 end
 
-clear gama_all_img gama_b_all_img fmatrix  proj1 proj2 tgt_all_img tgt_b_all_img Gama_all Tgt_all;
+%%%%clear gama_all_img gama_b_all_img fmatrix  proj1 proj2 tgt_all_img tgt_b_all_img Gama_all Tgt_all;
 
-ids1 = zeros(maxcount,1);
-ids2 = zeros(maxcount,1);
-
-scount=0;
-while scount < maxcount
-  id1 = randi([1 nsamples_pool],1,1);
-  while (~isempty(find(ids1 == id1)))
-    id1 = randi([1 nsamples_pool],1,1);
-  end
-  scount = scount + 1;
-  ids1(scount) = id1;
-
-  id2 = randi([1 nsamples_pool],1,1);
-  while (id2 ~= id1 & ~isempty(find(ids2 == id2)))
-    id2 = randi([1 nsamples_pool],1,1);
-  end
-  ids2(scount) = id2;
-end
+%%%%% Commented out to reproduce ECCV12 data to compare against p2pt -----------
+%%%% ids1 = zeros(maxcount,1);
+%%%% ids2 = zeros(maxcount,1);
+%%%% 
+%%%% scount=0;
+%%%% while scount < maxcount
+%%%%   id1 = randi([1 nsamples_pool],1,1);
+%%%%   while (~isempty(find(ids1 == id1)))
+%%%%     id1 = randi([1 nsamples_pool],1,1);
+%%%%   end
+%%%%   scount = scount + 1;
+%%%%   ids1(scount) = id1;
+%%%% 
+%%%%   id2 = randi([1 nsamples_pool],1,1);
+%%%%   while (id2 ~= id1 & ~isempty(find(ids2 == id2)))
+%%%%     id2 = randi([1 nsamples_pool],1,1);
+%%%%   end
+%%%%   ids2(scount) = id2;
+%%%% end
 
 
 
 % TODO rewrite to use txt dataset
-rf_synthetic_point_tangent_curves;  
+%%%% rf_synthetic_point_tangent_curves;  
 
 %perturb_levels = [0 0.1 0.5 1 2];
 %theta_perturbs_deg = [0 0.1 0.5 1 2 5 7 10];
-perturb_levels = [0 0.5 1 2];
-theta_perturbs_deg = [0 0.5 1 5 10];
+%%%% perturb_levels = [0 0.5 1 2];
+%%%% theta_perturbs_deg = [0 0.5 1 5 10];
 
-n_perturbs = length(perturb_levels);
+%%%%n_perturbs = length(perturb_levels);
 n_theta_perts = length(theta_perturbs_deg);
 total_iter=0;
 
@@ -112,7 +120,7 @@ for tp = 1:n_theta_perts
       save('camera_K.txt','K_gt','-ascii','-double');
 
       % run bundle adjustment.
-      retval = unix('dbccl_refine_pose_app');
+      retval = unix('$HOME/cprg/vxlprg/lemsvpe/lemsvxl-bin/bin/dbccl_refine_pose_app');  % lemsvxl/contrib/tpollard/dbccl
       if retval
         error('something wrong with refine pose app.');
       end
@@ -141,29 +149,29 @@ end
 save(['all_pairs_experiment_perturb-maxcount_' num2str(maxcount) '-ransac.mat'],...
       'all_errs','ids1','ids2','perturb_levels','theta_perturbs_deg','ids1','ids2');
 
-% Raw plot ------------------------------------------------
-figure;
-clf;
-hold on;
-for tp = 1:n_theta_perts
-  for p=1:n_perturbs
-    mycolor = rand(1,3)*0.7;
-    mycolor(1) = min(mycolor(1)+rand()*0.4,1);
-    mycolor(2) = min(mycolor(2)+rand()*0.2,1);
-    mycolor(3) = min(mycolor(3)+rand()*0.1,1);
-
-    h = plot(all_errs{tp}(p,:));
-    set(h,'color',mycolor);
-    set(h,'linewidth',2);
-  end
-end
-title('Error for different samples and noise levels');
-ylabel('reprojection error');
-xlabel('point-tangent id');
-
-% Hist plot ------------------------------------------------
-
-rf_all_pairs_experiment_perturb_histplot;
-
-% Box plot ------------------------------------------------
-rf_all_pairs_experiment_perturb_boxplot;
+% % Raw plot ------------------------------------------------
+% figure;
+% clf;
+% hold on;
+% for tp = 1:n_theta_perts
+%   for p=1:n_perturbs
+%     mycolor = rand(1,3)*0.7;
+%     mycolor(1) = min(mycolor(1)+rand()*0.4,1);
+%     mycolor(2) = min(mycolor(2)+rand()*0.2,1);
+%     mycolor(3) = min(mycolor(3)+rand()*0.1,1);
+% 
+%     h = plot(all_errs{tp}(p,:));
+%     set(h,'color',mycolor);
+%     set(h,'linewidth',2);
+%   end
+% end
+% title('Error for different samples and noise levels');
+% ylabel('reprojection error');
+% xlabel('point-tangent id');
+% 
+% % Hist plot ------------------------------------------------
+% 
+% rf_all_pairs_experiment_perturb_histplot;
+% 
+% % Box plot ------------------------------------------------
+% rf_all_pairs_experiment_perturb_boxplot;

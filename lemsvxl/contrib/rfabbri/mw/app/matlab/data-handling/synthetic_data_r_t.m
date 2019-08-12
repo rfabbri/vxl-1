@@ -6,6 +6,7 @@
 
 function [pts1,pts2, fmatrix, R1, T1, R2, T2, tgts1, tgts2, pts3d, tgts3d] = synthetic_data_r_t(angles)
 
+  % mex function synthetic_data:
   [pts1,pts2, fmatrix, proj1, proj2, tgts1, tgts2, pts3d, tgts3d] = synthetic_data(angles);
   
   [K1, R1, C1] = vgg_KR_from_P(proj1);
