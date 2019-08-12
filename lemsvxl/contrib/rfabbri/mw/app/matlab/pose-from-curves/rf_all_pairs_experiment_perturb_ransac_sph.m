@@ -36,7 +36,7 @@ n_theta_perts = length(theta_perturbs_deg);
 all_errs_views = {};
 all_errs_no_badj_views = {};
 nviews = size(R_gt, 3);
-for v=1:nviews
+for v=1:2
   K_gt_inv = inv(K_gt(:,:,v));
   total_iter=0;
   all_errs = {};
@@ -84,7 +84,7 @@ for v=1:nviews
 
       if b_adj
         % input for bundle adjustment.
-        unix('./clean');
+        unix('rm *.txt');
         save('image_pts.txt','gama_pert_img','-ascii','-double');
         tmp = Gama_all(:,:,v);
         save('world_pts.txt','tmp','-ascii','-double');
