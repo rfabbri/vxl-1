@@ -1,60 +1,17 @@
-clear all;
+%clear all;
+% to be called by this script _batch.m
 
-b_adj = true;
-N_RANSAC = 3; % 1000 RANSAC iters TODO if change here, need to change in the
-                 % RANSAC fn called below - not a param
-
-%cd ('~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work')
-% when creating a new work floder, copy the "clean" script over
-
-[gama_all_img, tgt_all_img, gama_all, tgts_all, Gama_all, Tgt_all, K_gt, R_gt, C_gt] = synthetic_data_sph();
-
-nsamples_pool = max(size(Gama_all));
-maxcount = nsamples_pool;
-%maxcount = 1000;  % random sample maxcount points out of the 5117 in the dataset
-%maxcount = 3;     % instead of using the entire dataset
-if (maxcount > nsamples_pool)
-  error('maxcount too high');
-end
-
-% The random subset of maxcount of all points (5117 to be used in random sampling)
-ids1 = zeros(maxcount,1);  
-scount=0;
-while scount < maxcount
-  id1 = randi([1 nsamples_pool],1,1);
-  while ~isempty(find(ids1 == id1))
-    id1 = randi([1 nsamples_pool],1,1);
-  end
-  scount = scount + 1;
-  ids1(scount) = id1;
-end
-
-perturb_levels = [0 0.5 1 2];
-theta_perturbs_deg = [0 0.5 1 5 10];
-
-%perturb_levels = [0 0.5 1 2];  % PAPER XXX TODO
-%theta_perturbs_deg = [0 0.5 1 5 10];
-
-perturb_levels = [0 0.5];
-theta_perturbs_deg = [0 1];
-
-%perturb_levels = [0 0.1 0.5 1 2];
-%theta_perturbs_deg = [0 0.1 0.5 1 2 5 7 10];
-n_perturbs = length(perturb_levels);
-n_theta_perts = length(theta_perturbs_deg);
-all_errs_views = {};
-all_errs_no_badj_views = {};
-all_errs_rt_views = {};
-all_times_views = {};
-nviews = size(R_gt, 3);
-for v=1:2 % TODO XXX
-  K_gt_inv = inv(K_gt(:,:,v));
+for v=v_ini:v_f % 1:nviews
   total_iter=0;
-  all_errs = {};
-  all_errs_no_badj = {};
-  all_errs_rt = {};
+  all_errs = cell(1,n_theta_perts);
+  all_errs_no_badj = cell(1,n_theta_perts);
+  all_errs_rt = cell(1,n_theta_perts);
+  all_times = cell(1,n_theta_perts); 
   for tp = 1:n_theta_perts
     pert_errors = zeros(n_perturbs, nsamples_pool);
+    pert_errors_no_badj = zeros(n_perturbs, nsamples_pool);
+    rt_errors = zeros(n_perturbs,2); % 1 = R, 2 = T
+    times = zeros(n_perturbs,N);
     tgt_pert = perturb_tangent(tgt_all_img(:,:,v), theta_perturbs_deg(tp)*pi/180);
 
     % transform to world coordinates
@@ -87,12 +44,11 @@ for v=1:2 % TODO XXX
 
       dThreshRansac = perturb_levels(p)+1;
       [Rot,Transl,bestResErr,bestResErrVec, solve_time] = rf_pose_from_point_tangents_ransac_fn(...
-          ids1, gama_pert, tgt_pert, Gama_all(:,:,v), Tgt_all(:,:,v), ...
-          K_gt(:,:,v), gama_pert_img, dThreshRansac);
+          ids1, gama_pert, tgt_pert, Gama_all, Tgt_all, ...
+          K_gt, gama_pert_img, dThreshRansac);
 
       % We report reproj. errors on the entire perturbed ground truth:
-      pert_errors_no_badj(p,:) = rf_reprojection_error(K_gt(:,:,v)*[Rot Transl],...
-               gama_pert_img, Gama_all(:,:,v));
+      pert_errors_no_badj(p,:) = rf_reprojection_error(K_gt*[Rot Transl], gama_pert_img, Gama_all);
 
       times(p,:) = solve_time;
 
@@ -101,14 +57,13 @@ for v=1:2 % TODO XXX
         % input for bundle adjustment.
         unix('rm *.txt');
         save('image_pts.txt','gama_pert_img','-ascii','-double');
-        tmp = Gama_all(:,:,v);
+        tmp = Gama_all;
         save('world_pts.txt','tmp','-ascii','-double');
         
         % save cam.
         RC = [Rot;(-Rot'*Transl)'];
         save('camera_RC.txt','RC','-ascii','-double');
-        tmp = K_gt(:,:,v);
-        save('camera_K.txt','tmp','-ascii','-double');
+        save('camera_K.txt','K_gt','-ascii','-double');
 
         % run bundle adjustment.
         retval = unix('$HOME/cprg/vxlprg/lemsvpe/lemsvxl-bin/bin/dbccl_refine_pose_app');  % lemsvxl/contrib/tpollard/dbccl
@@ -125,8 +80,8 @@ for v=1:2 % TODO XXX
       disp('done bundle adjustment');
 
       % We report reproj. errors on the entire perturbed ground truth:
-      pert_errors(p,:) = rf_reprojection_error(K_gt(:,:,v)*[Rot Transl],...
-               gama_pert_img, Gama_all(:,:,v));
+      pert_errors(p,:) = rf_reprojection_error(K_gt*[Rot Transl],...
+               gama_pert_img, Gama_all);
 
       % Pose errors       
       T_gt = -R_gt(:,:,v)*C_gt(:,:,v);
@@ -137,15 +92,15 @@ for v=1:2 % TODO XXX
             num2str(n_perturbs*n_theta_perts) '('...
             num2str(100*total_iter/(n_perturbs*n_theta_perts)) '%)']);
     end
-    all_errs{end+1} = pert_errors;
-    all_errs_no_badj{end+1} = pert_errors_no_badj;
-    all_errs_rt{end+1} = rt_errors;
-    all_times{end+1} = times;
+    all_errs{tp} = pert_errors;
+    all_errs_no_badj{tp} = pert_errors_no_badj;
+    all_errs_rt{tp} = rt_errors;
+    all_times{tp} = times;
   end
-  all_errs_views{end+1} = all_errs;
-  all_errs_no_badj_views{end+1} = all_errs_no_badj_v;
-  all_errs_rt_views{end+1} = all_errs_rt;
-  all_times_views{end+1} = all_times;
+  all_errs_views{v} = all_errs;
+  all_errs_no_badj_views{v} = all_errs_no_badj_v;
+  all_errs_rt_views{v} = all_errs_rt;
+  all_times_views{v} = all_times;
 end  % views
 
 % usually drops into ~/lib/matlab
@@ -164,7 +119,7 @@ save(['all_pairs_experiment_perturb-maxcount_' num2str(maxcount) '-ransac-sph.ma
       'script_path',...
       'script_txt',...
       'timestamp',...
-      'gitinfo');
+      'gitinfo', 'v_ini', 'v_f');
       
 % % Raw plot ------------------------------------------------
 % figure;

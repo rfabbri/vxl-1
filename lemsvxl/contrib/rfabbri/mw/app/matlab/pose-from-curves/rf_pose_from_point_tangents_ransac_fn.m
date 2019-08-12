@@ -15,22 +15,17 @@ N = log(1 - p)/log(1 - (1 - e)^s);
 %N=1000; 
 N=3;  % XXX TODO
 
-
-samplesTaken = 0;
 bestResErr = Inf;
 maxInliers = 0;
 num_corresps = size(ids1,1);
 vsolve_time = zeros(1,N);
-while samplesTaken < N
+for samplesTaken=1:N
     %select samples
-
     corr_id1 = randi([1 num_corresps],1,1);
     corr_id2 = randi([1 num_corresps],1,1);
     while corr_id2 == corr_id1
       corr_id2 = randi([1 num_corresps],1,1);
     end
-
-    samplesTaken = samplesTaken + 1;
 
     id1 = ids1(corr_id1);
     id2 = ids1(corr_id2);
