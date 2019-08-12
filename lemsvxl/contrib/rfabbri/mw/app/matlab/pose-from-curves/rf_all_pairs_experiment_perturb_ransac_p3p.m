@@ -52,7 +52,7 @@ end
 %%%%% end
 
 
-% TODO rewrite to use txt dataset
+% TODO use my rewrite to use txt dataset
 %%%%% rf_synthetic_point_tangent_curves;  
 
 %perturb_levels = [0 0.1 0.5 1 2];
@@ -64,7 +64,6 @@ total_iter=0;
 all_errs_p3p = {}; % same format as P2Pt
 all_errs_p3p_no_badj = {};
 pert_errors = zeros(n_perturbs, nsamples_pool);
-
 for p = 1:n_perturbs
   % perturb the points in the image.
   gama_pert_img = perturb(gama_all_img, perturb_levels(p));
@@ -78,12 +77,11 @@ for p = 1:n_perturbs
 
   % P3P ------------------------------------------------------------------------
   dThreshRansac = perturb_levels(p)+1;
-  [Rot,Transl] = rf_p3p_ransac_fn(ids1, gama_pert, Gama_all, K_gt, gama_pert_img, dThreshRansac);
+  [Rot,Transl,bestResErr,bestResErrVec, solve_time] = rf_p3p_ransac_fn(ids1, gama_pert, Gama_all, K_gt, gama_pert_img, dThreshRansac);
   % P3P END --------------------------------------------------------------------
 
   % We report reproj. errors on the entire perturbed ground truth:
-  pert_errors_no_badj(p,:) = rf_reprojection_error(K_gt*[Rot Transl],...
-           gama_pert_img, Gama_all);
+  pert_errors_no_badj(p,:) = rf_reprojection_error(K_gt*[Rot Transl], gama_pert_img, Gama_all);
 
   if b_adj
     % input for bundle adjustment.

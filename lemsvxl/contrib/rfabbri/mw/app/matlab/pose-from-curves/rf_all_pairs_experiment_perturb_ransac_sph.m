@@ -109,6 +109,7 @@ for v=v_ini:v_f % 1:nviews
   all_errs_rt_views{v} = all_errs_rt;
   all_times_views{v} = all_times;
 end  % views
+disp(['finished loops for ' num2str(v_ini) '-' num2str(v_f)]);
 
 % usually drops into ~/lib/matlab
 % also remember to save the workspace when hitting an excellent result
@@ -117,7 +118,8 @@ end  % views
 script_path = mfilename('fullpath');
 timestamp = datetime('now');
 script_txt=load(script_path);
-save(['all_pairs_experiment_perturb-maxcount_' num2str(maxcount) '-ransac-sph.mat'],...
+repname = ['all_pairs_experiment_perturb-maxcount_' num2str(maxcount) '-ransac-sph.mat'];
+save(repname,...
       'all_errs_views',...
       'all_errs_nobadj_views', ...
       'all_errs_rt_views',...
@@ -127,6 +129,7 @@ save(['all_pairs_experiment_perturb-maxcount_' num2str(maxcount) '-ransac-sph.ma
       'script_txt',...
       'timestamp',...
       'gitinfo', 'v_ini', 'v_f');
+disp(['saved data to' repname]);
       
 % % Raw plot ------------------------------------------------
 % figure;
