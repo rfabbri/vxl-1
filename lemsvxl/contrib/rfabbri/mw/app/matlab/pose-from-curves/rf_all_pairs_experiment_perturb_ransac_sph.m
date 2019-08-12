@@ -127,17 +127,33 @@ for v=1:2 % TODO XXX
     end
     all_errs{end+1} = pert_errors;
     all_errs_no_badj{end+1} = pert_errors_no_badj;
+    all_errs_rt{end+1} = rt_errors;
     all_times{end+1} = times;
   end
   all_errs_views{end+1} = all_errs;
   all_errs_no_badj_views{end+1} = all_errs_no_badj_v;
+  all_errs_rt_views{end+1} = all_errs_rt;
   all_times_views{end+1} = all_times;
 end  % views
 
 % usually drops into ~/lib/matlab
 % also remember to save the workspace when hitting an excellent result
+[stat,cpuinfo]=unix('cat /proc/cpuinfo');
+[stat,gitinfo]=unix('git branch -v');
+script_path = mfilename('fullpath');
+timestamp = datetime('now');
+script_txt=load(sript_path);
 save(['all_pairs_experiment_perturb-maxcount_' num2str(maxcount) '-ransac-sph.mat'],...
-      'all_errs_views','all_errs_nobadj_views', 'ids1','perturb_levels','theta_perturbs_deg');
+      'all_errs_views',
+      'all_errs_nobadj_views', 
+      'all_errs_rt_views',
+      'all_times_views',
+      'ids1','perturb_levels','theta_perturbs_deg'
+      'script_path'
+      'script_txt',
+      'timestamp',
+      'gitinfo');
+      
 % % Raw plot ------------------------------------------------
 % figure;
 % clf;
