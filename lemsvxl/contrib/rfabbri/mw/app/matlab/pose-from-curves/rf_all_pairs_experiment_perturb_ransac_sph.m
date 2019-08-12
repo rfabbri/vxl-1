@@ -31,12 +31,20 @@ end
 
 perturb_levels = [0 0.5 1 2];
 theta_perturbs_deg = [0 0.5 1 5 10];
+
+%perturb_levels = [0 0.5 1 2];  % PAPER XXX TODO
+%theta_perturbs_deg = [0 0.5 1 5 10];
+
+perturb_levels = [0 0.5];
+theta_perturbs_deg = [0 1];
+
 %perturb_levels = [0 0.1 0.5 1 2];
 %theta_perturbs_deg = [0 0.1 0.5 1 2 5 7 10];
 n_perturbs = length(perturb_levels);
 n_theta_perts = length(theta_perturbs_deg);
 all_errs_views = {};
 all_errs_no_badj_views = {};
+all_errs_rt_views = {};
 all_times_views = {};
 nviews = size(R_gt, 3);
 for v=1:2 % TODO XXX
@@ -44,6 +52,7 @@ for v=1:2 % TODO XXX
   total_iter=0;
   all_errs = {};
   all_errs_no_badj = {};
+  all_errs_rt = {};
   for tp = 1:n_theta_perts
     pert_errors = zeros(n_perturbs, nsamples_pool);
     tgt_pert = perturb_tangent(tgt_all_img(:,:,v), theta_perturbs_deg(tp)*pi/180);
