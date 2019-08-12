@@ -1,7 +1,7 @@
 clear all;
 
 b_adj = true;
-N_RANSAC = 1000; % 1000 RANSAC iters TODO if change here, need to change in the
+N_RANSAC = 3; % 1000 RANSAC iters TODO if change here, need to change in the
                  % RANSAC fn called below - not a param
 
 %cd ('~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work')
@@ -87,6 +87,7 @@ for v=1:2 % TODO XXX
 
       times(p,:) = solve_time;
 
+      disp('bundle adjustment');
       if b_adj
         % input for bundle adjustment.
         unix('rm *.txt');
@@ -112,13 +113,15 @@ for v=1:2 % TODO XXX
         C = rc(4,:)';
         Transl = -Rot*C;
       end
+      disp('done bundle adjustment');
 
       % We report reproj. errors on the entire perturbed ground truth:
       pert_errors(p,:) = rf_reprojection_error(K_gt(:,:,v)*[Rot Transl],...
                gama_pert_img, Gama_all(:,:,v));
 
       % Pose errors       
-      [rt_errors(p,1),rt_errors(p,2)] = rf_pose_error(R_gt(:,:,v), T_gt(:,:,v), Rot, Transl);
+      T_gt = -R_gt(:,:,v)*C_gt(:,:,v);
+      [rt_errors(p,1),rt_errors(p,2)] = rf_pose_error(R_gt(:,:,v), T_gt, Rot, Transl);
 
       total_iter = total_iter + 1;
       disp(['== finished pose computation: ' num2str(total_iter) '/'...
@@ -144,14 +147,14 @@ script_path = mfilename('fullpath');
 timestamp = datetime('now');
 script_txt=load(sript_path);
 save(['all_pairs_experiment_perturb-maxcount_' num2str(maxcount) '-ransac-sph.mat'],...
-      'all_errs_views',
-      'all_errs_nobadj_views', 
-      'all_errs_rt_views',
-      'all_times_views',
-      'ids1','perturb_levels','theta_perturbs_deg'
-      'script_path'
-      'script_txt',
-      'timestamp',
+      'all_errs_views',...
+      'all_errs_nobadj_views', ...
+      'all_errs_rt_views',...
+      'all_times_views',...
+      'ids1','perturb_levels','theta_perturbs_deg',...
+      'script_path',...
+      'script_txt',...
+      'timestamp',...
       'gitinfo');
       
 % % Raw plot ------------------------------------------------
