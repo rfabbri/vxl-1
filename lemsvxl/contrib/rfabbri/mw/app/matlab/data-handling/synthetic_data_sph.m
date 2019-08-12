@@ -4,29 +4,35 @@ function [pts_img, tgts_img, pts, tgts, pts3d, tgts3d, K, R, C] = synthetic_data
 % all in image cooords
 % TODO this should go into public synthcurves
 
-mydir='~/lib/data/synthcurves-multiview-3d-dataset/spherical-ascii-100_views-perturb-radius_sigma10-normal_sigma0_01rad-minsep_15deg-no_two_cams_colinear_with_object/';
-fname = dir([mydir '*.extrinsic']);
-nviews = length(fname);
-extrinsics = zeros(4,3,nviews);
-for i=1:nviews
-  extrinsics(:,:,i) = load([mydir fname(i).name]);
+load_from_file=1;
+if load_from_file
+  load('synthetic_data_sph.mat');  % matlab/data-handling
+else
+  mydir='~/lib/data/synthcurves-multiview-3d-dataset/spherical-ascii-100_views-perturb-radius_sigma10-normal_sigma0_01rad-minsep_15deg-no_two_cams_colinear_with_object/';
+  fname = dir([mydir '*.extrinsic']);
+  nviews = length(fname);
+  extrinsics = zeros(4,3,nviews);
+  for i=1:nviews
+    extrinsics(:,:,i) = load([mydir fname(i).name]);
+  end
+  C = squeeze(extrinsics(4,:,:));
+  R = extrinsics(1:3,:,:);
+  pts3d = load([mydir 'crv-3D-pts.txt']);
+  tgts3d = load([mydir 'crv-3D-tgts.txt']);
+  npts = size(pts3d,1);
+  fname = dir([mydir '*-pts-2D*']);
+  pts_img = zeros(npts,2,nviews);
+  for i=1:nviews
+    pts_img(:,:,i) = load([mydir fname(i).name]);
+  end
+  fname = dir([mydir '*-tgts-2D*']);
+  tgts_img = zeros(npts,2,nviews);
+  for i=1:nviews
+    tgts_img(:,:,i) = load([mydir fname(i).name]);
+  end
+  K=load([mydir 'calib.intrinsic']);
+  % gives pts, tgts by inverting K:
+  synthetic_data_sph_normalized
 end
-C = squeeze(extrinsics(4,:,:));
-R = extrinsics(1:3,:,:);
-pts3d = load([mydir 'crv-3D-pts.txt']);
-tgts3d = load([mydir 'crv-3D-tgts.txt']);
-npts = size(pts3d,1);
-fname = dir([mydir '*-pts-2D*']);
-pts_img = zeros(npts,2,nviews);
-for i=1:nviews
-  pts_img(:,:,i) = load([mydir fname(i).name]);
-end
-fname = dir([mydir '*-tgts-2D*']);
-tgts_img = zeros(npts,2,nviews);
-for i=1:nviews
-  tgts_img(:,:,i) = load([mydir fname(i).name]);
-end
-K=load([mydir 'calib.intrinsic']);
 
-% gives pts, tgts by inverting K:
-synthetic_data_sph_normalized
+%save('synthetic_data_sph.mat', 'pts_img', 'tgts_img', 'pts', 'tgts', 'pts3d', 'tgts3d', 'K', 'R', 'C', 'npts');

@@ -5,15 +5,7 @@ b_adj = true;
 %cd ('~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work')
 % when creating a new work floder, copy the "clean" script over
 
-[gama_all_img, tgt_all_img, Gama_all, Tgt_all, K_gt, R_gt, C_gt] = synthetic_data_sph();
-%save('synthetic_data_sph.mat', 'gama_all_img', 'tgt_all_img', 'Gama_all', 'Tgt_all', 'K_gt', 'R_gt', 'C_gt');
-
-
-load('synthetic_data_sph.mat');
-
-synthetic_data_sph_normalized;
-
-
+[gama_all_img, tgt_all_img, gama_all, tgts_all, Gama_all, Tgt_all, K_gt, R_gt, C_gt] = synthetic_data_sph();
 
 nsamples_pool = max(size(Gama_all));
 maxcount = nsamples_pool;
