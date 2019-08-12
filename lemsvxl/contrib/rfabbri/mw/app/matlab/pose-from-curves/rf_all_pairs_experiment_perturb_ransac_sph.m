@@ -1,6 +1,8 @@
 clear all;
 
 b_adj = true;
+N_RANSAC = 1000; % 1000 RANSAC iters TODO if change here, need to change in the
+                 % RANSAC fn called below - not a param
 
 %cd ('~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work')
 % when creating a new work floder, copy the "clean" script over
@@ -35,8 +37,9 @@ n_perturbs = length(perturb_levels);
 n_theta_perts = length(theta_perturbs_deg);
 all_errs_views = {};
 all_errs_no_badj_views = {};
+all_times_views = {};
 nviews = size(R_gt, 3);
-for v=1:2
+for v=1:2 % TODO XXX
   K_gt_inv = inv(K_gt(:,:,v));
   total_iter=0;
   all_errs = {};
@@ -74,13 +77,15 @@ for v=1:2
       gama_pert(:,3) = gama_pert(:,3)./gama_pert(:,3);
 
       dThreshRansac = perturb_levels(p)+1;
-      [Rot,Transl] = rf_pose_from_point_tangents_ransac_fn(...
+      [Rot,Transl,bestResErr,bestResErrVec, solve_time] = rf_pose_from_point_tangents_ransac_fn(...
           ids1, gama_pert, tgt_pert, Gama_all(:,:,v), Tgt_all(:,:,v), ...
           K_gt(:,:,v), gama_pert_img, dThreshRansac);
 
       % We report reproj. errors on the entire perturbed ground truth:
       pert_errors_no_badj(p,:) = rf_reprojection_error(K_gt(:,:,v)*[Rot Transl],...
                gama_pert_img, Gama_all(:,:,v));
+
+      times(p,:) = solve_time;
 
       if b_adj
         % input for bundle adjustment.
@@ -112,6 +117,9 @@ for v=1:2
       pert_errors(p,:) = rf_reprojection_error(K_gt(:,:,v)*[Rot Transl],...
                gama_pert_img, Gama_all(:,:,v));
 
+      % Pose errors       
+      [rt_errors(p,1),rt_errors(p,2)] = rf_pose_error(R_gt(:,:,v), T_gt(:,:,v), Rot, Transl);
+
       total_iter = total_iter + 1;
       disp(['== finished pose computation: ' num2str(total_iter) '/'...
             num2str(n_perturbs*n_theta_perts) '('...
@@ -119,9 +127,11 @@ for v=1:2
     end
     all_errs{end+1} = pert_errors;
     all_errs_no_badj{end+1} = pert_errors_no_badj;
+    all_times{end+1} = times;
   end
   all_errs_views{end+1} = all_errs;
   all_errs_no_badj_views{end+1} = all_errs_no_badj_v;
+  all_times_views{end+1} = all_times;
 end  % views
 
 % usually drops into ~/lib/matlab

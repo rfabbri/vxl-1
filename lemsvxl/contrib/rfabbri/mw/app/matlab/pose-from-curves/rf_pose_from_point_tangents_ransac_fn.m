@@ -1,4 +1,4 @@
-function [bestRot,bestTransl,bestResErr,bestResErrVec]=rf_pose_from_point_tangents_ransac_fn(...
+function [bestRot,bestTransl,bestResErr,bestResErrVec,vsolve_time]=rf_pose_from_point_tangents_ransac_fn(...
 ids1, gama_pert, tgt_pert, Gama_all, Tgt_all, K_gt, gama_pert_img, dThresh)
 
 if nargin < 8
@@ -20,6 +20,7 @@ samplesTaken = 0;
 bestResErr = Inf;
 maxInliers = 0;
 num_corresps = size(ids1,1);
+vsolve_time = zeros(1,N);
 while samplesTaken < N
     %select samples
 
@@ -39,7 +40,7 @@ while samplesTaken < N
     [Rots, Transls, degen] = rf_pose_from_point_tangents_root_find_function_any(...
     gama_pert(id1,:)', tgt_pert(id1,:)', gama_pert(id2,:)', tgt_pert(id2,:)',...
     Gama_all(id1,:)', Tgt_all(id1,:)', Gama_all(id2,:)', Tgt_all(id2,:)');
-    toc
+    vsolve_time(samplesTaken) = toc;
 
     num_sols = length(Rots);
     for i=1:num_sols
