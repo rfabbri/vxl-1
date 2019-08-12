@@ -13,7 +13,7 @@ N = log(1 - p)/log(1 - (1 - e)^s);
 % harcode:
 %N=1200; 
 %N=1000; 
-N=3;  % XXX TODO
+N=1000;  % XXX TODO
 
 bestResErr = Inf;
 maxInliers = 0;

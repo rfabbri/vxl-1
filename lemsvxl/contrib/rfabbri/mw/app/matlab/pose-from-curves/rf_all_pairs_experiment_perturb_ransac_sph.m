@@ -2,7 +2,7 @@
 % to be called by this script _batch.m
 
 for v=v_ini:v_f % 1:nviews
-  total_iter=0;
+%  total_iter=0;
   all_errs = cell(1,n_theta_perts);
   all_errs_no_badj = cell(1,n_theta_perts);
   all_errs_rt = cell(1,n_theta_perts);
@@ -55,6 +55,11 @@ for v=v_ini:v_f % 1:nviews
       disp('bundle adjustment');
       if b_adj
         % input for bundle adjustment.
+        signature = ['-view_' num2str(v) '-thetapert-' num2str(tp) '-pert-' num2str(p)];
+        workdir_sig = [workdir signature];
+        unix(['mkdir ' workdir_sig ' 2>/dev/null']);
+        cd(workdir_sig);
+        
         unix('rm *.txt');
         save('image_pts.txt','gama_pert_img','-ascii','-double');
         tmp = Gama_all;
@@ -76,6 +81,8 @@ for v=v_ini:v_f % 1:nviews
         Rot = rc(1:3,1:3);
         C = rc(4,:)';
         Transl = -Rot*C;
+        cd('..');
+        unix(['rm -rf ' workdir_sig]);
       end
       disp('done bundle adjustment');
 
@@ -84,13 +91,13 @@ for v=v_ini:v_f % 1:nviews
                gama_pert_img, Gama_all);
 
       % Pose errors       
-      T_gt = -R_gt(:,:,v)*C_gt(:,:,v);
+      T_gt = -R_gt(:,:,v)*C_gt(:,v);
       [rt_errors(p,1),rt_errors(p,2)] = rf_pose_error(R_gt(:,:,v), T_gt, Rot, Transl);
 
-      total_iter = total_iter + 1;
-      disp(['== finished pose computation: ' num2str(total_iter) '/'...
-            num2str(n_perturbs*n_theta_perts) '('...
-            num2str(100*total_iter/(n_perturbs*n_theta_perts)) '%)']);
+%      total_iter = total_iter + 1;
+%      disp(['== finished pose computation: ' num2str(total_iter) '/'...
+%            num2str(n_perturbs*n_theta_perts) '('...
+%            num2str(100*total_iter/(n_perturbs*n_theta_perts)) '%)']);
     end
     all_errs{tp} = pert_errors;
     all_errs_no_badj{tp} = pert_errors_no_badj;
@@ -98,7 +105,7 @@ for v=v_ini:v_f % 1:nviews
     all_times{tp} = times;
   end
   all_errs_views{v} = all_errs;
-  all_errs_no_badj_views{v} = all_errs_no_badj_v;
+  all_errs_no_badj_views{v} = all_errs_no_badj;
   all_errs_rt_views{v} = all_errs_rt;
   all_times_views{v} = all_times;
 end  % views
@@ -109,7 +116,7 @@ end  % views
 [stat,gitinfo]=unix('git branch -v');
 script_path = mfilename('fullpath');
 timestamp = datetime('now');
-script_txt=load(sript_path);
+script_txt=load(script_path);
 save(['all_pairs_experiment_perturb-maxcount_' num2str(maxcount) '-ransac-sph.mat'],...
       'all_errs_views',...
       'all_errs_nobadj_views', ...
