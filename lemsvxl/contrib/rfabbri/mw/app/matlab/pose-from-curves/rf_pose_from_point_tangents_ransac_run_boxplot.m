@@ -9,24 +9,16 @@ clear all;
 
 distribs = cell(1,2);
 
-
 % capitol
 load ('~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-capitol2/working-state-capitol2-30samples-ransac_results.mat');
-distribs{1} = 
+distribs{1} = {all_errs{1}, all_errs{2}, all_errs{3}};
 
 
 % dino 
 load('~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-dino2/dino2-error-distrib-10samples-recovered_data.mat');
-distribs{2} = {all_errs{1}, all_errs{3}, all_errs{2}}
+distribs{2} = {all_errs{1}, all_errs{3}, all_errs{2}};
 
-
-badj=true;
-
-% Generate distribs 
-distribs{1} = {all_}% capitol
-distribs{2} = {}%dino
-
-
+% badj=true;
 
 % Remove theta zero
 %n_sub = n_sub - 1;
@@ -37,7 +29,6 @@ distribs{2} = {}%dino
 %------------------------------------------------------------------------------
 
 % Inputs -----------------------------------------------------------------------
-
 %  n_top:   number of top levels
 %  n_sub:   number of sub levels 
 %  distribs:  eg distribs{tp} same shape as 1st param to boxplot, transposed
@@ -50,7 +41,6 @@ sub_tags = {'A', 'B', 'C'};  % relate to legend done by hand
 n_top = 2; % capitol, dino
 n_sub = 3; % p2pt, p2pt bundle, dataset
 sub_axis_label = ''; 
-
 
 
 % Renamed
