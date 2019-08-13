@@ -1,6 +1,13 @@
 function [Rots, Transls, runtime] = rf_p3p_root_find_function_any(gamas,Gamas)
   % see rf_demo_p3p for sample usage
   % write points ---------------------------------------------------------------
+  tname = tempname;
+  hash=num2str(round(sum(gamas(:))*1000))
+  workdir = [tname hash]
+  unix(['mkdir ' workdir ' 2>/dev/null']);
+  orig_dir = pwd;
+  cd (workdir);
+  
   assert(size(gamas,1) == 3 && size(gamas,2) == 2);
   assert(size(Gamas,1) == 3 && size(Gamas,2) == 3);
   save('image_pts.txt','gamas','-ascii','-double');
@@ -25,3 +32,5 @@ function [Rots, Transls, runtime] = rf_p3p_root_find_function_any(gamas,Gamas)
     Transls{end+1} = rt(4,:)';
   end
   runtime = load('time');
+  unix(['rm -rf ' workdir]);
+  cd(orig_dir);

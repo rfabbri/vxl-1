@@ -1,5 +1,6 @@
 function [bestRot,bestTransl,bestResErr,bestResErrVec,vsolve_time]=rf_p3p_ransac_fn(...
-ids1, gama_pert, Gama_all, K_gt, gama_pert_img, dThresh)
+ids1, gama_pert, Gama_all, K_gt, gama_pert_img, dThresh, N)
+
 
 if nargin < 6
   dThresh = 1.5; % inlier distance threshold
@@ -9,11 +10,13 @@ e = .50; % outlier probability
 p = .99; % probability we hit all inliers sample
 s = 2;   % sample size
 % number of runs:
-N = log(1 - p)/log(1 - (1 - e)^s);
-% harcode:
-%N=1200; 
-N=1000; 
-%N=3; 
+%N = log(1 - p)/log(1 - (1 - e)^s);
+if ~exist('N','var')
+  % harcode:
+  %N=1200; 
+  N=1000; 
+  %N=3; 
+end
 
 
 samplesTaken = 0;
