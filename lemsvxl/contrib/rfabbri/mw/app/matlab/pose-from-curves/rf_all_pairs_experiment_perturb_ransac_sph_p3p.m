@@ -24,7 +24,7 @@ for v=v_ini:v_f % 1:nviews
 
     % P3P ------------------------------------------------------------------------
     dThreshRansac = perturb_levels(p)+1;
-    [Rot,Transl,bestResErr,bestResErrVec, solve_time] = rf_p3p_ransac_fn(ids1, gama_pert, Gama_all, K_gt, gama_pert_img, dThreshRansac);
+    [Rot,Transl,solve_time] = rf_p3p_ransac_fn(ids1, gama_pert, Gama_all, K_gt, gama_pert_img, dThreshRansac,N);
     % P3P END --------------------------------------------------------------------
 
     % We report reproj. errors on the entire perturbed ground truth:
@@ -34,7 +34,7 @@ for v=v_ini:v_f % 1:nviews
     disp('bundle adjustment');
     if b_adj
       % input for bundle adjustment.
-      signature = ['-view_' num2str(v) '-thetapert-' num2str(tp) '-pert-' num2str(p)];
+      signature = ['badj_view_' num2str(v) '-pert-' num2str(p)];
       workdir_sig = [workdir signature];
       unix(['mkdir ' workdir_sig ' 2>/dev/null']);
       cd(workdir_sig);
@@ -78,11 +78,10 @@ for v=v_ini:v_f % 1:nviews
 %            num2str(n_perturbs*n_theta_perts) '('...
 %            num2str(100*total_iter/(n_perturbs*n_theta_perts)) '%)']);
   end
-    all_errs{tp} = pert_errors;
-    all_errs_no_badj{tp} = pert_errors_no_badj;
-    all_errs_rt{tp} = rt_errors;
-    all_times{tp} = times;
-  end
+  all_errs = pert_errors;
+  all_errs_no_badj = pert_errors_no_badj;
+  all_errs_rt = rt_errors;
+  all_times = times;
   all_errs_p3p_views{v} = all_errs;
   all_errs_p3p_no_badj_views{v} = all_errs_no_badj;
   all_errs_p3p_rt_views{v} = all_errs_rt;
@@ -96,19 +95,17 @@ disp(['finished loops for ' num2str(v_ini) '-' num2str(v_f)]);
 [stat,gitinfo]=unix('git branch -v');
 script_path = mfilename('fullpath');
 timestamp = datetime('now');
-script_txt=load(script_path);
+%script_txt=load([script_path '.m'h]);
 repname = ['all_pairs_experiment_perturb-maxcount_' num2str(maxcount) '-ransac-sph-p3p.mat'];
 save(repname,...
       'all_errs_p3p_views',...
-      'all_errs_p3p_nobadj_views', ...
+      'all_errs_p3p_no_badj_views', ...
       'all_errs_p3p_rt_views',...
-      'all_p3p_times_views',...
+      'all_times_p3p_views',...
       'ids1','perturb_levels','theta_perturbs_deg',...
-      'script_path',...
-      'script_txt',...
       'timestamp',...
-      'gitinfo', 'v_ini', 'v_f');
-disp(['saved data to' repname]);
+      'gitinfo', 'v_ini', 'v_f', 'N');
+disp(['saved data to ' repname]);
       
 % % Raw plot ------------------------------------------------
 % figure;

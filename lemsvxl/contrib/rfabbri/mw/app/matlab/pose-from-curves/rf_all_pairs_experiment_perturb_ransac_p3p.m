@@ -4,6 +4,7 @@ cd ('~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curve
 %maxcount = 1100;  % how many ransac-like iterations (how many random samples)
 %maxcount = 3;
 b_adj = true;
+N = 1000; % ransac interations
 
 % TODO rewrite to use my static dataset
 %%%% Four comments %%%% = using the value loaded from .mat file
@@ -77,7 +78,7 @@ for p = 1:n_perturbs
 
   % P3P ------------------------------------------------------------------------
   dThreshRansac = perturb_levels(p)+1;
-  [Rot,Transl,bestResErr,bestResErrVec, solve_time] = rf_p3p_ransac_fn(ids1, gama_pert, Gama_all, K_gt, gama_pert_img, dThreshRansac);
+  [Rot,Transl,bestResErr,bestResErrVec, solve_time] = rf_p3p_ransac_fn(ids1, gama_pert, Gama_all, K_gt, gama_pert_img, dThreshRansac,N);
   % P3P END --------------------------------------------------------------------
 
   % We report reproj. errors on the entire perturbed ground truth:

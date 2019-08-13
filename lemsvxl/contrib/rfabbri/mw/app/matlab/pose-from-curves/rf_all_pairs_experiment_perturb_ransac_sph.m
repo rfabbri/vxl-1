@@ -43,9 +43,18 @@ for v=v_ini:v_f % 1:nviews
       gama_pert(:,3) = gama_pert(:,3)./gama_pert(:,3);
 
       dThreshRansac = perturb_levels(p)+1;
-      [Rot,Transl,bestResErr,bestResErrVec, solve_time] = rf_pose_from_point_tangents_ransac_fn(...
+      [Rot,Transl,solve_time] = rf_pose_from_point_tangents_ransac_fn(...
           ids1, gama_pert, tgt_pert, Gama_all, Tgt_all, ...
-          K_gt, gama_pert_img, dThreshRansac);
+          K_gt, gama_pert_img, dThreshRansac,N);
+      if Rot == -1 % retry
+        [Rot,Transl,solve_time] = rf_pose_from_point_tangents_ransac_fn(...
+            ids1, gama_pert, tgt_pert, Gama_all, Tgt_all, ...
+            K_gt, gama_pert_img, dThreshRansac,N);
+      end
+      if Rot == -1 % statistically insignificant, keep going
+        Rot = R_gt
+        Transl = -R_gt(:,:,v)*C_gt(:,v);
+      end
 
       % We report reproj. errors on the entire perturbed ground truth:
       pert_errors_no_badj(p,:) = rf_reprojection_error(K_gt*[Rot Transl], gama_pert_img, Gama_all);
@@ -55,7 +64,7 @@ for v=v_ini:v_f % 1:nviews
       disp('bundle adjustment');
       if b_adj
         % input for bundle adjustment.
-        signature = ['-view_' num2str(v) '-thetapert-' num2str(tp) '-pert-' num2str(p)];
+        signature = ['badj-view_' num2str(v) '-thetapert-' num2str(tp) '-pert-' num2str(p)];
         workdir_sig = [workdir signature];
         unix(['mkdir ' workdir_sig ' 2>/dev/null']);
         cd(workdir_sig);
@@ -117,19 +126,18 @@ disp(['finished loops for ' num2str(v_ini) '-' num2str(v_f)]);
 [stat,gitinfo]=unix('git branch -v');
 script_path = mfilename('fullpath');
 timestamp = datetime('now');
-script_txt=load(script_path);
+%script_txt=load(script_path);
 repname = ['all_pairs_experiment_perturb-maxcount_' num2str(maxcount) '-ransac-sph.mat'];
 save(repname,...
       'all_errs_views',...
-      'all_errs_nobadj_views', ...
+      'all_errs_no_badj_views', ...
       'all_errs_rt_views',...
       'all_times_views',...
       'ids1','perturb_levels','theta_perturbs_deg',...
       'script_path',...
-      'script_txt',...
       'timestamp',...
-      'gitinfo', 'v_ini', 'v_f');
-disp(['saved data to' repname]);
+      'gitinfo', 'v_ini', 'v_f', 'N');
+disp(['saved data to ' repname]);
       
 % % Raw plot ------------------------------------------------
 % figure;

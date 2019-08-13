@@ -1,5 +1,5 @@
-function [bestRot,bestTransl,bestResErr,bestResErrVec,vsolve_time]=rf_pose_from_point_tangents_ransac_fn(...
-ids1, gama_pert, tgt_pert, Gama_all, Tgt_all, K_gt, gama_pert_img, dThresh)
+function [bestRot,bestTransl,vsolve_time]=rf_pose_from_point_tangents_ransac_fn(...
+ids1, gama_pert, tgt_pert, Gama_all, Tgt_all, K_gt, gama_pert_img, dThresh, N)
 
 if nargin < 8
   dThresh = 1.5; % inlier distance threshold
@@ -9,12 +9,16 @@ e = .50; % outlier probability
 p = .99; % probability we hit all inliers sample
 s = 2;   % sample size
 % number of runs:
-N = log(1 - p)/log(1 - (1 - e)^s);
-% harcode:
-%N=1200; 
-%N=1000; 
-N=1000;  % XXX TODO
+%N = log(1 - p)/log(1 - (1 - e)^s);
+if ~exist('N','var')
+  % harcode:
+  %N=1200; 
+  %N=1000; 
+  N=1000; 
+end
 
+bestRot=-1;
+bestTransl = -1;
 bestResErr = Inf;
 maxInliers = 0;
 num_corresps = size(ids1,1);
