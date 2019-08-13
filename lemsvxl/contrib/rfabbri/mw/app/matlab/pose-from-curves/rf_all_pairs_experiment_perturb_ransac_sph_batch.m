@@ -1,17 +1,14 @@
 clear all;
 
-v_ini = 77;
-v_f = 78;
-%v_ini=@INI@; % REVERT TODO
-%v_f=@END@;
+v_ini=@INI@; % REVERT TODO
+v_f=@END@;
 %v_ini=1; v_f=10;
 b_adj = true;
-N = 3; % 1000 RANSAC iters TODO if change here, need to change in the
+N = 1000; % 1000 RANSAC iters TODO if change here, need to change in the
 %N = 1000; % 1000 RANSAC iters TODO if change here, need to change in the
  % RANSAC fn called below - not a param
 
-workdir = ['~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work-views-'
-  num2str(v_ini) '-' num2str(v_f) '/']
+workdir = ['~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work-views-' num2str(v_ini) '-' num2str(v_f) '/']
 unix(['mkdir ' workdir ' 2>/dev/null']);
 cd (workdir);
 
@@ -46,8 +43,8 @@ theta_perturbs_deg = [0 0.5 1 5 10];
 %perturb_levels = [0 0.5 1 2];  % PAPER XXX TODO
 %theta_perturbs_deg = [0 0.5 1 5 10];
 
-perturb_levels = [0 0.5];
-theta_perturbs_deg = [0 1];
+%perturb_levels = [0 0.5];
+%theta_perturbs_deg = [1];
 
 %perturb_levels = [0 0.1 0.5 1 2];
 %theta_perturbs_deg = [0 0.1 0.5 1 2 5 7 10];
