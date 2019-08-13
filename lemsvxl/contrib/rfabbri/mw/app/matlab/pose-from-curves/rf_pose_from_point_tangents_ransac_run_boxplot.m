@@ -7,16 +7,17 @@ clear all;
 %recovered plot data: paper/figs/*/dino2-error-distrib-10samples-recovered_data.mat
 %also at 
 
-distribs = cell(1,2);
+distribs = {}
 
 % capitol
-load ('~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-capitol2/working-state-capitol2-30samples-ransac_results.mat');
-distribs{1} = {all_errs{1}, all_errs{2}, all_errs{3}};
+load ('~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-capitol2/capitol2-error-distrib-30samples-b_adj-recovered_data.mat');
+distribs{end+1} = [all_errs{1}; all_errs{2}; all_errs{3}];
 
 
 % dino 
 load('~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-dino2/dino2-error-distrib-10samples-recovered_data.mat');
-distribs{2} = {all_errs{1}, all_errs{3}, all_errs{2}};
+%distribs{2} = {all_errs(1,:), all_errs(3,:), all_errs(2,:)};
+distribs{end+1} = all_errs;
 
 % badj=true;
 
@@ -77,7 +78,7 @@ for tp = 1:n_sub
   positions = (1:n_top) + delta(tp);
   nbx = size(ax.Children,1);
   bx = boxplot(distribs{tp}', ...
-    'positions', positions, 'widths', width, 'labels', top_tags, 'colors', ecolor(tp,:),...
+    'positions', positions, 'widths', width, 'labels', sub_tags, 'colors', ecolor(tp,:),...
     'symbol','.');
   %set(findobj(gcf,'tag','Box'), 'Color', red);
   nbx = size(ax.Children,1) - nbx;

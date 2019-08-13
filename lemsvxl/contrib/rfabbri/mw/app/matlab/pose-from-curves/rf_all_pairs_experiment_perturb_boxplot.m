@@ -3,13 +3,13 @@ clear all;
 
 % by default this loads all state variables
 % plus the data for fig 10 (synth w/o badj)
-load('/home/rfabbri/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/working-state-synthetic-ransac_results-paper.mat')
+load('/home/rfabbri/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work-eccv12/working-state-synthetic-ransac_results-paper.mat')
 
 badj=true;
 
 if badj
   % load this for fig 11 (synth w/badj)
-  load('/home/rfabbri/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work/all_pairs_experiment_perturb-maxcount_1100-ransac.mat')
+  load('/home/rfabbri/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work-eccv12/all_pairs_experiment_perturb-maxcount_1100-ransac.mat')
 end
 
 % Remove theta zero
