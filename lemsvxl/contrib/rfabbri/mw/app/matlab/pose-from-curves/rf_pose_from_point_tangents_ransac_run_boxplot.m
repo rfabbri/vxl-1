@@ -7,17 +7,19 @@ clear all;
 %recovered plot data: paper/figs/*/dino2-error-distrib-10samples-recovered_data.mat
 %also at 
 
-distribs = {}
+distribs_dat = {}
 
 % capitol
 load ('~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-capitol2/capitol2-error-distrib-30samples-b_adj-recovered_data.mat');
-distribs{end+1} = [all_errs{1}; all_errs{2}; all_errs{3}];
+distribs_dat{end+1} = [all_errs{1}; all_errs{2}; all_errs{3}];
 
 
 % dino 
 load('~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-dino2/dino2-error-distrib-10samples-recovered_data.mat');
 %distribs{2} = {all_errs(1,:), all_errs(3,:), all_errs(2,:)};
-distribs{end+1} = all_errs;
+distribs_dat{end+1} = all_errs;
+
+distribs = { [distribs_dat{1}(1,:); distribs_dat{2}(1,:)], [distribs_dat{1}(2,:); distribs_dat{2}(2,:)], [distribs_dat{1}(3,:); distribs_dat{2}(3,:)]};
 
 % badj=true;
 
@@ -38,11 +40,10 @@ distribs{end+1} = all_errs;
 %  sub_axis_label: short string to show indicating sublevel.
 
 top_tags = {'capitol','dino'};
-sub_tags = {'A', 'B', 'C'};  % relate to legend done by hand
+sub_tags = {'1', '2', '3'};  % relate to legend done by hand
 n_top = 2; % capitol, dino
 n_sub = 3; % p2pt, p2pt bundle, dataset
 sub_axis_label = ''; 
-
 
 % Renamed
 % n_perturbs <---> n_top %level
@@ -65,9 +66,11 @@ hold on
 grid on
 set(gca,'XGrid','off')
 set(groot, 'defaultAxesTickLabelInterpreter','tex'); set(groot, 'defaultLegendInterpreter','latex');
-xlabel('dataset'); 
-ylabel('reprojection error');
+%xlabel('dataset'); 
+ylabel('reprojection error (pixels)');
 color = min(lines(n_sub)+0.2,1);
+lines5 = lines(5);
+color(n_sub,:) = min(lines5(5,:)+0.2,1); % XXX green rather than y
 %color = color([2 1 3:end],:)
 %color = [233 83 62; 235 120 34; 0 136 195; 197 51 107; 0 125 28]/255;
 %ecolor = max(color - 0.2,0);
@@ -78,7 +81,7 @@ for tp = 1:n_sub
   positions = (1:n_top) + delta(tp);
   nbx = size(ax.Children,1);
   bx = boxplot(distribs{tp}', ...
-    'positions', positions, 'widths', width, 'labels', sub_tags, 'colors', ecolor(tp,:),...
+    'positions', positions, 'widths', width, 'labels', top_tags, 'colors', ecolor(tp,:),...
     'symbol','.');
   %set(findobj(gcf,'tag','Box'), 'Color', red);
   nbx = size(ax.Children,1) - nbx;
@@ -157,9 +160,11 @@ if length(sub_axis_label) ~= 0
 end
 
 %set(gca,'box','off')
-xlim([0.5 3.5]);
-ylim([-0.4 6]);
-set(gca,'plotboxaspectratio',[1 0.7857 0.7857])
+xlim([0.5 2.5]);
+ylim([-0.05 0.25]);
+set(gca,'plotboxaspectratio',[1.0000    0.5096    0.5096])
+%set(gca,'plotboxaspectratio',[0.9180    1.0000    0.9180])
+%set(gca,'plotboxaspectratio',[1 0.7857 0.7857])
 %if badj
 %  ylim([-0.4 3]);
 %end
