@@ -14,10 +14,12 @@ function [Rots, Transls, runtime] = rf_p3p_root_find_function_any(gamas,Gamas)
   save('world_pts.txt','Gamas','-ascii','-double');
   
   % run p3p --------------------------------------------------------------------
-  % VM: retval = unix('ssh 192.168.1.116 /Users/rfabbri/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/scripts/pnp-run');
   retval = unix('$HOME/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/scripts/pnp-run');
   if retval
-    error('something wrong with p3p pose app.');
+    retval = unix('ssh 192.168.1.116 /Users/rfabbri/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/scripts/pnp-run-vm');
+    if retval
+      error('something wrong with p3p pose app.');
+    end
   end
   
   % read results ---------------------------------------------------------------
