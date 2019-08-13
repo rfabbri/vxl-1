@@ -11,6 +11,9 @@ distribs = cell(1,2);
 
 
 % capitol
+load ('~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-capitol2/working-state-capitol2-30samples-ransac_results.mat');
+distribs{1} = 
+
 
 % dino 
 load('~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-dino2/dino2-error-distrib-10samples-recovered_data.mat');
