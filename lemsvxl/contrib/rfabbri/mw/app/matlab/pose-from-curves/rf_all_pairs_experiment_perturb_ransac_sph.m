@@ -43,7 +43,7 @@ for v=v_ini:v_f % 1:nviews
       gama_pert(:,3) = gama_pert(:,3)./gama_pert(:,3);
 
       dThreshRansac = perturb_levels(p)+1;
-      [Rot,Transl,bestResErr,bestResErrVec, solve_time] = rf_pose_from_point_tangents_ransac_fn(...
+      [Rot,Transl,solve_time] = rf_pose_from_point_tangents_ransac_fn(...
           ids1, gama_pert, tgt_pert, Gama_all, Tgt_all, ...
           K_gt, gama_pert_img, dThreshRansac,N);
 
@@ -55,7 +55,7 @@ for v=v_ini:v_f % 1:nviews
       disp('bundle adjustment');
       if b_adj
         % input for bundle adjustment.
-        signature = ['-view_' num2str(v) '-thetapert-' num2str(tp) '-pert-' num2str(p)];
+        signature = ['badj-view_' num2str(v) '-thetapert-' num2str(tp) '-pert-' num2str(p)];
         workdir_sig = [workdir signature];
         unix(['mkdir ' workdir_sig ' 2>/dev/null']);
         cd(workdir_sig);
