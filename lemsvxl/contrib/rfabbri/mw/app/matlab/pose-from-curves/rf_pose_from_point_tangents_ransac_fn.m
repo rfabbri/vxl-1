@@ -17,6 +17,8 @@ if ~exist('N','var')
   N=1000; 
 end
 
+bestRot=-1;
+bestTransl = -1;
 bestResErr = Inf;
 maxInliers = 0;
 num_corresps = size(ids1,1);
