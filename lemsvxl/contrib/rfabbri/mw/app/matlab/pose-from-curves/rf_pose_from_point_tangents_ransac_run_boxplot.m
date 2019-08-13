@@ -7,19 +7,20 @@ clear all;
 %recovered plot data: paper/figs/*/dino2-error-distrib-10samples-recovered_data.mat
 %also at 
 
-distribs_dat = {}
+distribs_dat = cell(1,2);
+ns = 10000;
+
+% dino 
+load('~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-dino2/dino2-error-distrib-10samples-recovered_data-v2.mat');
+%distribs{2} = {all_errs(1,:), all_errs(3,:), all_errs(2,:)};
+distribs_dat{2} = [x_errs(randsmpl(all_errs(1,:),1,ns)); x_errs(randsmpl(all_errs(3,:),1,ns)); x_errs(randsmpl(all_errs(2,:),1,ns))];
 
 % capitol
 load ('~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-capitol2/capitol2-error-distrib-30samples-b_adj-recovered_data.mat');
-distribs_dat{end+1} = [all_errs{1}; all_errs{2}; all_errs{3}];
-
-
-% dino 
-load('~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-dino2/dino2-error-distrib-10samples-recovered_data.mat');
-%distribs{2} = {all_errs(1,:), all_errs(3,:), all_errs(2,:)};
-distribs_dat{end+1} = all_errs;
+distribs_dat{1} = [x_errs(randsmpl(all_errs{1},1,ns)); x_errs(randsmpl(all_errs{2},1,ns)); x_errs(randsmpl(all_errs{3},1,ns))];
 
 distribs = { [distribs_dat{1}(1,:); distribs_dat{2}(1,:)], [distribs_dat{1}(2,:); distribs_dat{2}(2,:)], [distribs_dat{1}(3,:); distribs_dat{2}(3,:)]};
+
 
 % badj=true;
 
@@ -40,7 +41,7 @@ distribs = { [distribs_dat{1}(1,:); distribs_dat{2}(1,:)], [distribs_dat{1}(2,:)
 %  sub_axis_label: short string to show indicating sublevel.
 
 top_tags = {'capitol','dino'};
-sub_tags = {'1', '2', '3'};  % relate to legend done by hand
+sub_tags = {'a', 'b', 'c'};  % relate to legend done by hand
 n_top = 2; % capitol, dino
 n_sub = 3; % p2pt, p2pt bundle, dataset
 sub_axis_label = ''; 
@@ -151,7 +152,7 @@ for il=1:size(lines,1)
     mx = x
   end
   tp = n_sub - floor((il-1)/n_top);
-  text(x,0-0.2,sub_tags{tp}, 'HorizontalAlignment', 'center', 'Fontsize', 8, 'color', color(tp,:)*0.8)
+  text(x,0-0.02,sub_tags{tp}, 'HorizontalAlignment', 'center', 'Fontsize', 10, 'color', color(tp,:)*0.8)
   %text(x+0.015,0-0.2,[num2str(theta_perturbs_deg(tp)) '^\circ'], 'HorizontalAlignment', 'center', 'Fontsize', 8, 'color', color(tp,:)*0.8)
   set(mlines(il), 'Color', ecolor(tp,:)*0.7);
 end
@@ -163,6 +164,7 @@ end
 xlim([0.5 2.5]);
 ylim([-0.05 0.25]);
 set(gca,'plotboxaspectratio',[1.0000    0.5096    0.5096])
+ylim([-0.05 0.25]);
 %set(gca,'plotboxaspectratio',[0.9180    1.0000    0.9180])
 %set(gca,'plotboxaspectratio',[1 0.7857 0.7857])
 %if badj
