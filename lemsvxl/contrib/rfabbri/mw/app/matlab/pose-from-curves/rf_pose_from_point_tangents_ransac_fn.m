@@ -1,4 +1,4 @@
-function [bestRot,bestTransl,bestResErr,bestResErrVec,vsolve_time]=rf_pose_from_point_tangents_ransac_fn(...
+function [bestRot,bestTransl,vsolve_time]=rf_pose_from_point_tangents_ransac_fn(...
 ids1, gama_pert, tgt_pert, Gama_all, Tgt_all, K_gt, gama_pert_img, dThresh, N)
 
 if nargin < 8
@@ -17,6 +17,8 @@ if ~exist('N','var')
   N=1000; 
 end
 
+bestRot=-1;
+bestTransl = -1;
 bestResErr = Inf;
 maxInliers = 0;
 num_corresps = size(ids1,1);

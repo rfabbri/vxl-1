@@ -32,5 +32,5 @@ end
 [stat,cpuinfo]=unix('cat /proc/cpuinfo');
 script_path = mfilename('fullpath');
 timestamp = datetime('now');
-save(['time-random-rf_time_experiment-' stamp '-nreps-' num2str(reps)],'vsolve_time', 'cpuinfo','script_path','timestamp', 'vfail', 'vdRbest', 'dTbest', 'vnumber_of_solutions'); 
+save(['time-random-rf_time_experiment-' stamp '-nreps-' num2str(reps)],'vsolve_time', 'cpuinfo','script_path','timestamp', 'vfail', 'vdRbest', 'vdTbest', 'vnumber_of_solutions'); 
 % boxplot

@@ -24,7 +24,7 @@ for v=v_ini:v_f % 1:nviews
 
     % P3P ------------------------------------------------------------------------
     dThreshRansac = perturb_levels(p)+1;
-    [Rot,Transl,bestResErr,bestResErrVec, solve_time] = rf_p3p_ransac_fn(ids1, gama_pert, Gama_all, K_gt, gama_pert_img, dThreshRansac,N);
+    [Rot,Transl,solve_time] = rf_p3p_ransac_fn(ids1, gama_pert, Gama_all, K_gt, gama_pert_img, dThreshRansac,N);
     % P3P END --------------------------------------------------------------------
 
     % We report reproj. errors on the entire perturbed ground truth:
@@ -34,7 +34,7 @@ for v=v_ini:v_f % 1:nviews
     disp('bundle adjustment');
     if b_adj
       % input for bundle adjustment.
-      signature = ['-view_' num2str(v) '-pert-' num2str(p)];
+      signature = ['badj_view_' num2str(v) '-pert-' num2str(p)];
       workdir_sig = [workdir signature];
       unix(['mkdir ' workdir_sig ' 2>/dev/null']);
       cd(workdir_sig);
@@ -105,7 +105,7 @@ save(repname,...
       'ids1','perturb_levels','theta_perturbs_deg',...
       'timestamp',...
       'gitinfo', 'v_ini', 'v_f', 'N');
-disp(['saved data to' repname]);
+disp(['saved data to ' repname]);
       
 % % Raw plot ------------------------------------------------
 % figure;
