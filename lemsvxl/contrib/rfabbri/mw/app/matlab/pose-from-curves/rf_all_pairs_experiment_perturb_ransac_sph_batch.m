@@ -1,14 +1,13 @@
 clear all;
 
-v_ini=@INI@; % REVERT TODO
+v_ini=@INI@;
 v_f=@END@;
 %v_ini=1; v_f=10;
 b_adj = true;
-N = 1000; % 1000 RANSAC iters TODO if change here, need to change in the
-%N = 1000; % 1000 RANSAC iters TODO if change here, need to change in the
+N = 1000 % RANSAC iters TODO if change here, need to change in the
  % RANSAC fn called below - not a param
 
-workdir = ['~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work/views-' num2str(v_ini) '-' num2str(v_f) '/']
+workdir = ['~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work/views-' num2str(v_ini) '-' num2str(v_f) '-v1/']
 unix(['mkdir ' workdir ' 2>/dev/null']);
 cd (workdir);
 
