@@ -302,7 +302,7 @@ for il=1:size(lines,1)
     mx = x
   end
   tp = n_sub - floor((il-1)/n_top);
-  text(x,0-0.02,sub_tags{tp}, 'HorizontalAlignment', 'center', 'Fontsize', 10, 'color', color(tp,:)*0.8)
+  text(x,0-0.1,sub_tags{tp}, 'HorizontalAlignment', 'center', 'Fontsize', 10, 'color', color(tp,:)*0.8)
   %text(x+0.015,0-0.2,[num2str(theta_perturbs_deg(tp)) '^\circ'], 'HorizontalAlignment', 'center', 'Fontsize', 8, 'color', color(tp,:)*0.8)
   set(mlines(il), 'Color', ecolor(tp,:)*0.7);
 end
@@ -312,9 +312,10 @@ end
 
 %set(gca,'box','off')
 xlim([0.5 2.5]);
-ylim([-0.05 0.25]);
+ylim([-0.3 3.5]);
 set(gca,'plotboxaspectratio',[1.0000    0.5096    0.5096])
-ylim([-0.05 0.25]);
+%set(gca,'plotboxaspectratio',[1.0000    0.5048    0.5048])
+%ylim([-0.05 0.25]);
 %set(gca,'plotboxaspectratio',[0.9180    1.0000    0.9180])
 %set(gca,'plotboxaspectratio',[1 0.7857 0.7857])
 %if badj
