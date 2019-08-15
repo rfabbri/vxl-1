@@ -5,7 +5,8 @@ id2 = 2;
 A = load('~/lib/data/dino-iccv2011/iccv-experiment/ground-truth-edgels-25-323-189-data-10corresp-no_fail-v1.dat');
 %A = load('/home/rfabbri/lib/data/dino-iccv2011/iccv-experiment/ground-truth-edgels-25-323-189-data-10corresp-v1.dat');
 
-cd ~/cprg/vxlprg/lemsvxlsrc-git2/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-dino-pami/work/
+%cd ~/cprg/vxlprg/lemsvxlsrc-git2/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-dino-pami/work/
+cd ~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-dino-pami/work/
 
 A=reshape(A',3,11,10);
 

@@ -4,7 +4,8 @@ id2 = 2;
 
 A = load('~/lib/data/right-dome-subset-local-mcs-work/ground-truth/edgel-corresp-1-177-66-data_matlab_v1.dat');
 
-cd ~/cprg/vxlprg/lemsvxlsrc-git2/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-capitol-pami/work/
+%cd ~/cprg/vxlprg/lemsvxlsrc-git2/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-capitol-pami/work/
+cd ~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-capitol-pami/work/
 
 A=reshape(A',3,11,29);
 
