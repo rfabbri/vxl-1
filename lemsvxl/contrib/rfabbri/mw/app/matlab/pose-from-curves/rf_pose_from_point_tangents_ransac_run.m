@@ -1,7 +1,7 @@
 clear all;
 % TODO: dataset does chdir to working results dir
-rf_real_point_tangents_dino2;
-% rf_real_point_tangents_capitol2;
+% rf_real_point_tangents_dino2;
+rf_real_point_tangents_capitol2;
 
 dThreshRansac = max(errors_gt) + 0.5;
 ids1 = (1:size(gama_all,1))';
