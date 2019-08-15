@@ -2,9 +2,9 @@
 id1 = 1;
 id2 = 2;
 
-A = load('/home/rfabbri/lib/data/right-dome-subset-local-mcs-work/ground-truth/edgel-corresp-1-177-66-data_matlab_v1.dat');
+A = load('~/lib/data/right-dome-subset-local-mcs-work/ground-truth/edgel-corresp-1-177-66-data_matlab_v1.dat');
 
-cd /home/rfabbri/cprg/vxlprg/lemsvxlsrc-git2/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-capitol2/work/
+cd ~/cprg/vxlprg/lemsvxlsrc-git2/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-capitol-pami/work/
 
 A=reshape(A',3,11,29);
 

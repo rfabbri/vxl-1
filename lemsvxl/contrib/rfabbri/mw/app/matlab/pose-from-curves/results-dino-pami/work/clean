@@ -1,0 +1,2 @@
+#rm `ls *.txt|grep -v _pts.txt`
+rm *.txt

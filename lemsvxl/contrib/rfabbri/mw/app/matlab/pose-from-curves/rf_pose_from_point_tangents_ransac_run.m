@@ -24,7 +24,7 @@ save('camera_RC.txt','RC','-ascii','-double');
 save('camera_K.txt','K_gt','-ascii','-double');
 
 % run bundle adjustment.
-retval = unix('dbccl_refine_pose_app');
+retval = unix('$HOME/cprg/vxlprg/lemsvpe/lemsvxl-bin/bin/dbccl_refine_pose_app');
 if retval
   error('something wrong with refine pose app.');
 end

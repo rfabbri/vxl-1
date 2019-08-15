@@ -70,7 +70,7 @@ ecolor = color;
 
 %-------------------------------------------------------------------------------
 ax = gca;
-ticks = zeros(1,tp);
+%ticks = zeros(1,tp);
 for tp = 1:(n_theta_perts+1)
   positions = (1:n_perturbs) + delta(tp);
   nbx = size(ax.Children,1);
