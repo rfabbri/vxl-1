@@ -10,7 +10,9 @@
 %  sub_tags: similarly for sub
 %  sub_axis_label: short string to show indicating sublevel.
 
-distribs = all_errs_no_badj_all;
+%distribs = all_errs_no_badj_all;
+%distribs = all_errs_views_all;
+distribs = all_errs_rt_views_all;
 
 n_top = n_perts; % positional perturb
 n_sub = n_theta_perts + 1; % thetas, then p3p
@@ -142,6 +144,8 @@ end
 %set(gca,'box','off')
 xlim([0.5 2.5]);
 ylim([-0.3 3.5]);
+%xlim([0.5 2.5]);  for rotational error
+%ylim([-0.1 0.3]);
 set(gca,'plotboxaspectratio',[1.0000    0.5096    0.5096])
 %set(gca,'plotboxaspectratio',[1.0000    0.5048    0.5048])
 %ylim([-0.05 0.25]);
