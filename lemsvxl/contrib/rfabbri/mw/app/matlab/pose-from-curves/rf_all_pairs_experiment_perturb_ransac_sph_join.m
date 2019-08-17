@@ -1,38 +1,63 @@
-% load data --------------------------------------------------------------------
+% after this script, call coalesce and boxplot sph
 clear
+% load data -------------------------------------------------------------------
+
 workdir='~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth-pami/a'
-cd workdir
+cd(workdir);
+load('all-joined.mat');
+
+% preload 
+
+coalesce_sph
+
+% UNCOMENT to recompute
+return %%----------------------------------------------------------------------
+%------------------------------------------------------------------------------
+
 
 nviews = 100;
 all_errs_no_badj_views_join = cell(1,nviews);
 all_errs_rt_views_join = cell(1,nviews);
 all_errs_views_join = cell(1,nviews);
 all_times_views_join = cell(1,nviews);
-
-p3p=0;
-
-if p3p
-  prefix = 'p3p-'
-  prefix_out = prefix;
-else
-  prefix = ''
-  prefix_out = 'p2pt-'
-end
-
+all_errs_no_badj_views_join_p3p = cell(1,nviews);
+all_errs_rt_views_join_p3p = cell(1,nviews);
+all_errs_views_join_p3p = cell(1,nviews);
+all_times_views_join_p3p = cell(1,nviews);
+has_data = zeros(1,nviews);
+has_data_p3p = zeros(1,nviews);
+prefix = ''
+prefix_out = 'p2pt-'
 dat = dir([prefix 'views*']);
 nfiles = length(dat);
 
-
 % join -------------------------------------------------------------------------
 for f=1:nfiles
-  load(dat(f));
-  all_errs_views_join(v_ini:v_f) = all_errs_views(v_ini:v_f);
-  all_errs_no_badj_views_join(v_ini:v_f) = all_errs_no_badj_views(v_ini:v_f);
-  all_errs_rt_views_join(v_ini:v_f) = all_errs_rt_views(v_ini:v_f);
-  all_times_views_join_join(v_ini:v_f) = all_times_views_join(v_ini:v_f);
+  load([dat(f).name '/all_pairs_experiment_perturb-maxcount_5117-ransac-sph.mat']);
+  for v=v_ini:v_f
+    all_errs_views_join{v} = all_errs_views{v}
+    all_errs_no_badj_views_join{v} = all_errs_no_badj_views{v};
+    all_errs_rt_views_join{v} = all_errs_rt_views{v};
+    all_times_views_join{v} = all_times_views{v};
+    has_data(v) = 1;
+  end
 end
 
+prefix = 'p3p-'
+prefix_out = prefix;
+dat = dir([prefix 'views*']);
+nfiles = length(dat);
+for f=1:nfiles
+  load([dat(f).name '/all_pairs_experiment_perturb-maxcount_5117-ransac-sph-p3p.mat']);
+  for v=v_ini:v_f
+    assert(isempty(all_errs_views_join_p3p{v}));
+    all_errs_views_join_p3p{v} = all_errs_p3p_views{v}
+    all_errs_no_badj_views_join_p3p{v} = all_errs_p3p_no_badj_views{v};
+    all_errs_rt_views_join_p3p{v} = all_errs_p3p_rt_views{v};
+    all_times_views_join_p3p{v} = all_times_p3p_views{v};
+    has_data_p3p(v) = 1;
+  end
+end
 
 % save -------------------------------------------------------------------------
-
-save([prefix_out '-joined.mat'])
+save(['all-joined.mat'])
