@@ -12,7 +12,16 @@
 
 %distribs = all_errs_no_badj_all;
 %distribs = all_errs_views_all;
-distribs = all_errs_rt_views_all;
+distribs = all_errs_rotation_views_all;
+%distribs = all_errs_translation_views_all;
+
+% error check
+szd = size(distribs{1})
+for i=2:length(distribs)
+    if size(distribs{i}) ~= szd
+      error('distribs must have equally sized components');
+    end
+end
 
 n_top = n_perts; % positional perturb
 n_sub = n_theta_perts + 1; % thetas, then p3p
@@ -33,6 +42,8 @@ my_xlabel = '\Delta_{pos} (positional perturbation in pixels)';
 % Renamed
 % n_perturbs <---> n_top %level
 % theta_perts <--> n_sub %level
+
+assert(length(distribs) == n_sub);
 
 % ------------------------------------------------------------------------------
 %T={};
