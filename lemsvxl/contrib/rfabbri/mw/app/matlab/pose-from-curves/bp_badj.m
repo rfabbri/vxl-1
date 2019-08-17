@@ -11,9 +11,9 @@
 %  sub_axis_label: short string to show indicating sublevel.
 
 %distribs = all_errs_no_badj_all;
-%distribs = all_errs_views_all;
+distribs = all_errs_views_all;
 %distribs = all_times_views_all;
-distribs = all_errs_rotation_views_all;
+%distribs = all_errs_rotation_views_all;
 %distribs = all_errs_translation_views_all;
 
 % error check
@@ -38,7 +38,7 @@ end
 sub_tags{n_sub} = 'P3P';
 sub_axis_label = '\Delta_\theta \rightarrow';
 
-my_xlabel = '\Delta_{pos} (positional perturbation in pixels)';
+my_xlabel = '\Delta_{pos} (pixels)';
 
 % Renamed
 % n_perturbs <---> n_top %level
@@ -52,7 +52,7 @@ assert(length(distribs) == n_sub);
 %  T{end+1} = ['\Delta_\theta = ', num2str(theta_perturbs_deg(tp))];
 %end
 
-delta = linspace(-.25,.25,n_sub);  % define offsets to distinguish plots
+delta = linspace(-.3,.3,n_sub);  % define offsets to distinguish plots
 %delta = zeros(1:n_sub)+;
 width = .08;  % small width to minimize overlap
 %legWidth = 1.8; % make room for legend
@@ -144,7 +144,13 @@ for il=1:size(llines,1)
     mx = x
   end
   tp = n_sub - floor((il-1)/n_top);
-  text(x,0-0.2,sub_tags(tp), 'HorizontalAlignment', 'center', 'Fontsize', 8, 'color', color(tp,:)*0.8)
+  if tp == n_sub
+    text(x+0.01,0-0.2,sub_tags(tp), 'HorizontalAlignment', 'center', 'Fontsize', 8, 'color', color(tp,:)*0.8)
+  elseif tp == n_sub-1
+    text(x-0.01,0-0.2,sub_tags(tp), 'HorizontalAlignment', 'center', 'Fontsize', 8, 'color', color(tp,:)*0.8)
+  else
+    text(x,0-0.2,sub_tags(tp), 'HorizontalAlignment', 'center', 'Fontsize', 8, 'color', color(tp,:)*0.8)
+  end
   %text(x,0-0.1,sub_tags{tp}, 'HorizontalAlignment', 'center', 'Fontsize', 10, 'color', color(tp,:)*0.8)
   %text(x+0.015,0-0.2,[num2str(theta_perturbs_deg(tp)) '^\circ'], 'HorizontalAlignment', 'center', 'Fontsize', 8, 'color', color(tp,:)*0.8)
   set(mlines(il), 'Color', ecolor(tp,:)*0.7);
@@ -154,12 +160,13 @@ if length(sub_axis_label) ~= 0
 end
 
 %set(gca,'box','off')
-xlim([0.5 2.5]);
-ylim([-0.3 3.5]);
+xlim([ 0.5187    3.5122]);
+ylim([-0.4306    6.3694]);
+
 %xlim([0.5 2.5]);  for rotational error
 %ylim([-0.1 0.3]);
-set(gca,'plotboxaspectratio',[1.0000    0.5096    0.5096])
-%set(gca,'plotboxaspectratio',[1.0000    0.5048    0.5048])
+%set(gca,'plotboxaspectratio',[1.0000    0.5096    0.5096])
+set(gca,'plotboxaspectratio',[1.0000    0.6035    0.6035])
 %ylim([-0.05 0.25]);
 %set(gca,'plotboxaspectratio',[0.9180    1.0000    0.9180])
 %set(gca,'plotboxaspectratio',[1 0.7857 0.7857])
