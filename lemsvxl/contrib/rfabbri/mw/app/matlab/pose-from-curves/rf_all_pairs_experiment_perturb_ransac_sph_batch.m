@@ -7,7 +7,7 @@ b_adj = true;
 N = 1000 % RANSAC iters TODO if change here, need to change in the
  % RANSAC fn called below - not a param
 
-workdir = ['~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work/views-' num2str(v_ini) '-' num2str(v_f) '-v5/']
+workdir = ['~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work/views-' num2str(v_ini) '-' num2str(v_f) '-v7/']
 unix(['mkdir ' workdir ' 2>/dev/null']);
 cd (workdir);
 
@@ -53,6 +53,7 @@ nviews = size(R_gt, 3);
 all_errs_views = cell(1,nviews);
 all_errs_no_badj_views = cell(1,nviews);
 all_errs_rt_views = cell(1,nviews);
+all_errs_rt_no_badj_views = cell(1,nviews);
 all_times_views = cell(1,nviews);
 
 rf_all_pairs_experiment_perturb_ransac_sph

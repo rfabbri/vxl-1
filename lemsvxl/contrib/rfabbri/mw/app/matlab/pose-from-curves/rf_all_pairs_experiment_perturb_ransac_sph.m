@@ -6,11 +6,13 @@ for v=v_ini:v_f % 1:nviews
   all_errs = cell(1,n_theta_perts);
   all_errs_no_badj = cell(1,n_theta_perts);
   all_errs_rt = cell(1,n_theta_perts);
+  all_errs_rt_no_badj = cell(1,n_theta_perts);
   all_times = cell(1,n_theta_perts); 
   for tp = 1:n_theta_perts
     pert_errors = zeros(n_perturbs, nsamples_pool);
     pert_errors_no_badj = zeros(n_perturbs, nsamples_pool);
     rt_errors = zeros(n_perturbs,2); % 1 = R, 2 = T
+    rt_errors_no_badj = zeros(n_perturbs,2); % 1 = R, 2 = T
     times = zeros(n_perturbs,N);
     tgt_pert = perturb_tangent(tgt_all_img(:,:,v), theta_perturbs_deg(tp)*pi/180);
 
@@ -58,6 +60,10 @@ for v=v_ini:v_f % 1:nviews
 
       % We report reproj. errors on the entire perturbed ground truth:
       pert_errors_no_badj(p,:) = rf_reprojection_error(K_gt*[Rot Transl], gama_pert_img, Gama_all);
+      
+      % Pose errors       
+      T_gt = -R_gt(:,:,v)*C_gt(:,v);
+      [rt_errors_no_badj(p,1),rt_errors_no_badj(p,2)] = rf_pose_error(R_gt(:,:,v), T_gt, Rot, Transl);
 
       times(p,:) = solve_time;
 
@@ -100,7 +106,6 @@ for v=v_ini:v_f % 1:nviews
                gama_pert_img, Gama_all);
 
       % Pose errors       
-      T_gt = -R_gt(:,:,v)*C_gt(:,v);
       [rt_errors(p,1),rt_errors(p,2)] = rf_pose_error(R_gt(:,:,v), T_gt, Rot, Transl);
 
 %      total_iter = total_iter + 1;
@@ -111,11 +116,13 @@ for v=v_ini:v_f % 1:nviews
     all_errs{tp} = pert_errors;
     all_errs_no_badj{tp} = pert_errors_no_badj;
     all_errs_rt{tp} = rt_errors;
+    all_errs_rt_no_badj{tp} = rt_errors_no_badj;
     all_times{tp} = times;
   end
   all_errs_views{v} = all_errs;
   all_errs_no_badj_views{v} = all_errs_no_badj;
   all_errs_rt_views{v} = all_errs_rt;
+  all_errs_rt_no_badj_views{v} = all_errs_rt_no_badj;
   all_times_views{v} = all_times;
 end  % views
 disp(['finished loops for ' num2str(v_ini) '-' num2str(v_f)]);
@@ -132,6 +139,7 @@ save(repname,...
       'all_errs_views',...
       'all_errs_no_badj_views', ...
       'all_errs_rt_views',...
+      'all_errs_rt_no_badj_views',...
       'all_times_views',...
       'ids1','perturb_levels','theta_perturbs_deg',...
       'script_path',...

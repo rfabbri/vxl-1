@@ -6,10 +6,10 @@ v_ini=@INI@;
 v_f=@END@;
 %v_ini=1; v_f=10;
 b_adj = true;
-N = 30% RANSAC iters TODO if change here, need to change in the
+N = 100% RANSAC iters TODO if change here, need to change in the
  % RANSAC fn called below - not a param
 
-workdir = ['~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work/p3p-views-' num2str(v_ini) '-' num2str(v_f) '-v30/']
+workdir = ['~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work/p3p-views-' num2str(v_ini) '-' num2str(v_f) '-v100_2/']
 unix(['mkdir ' workdir ' 2>/dev/null']);
 cd (workdir);
 
@@ -55,6 +55,7 @@ nviews = size(R_gt, 3);
 all_errs_p3p_views = cell(1,nviews);
 all_errs_p3p_no_badj_views = cell(1,nviews);
 all_errs_p3p_rt_views = cell(1,nviews);
+all_errs_p3p_rt_no_badj_views = cell(1,nviews);
 all_times_p3p_views = cell(1,nviews);
 
 rf_all_pairs_experiment_perturb_ransac_sph_p3p

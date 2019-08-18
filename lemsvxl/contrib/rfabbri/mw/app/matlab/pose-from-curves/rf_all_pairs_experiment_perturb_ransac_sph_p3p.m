@@ -6,10 +6,12 @@ for v=v_ini:v_f % 1:nviews
   all_errs = {};
   all_errs_no_badj = {};
   all_errs_rt = {};
+  all_errs_rt_no_badj = {};
   all_times = {};
   pert_errors = zeros(n_perturbs, nsamples_pool);
   pert_errors_no_badj = zeros(n_perturbs, nsamples_pool);
   rt_errors = zeros(n_perturbs,2); % 1 = R, 2 = T
+  rt_errors_no_badj = zeros(n_perturbs,2); % 1 = R, 2 = T
   times = zeros(n_perturbs,N);
   for p = 1:n_perturbs
     % perturb the points in the image.
@@ -30,6 +32,9 @@ for v=v_ini:v_f % 1:nviews
     % We report reproj. errors on the entire perturbed ground truth:
     pert_errors_no_badj(p,:) = rf_reprojection_error(K_gt*[Rot Transl], gama_pert_img, Gama_all);
     times(p,:) = solve_time;
+    
+    T_gt = -R_gt(:,:,v)*C_gt(:,v); 
+    [rt_errors_no_badj(p,1),rt_errors_no_badj(p,2)] = rf_pose_error(R_gt(:,:,v), T_gt, Rot, Transl);
 
     disp('bundle adjustment');
     if b_adj
@@ -70,7 +75,6 @@ for v=v_ini:v_f % 1:nviews
              gama_pert_img, Gama_all);
 
     % Pose errors       
-    T_gt = -R_gt(:,:,v)*C_gt(:,v);
     [rt_errors(p,1),rt_errors(p,2)] = rf_pose_error(R_gt(:,:,v), T_gt, Rot, Transl);
 
 %      total_iter = total_iter + 1;
@@ -81,10 +85,12 @@ for v=v_ini:v_f % 1:nviews
   all_errs = pert_errors;
   all_errs_no_badj = pert_errors_no_badj;
   all_errs_rt = rt_errors;
+  all_errs_rt_no_badj = rt_errors_no_badj;
   all_times = times;
   all_errs_p3p_views{v} = all_errs;
   all_errs_p3p_no_badj_views{v} = all_errs_no_badj;
   all_errs_p3p_rt_views{v} = all_errs_rt;
+  all_errs_p3p_rt_no_badj_views{v} = all_errs_rt_no_badj;
   all_times_p3p_views{v} = all_times;
 end  % views
 disp(['finished loops for ' num2str(v_ini) '-' num2str(v_f)]);
