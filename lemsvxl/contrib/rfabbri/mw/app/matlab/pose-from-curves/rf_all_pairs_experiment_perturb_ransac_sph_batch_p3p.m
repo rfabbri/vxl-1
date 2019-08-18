@@ -9,7 +9,7 @@ b_adj = true;
 N = 100% RANSAC iters TODO if change here, need to change in the
  % RANSAC fn called below - not a param
 
-workdir = ['~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work/p3p-views-' num2str(v_ini) '-' num2str(v_f) '-v100_2/']
+workdir = ['~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/results-synth/work/p3p-views-' num2str(v_ini) '-' num2str(v_f) '-v100_3/']
 unix(['mkdir ' workdir ' 2>/dev/null']);
 cd (workdir);
 
