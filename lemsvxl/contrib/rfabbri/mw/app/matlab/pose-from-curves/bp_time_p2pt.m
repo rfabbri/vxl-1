@@ -12,8 +12,8 @@
 
 %distribs = all_errs_no_badj_all;
 %distribs = all_errs_views_all;
-%distribs = all_times_views_all;
-distribs = all_errs_rotation_views_all;
+distribs = all_times_views_all;
+%distribs = all_errs_rotation_views_all;
 %distribs = all_errs_translation_views_all;
 
 % error check
@@ -25,7 +25,7 @@ for i=2:length(distribs)
 end
 
 n_top = n_perts; % positional perturb
-n_sub = n_theta_perts + 1; % thetas, then p3p
+n_sub = n_theta_perts; % no p3p
 top_tags = cell(1,n_top);
 for p=1:n_top
   top_tags{p} = num2str(perturb_levels(p));
@@ -35,7 +35,6 @@ sub_tags = {};
 for tp=1:n_theta_perts
   sub_tags{tp} = num2str([theta_perturbs_deg(tp)]);
 end
-sub_tags{n_sub} = 'P3P';
 sub_axis_label = '\Delta_\theta \rightarrow';
 
 my_xlabel = '\Delta_{pos} (positional perturbation in pixels)';

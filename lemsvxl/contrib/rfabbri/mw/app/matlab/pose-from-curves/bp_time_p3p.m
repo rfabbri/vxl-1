@@ -12,8 +12,9 @@
 
 %distribs = all_errs_no_badj_all;
 %distribs = all_errs_views_all;
-%distribs = all_times_views_all;
-distribs = all_errs_rotation_views_all;
+distribs = {};
+distribs{end+1} = all_times_views_all{end};
+%distribs = all_errs_rotation_views_all;
 %distribs = all_errs_translation_views_all;
 
 % error check
@@ -25,19 +26,14 @@ for i=2:length(distribs)
 end
 
 n_top = n_perts; % positional perturb
-n_sub = n_theta_perts + 1; % thetas, then p3p
+n_sub = 1; % thetas, then p3p
 top_tags = cell(1,n_top);
 for p=1:n_top
   top_tags{p} = num2str(perturb_levels(p));
 end
 
-sub_tags = {};
-for tp=1:n_theta_perts
-  sub_tags{tp} = num2str([theta_perturbs_deg(tp)]);
-end
-sub_tags{n_sub} = 'P3P';
-sub_axis_label = '\Delta_\theta \rightarrow';
-
+sub_tags{1} = 'P3P';
+sub_axis_label = '';
 my_xlabel = '\Delta_{pos} (positional perturbation in pixels)';
 
 % Renamed
@@ -68,8 +64,8 @@ xlabel(my_xlabel);
 ylabel('reprojection error (pixels)');
 lines5 = lines(n_sub);
 color = min(lines5+0.2,1);
-color(n_sub-1,:) = min(lines5(5,:)+0.2,1); % XXX green rather than y
-color(n_sub,:) = [0.6 0.6 0.6]; % gray for p3p
+%color(n_sub-1,:) = min(lines5(5,:)+0.2,1); % XXX green rather than y
+%color(n_sub,:) = [0.6 0.6 0.6]; % gray for p3p
 %color = color([2 1 3:end],:)
 %color = [233 83 62; 235 120 34; 0 136 195; 197 51 107; 0 125 28]/255;
 %ecolor = max(color - 0.2,0);
