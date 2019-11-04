@@ -1,4 +1,21 @@
-To generate the plots in the ECCV12 paper;
+Main files to generate result plots
+  ./a.sh : p2pt exps in parallel
+  ./b.sh : p3p exps in parallel
+    From these main files one can infer
+    P3P matlab function call calls this script
+    /Users/rfabbri/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/scripts/pnp-run-vm
+    That calls this C++
+        /Users/rfabbri/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/cmd/pnp
+          to build this, one needs USE_OpenMVG ON in lems
+          to build OpenMVG, follow the opnemvg/BUILD.md **closely**, see: 
+          
+    
+    
+    
+  
+
+
+To generate the plots in the original ECCV12 paper;
   rf_all_pairs_experiment_perturb.m
   rf_all_pairs_experiment_perturb_histplot.m
 

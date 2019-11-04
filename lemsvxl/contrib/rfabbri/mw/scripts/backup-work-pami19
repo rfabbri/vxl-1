@@ -1,0 +1,2 @@
+mv ~/mnt/ccv-data/pose-from-curves/bak ~/mnt/ccv-data/pose-from-curves/bak-older
+rsync -av ~/mnt/ccv-data/pose-from-curves ~/mnt/ccv-data/pose-from-curves/bak
