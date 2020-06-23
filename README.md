@@ -536,3 +536,10 @@ workflow based on VPE (as in LEMSVXL), see [Internal Projects and
 VPE](./doc/internal-projects.md).  You may want to do this in case your internal
 project is tightly coupled with VXL/VXD, and will be constantly moving code
 to/from these packages.
+
+## Additional documentation
+
+The `doc/` folder contains additional documentation.
+For instance:
+- [3D Curve Sketch and Drawing system documentation](./doc/3d-curve-drawing.md)
+- [To Do list for LEMSVPE](./doc/todo.md)

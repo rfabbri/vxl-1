@@ -1,4 +1,3 @@
-
 ### Creating a new Internal project based on VPE 
 
 ```bash
