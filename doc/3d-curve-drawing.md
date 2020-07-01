@@ -1,10 +1,12 @@
 # 3D Curve Sketch and Drawing System
 
 
-## Hacking
+## Hacking / Compiling / Building
 
-First read the [README](../README.md) for LEMSVPE carefully.
-There is also a video explaining this.
+- Read the [README](../README.md) for LEMSVPE carefully. It explains the setup,
+and also lists a website for VXL-related compilation specific for our project
+from Ricardo Fabbri (http://wiki.nosdigitais.teia.org.br/VXL)
+- There is also a video explaining this.
 
 ### LEMSVPE
 
@@ -21,4 +23,6 @@ We (Ricardo Fabbri et al) keep mirrors at the following locations
 
 Please contact us for access
 
+## Code location
 
+`vxd/contrib/brld/bmvgd/bmcsd/cmd`
