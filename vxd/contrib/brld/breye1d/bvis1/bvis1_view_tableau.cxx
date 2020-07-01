@@ -63,7 +63,7 @@ bool bvis1_view_tableau::handle(vgui_event const& e)
   //intercept event and send it to the current active tool
   bvis1_tool_sptr active_tool = bvis1_manager::instance()->active_tool();
   
-  if( active_tool != NULL ) {
+  if( active_tool ) {
     //get the active tableau as reported by the grid tableau
     vgui_tableau_sptr active_tab = bvis1_manager::instance()->active_tableau();
     
