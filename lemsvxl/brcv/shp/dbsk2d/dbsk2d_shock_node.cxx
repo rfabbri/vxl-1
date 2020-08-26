@@ -44,7 +44,7 @@ void dbsk2d_shock_node::form_shock_fragments()
   for (; p_itr != descriptor_list_.end(); ++ p_itr){
     dbsk2d_shock_node_descriptor* cur_descriptor = &(*p_itr);
 
-    if (cur_descriptor->edge == 0)//signals A-inf
+    if (!cur_descriptor->edge)//signals A-inf
     {  
       // instantiate the shock fragment
       cur_descriptor->fragment = new dbsk2d_shock_fragment(this);
