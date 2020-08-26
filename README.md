@@ -137,6 +137,10 @@ The following command installs many of the required packages for building VXL.
 The following website has information on configuring your Mac OS for
 programming: http://wiki.nosdigitais.teia.org.br/Mac
 
+Also check dependencies here if needed: 
+http://wiki.nosdigitais.teia.org.br/VXL
+
+
 
 ### 2. Compile VXL
 ```bash
