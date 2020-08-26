@@ -62,6 +62,9 @@ protected:
   unsigned margin_;  //size of margin to ignore
   unsigned option_;  //0: both max and min, 1: max only, 2: min only
 
+  // stub to initialize the references below
+  const vil_image_view<double> image_view_stub_;
+  
   //references to the data passed to this algo
   const vil_image_view<double>& dir_x_; 
   const vil_image_view<double>& dir_y_;

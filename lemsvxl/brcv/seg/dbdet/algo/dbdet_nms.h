@@ -72,9 +72,10 @@ protected:
   double rel_thresh_;                              ///< reliable threshold (depends on sensor noise and sigma)
   bool use_adaptive_thresh_;                       ///< use reliable threshold or not
   
+  // stub to initialize the references below
   const vil_image_view<double> image_view_stub_;
 
-  //references to the data passed to this algo
+  // references to the data passed to this algo
   const vil_image_view<double>& dir_x_; 
   const vil_image_view<double>& dir_y_;
   const vil_image_view<double>& grad_mag_;

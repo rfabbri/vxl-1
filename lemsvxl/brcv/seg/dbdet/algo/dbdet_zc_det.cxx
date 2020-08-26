@@ -23,10 +23,11 @@ dbdet_zc_det::dbdet_zc_det():
   thresh_(0.0), 
   margin_(1),
   option_(1),
-  dir_x_(vil_image_view<double>(0,0,1)), 
-  dir_y_(vil_image_view<double>(0,0,1)), 
-  grad_mag_(vil_image_view<double>(0,0,1)),
-  mask_(vil_image_view<double>(0,0,1)),
+  image_view_stub_(0,0,1),
+  dir_x_(image_view_stub_), 
+  dir_y_(image_view_stub_), 
+  grad_mag_(image_view_stub_),
+  mask_(image_view_stub_),
   mag_(0,0, 0.0)
 {
 }
