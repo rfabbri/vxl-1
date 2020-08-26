@@ -163,7 +163,7 @@ bvis1_manager::remove_active_view()
 
   vgui_tableau_sptr ptab = grid_tab_->get_tableau_at(c,r);
    
-  if (ptab != 0) {
+  if (ptab) {
      vgui_viewer2D_tableau_sptr rm_viewer;
      rm_viewer.vertical_cast( ptab );
 

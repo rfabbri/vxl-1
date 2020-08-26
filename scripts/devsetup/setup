@@ -33,7 +33,7 @@ git fetch utils &
 
 # Setup branches
 echo '==> Setting up branches and symlinks.'
-git branch --track utils-master origin/utils-master
+git branch --track utils-master origin/vpe/utils-master
 git branch --track vxl-master origin/vxl-master
 git branch --track vxd-master origin/vxd-master
 git branch --track vpe-master origin/vpe-master

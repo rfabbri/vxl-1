@@ -252,7 +252,7 @@ class bvis1_fmatrix_command : public vgui_command
     {
       tabs.push_back(*itr);
       bpro1_storage_sptr storage = bvis1_manager::instance()->storage_from_tableau(*itr);
-      if( storage != NULL )
+      if( storage )
         choices.push_back(storage->name());
       else
         choices.push_back("");

@@ -10,7 +10,9 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
-#include <ext/algorithm>
+#include <ext/algorithm> // GNU extension except after C++14 inclusive
+                         // might also be sample() in an <experimental/algorithm>
+                         // header
 #include <cassert>
 
 #include <vnl/vnl_rotation_matrix.h>
@@ -156,6 +158,10 @@ opt_orient_pos_subset(const vpgl_perspective_camera<double>& camera,
     do {
       random_sample_n(world_objects.begin(), world_objects.end(),
           samp.begin(), nc);
+      // random_sample_n is a GNU extension except after C++14 inclusive
+      // might also be sample() in an <experimental/algorithm>
+      // header TODO: make work with clang
+      
       assert(samp.size() == nc);
       for (unsigned c=0; c < nc; ++c) {
         if (samp[c].size() < minsize) {
