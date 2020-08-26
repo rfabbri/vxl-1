@@ -71,6 +71,8 @@ protected:
   unsigned margin_;                                ///< margin size
   double rel_thresh_;                              ///< reliable threshold (depends on sensor noise and sigma)
   bool use_adaptive_thresh_;                       ///< use reliable threshold or not
+  
+  const vil_image_view<double> image_view_stub_;
 
   //references to the data passed to this algo
   const vil_image_view<double>& dir_x_; 
