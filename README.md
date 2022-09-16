@@ -547,3 +547,4 @@ The `doc/` folder contains additional documentation.
 For instance:
 - [3D Curve Sketch and Drawing system documentation](./doc/3d-curve-drawing.md)
 - [To Do list for LEMSVPE](./doc/todo.md)
+- [Video about compiling LEMSVPE and 3D Curve Sketch](https://www.youtube.com/watch?v=Akel3_Nv2uI)

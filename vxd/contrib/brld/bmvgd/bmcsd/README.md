@@ -143,7 +143,12 @@ EDGE_COUNT=114056
 The third order detector from Amir Tamrakkar is used. There are variants for
 color images that you may want to try, but below is the basics of how to compute
 this. The basic classes are all open-sourced, located in `vxl/contrib/brl/bseg/sdet/*third*`,
-with additional code in `vxd/contrib/brld/bsegd/sdetd`.
+with additional code in `vxd/contrib/brld/bsegd/sdetd`. We, however, use the
+private classees in lemsvxl/*/dbdet which contain the latest research code from the
+group, with improvements and bugfixes by us and by Yuliang.
+Our script actually uses the command dborl_edge_third_order, which may use any
+version of the subpixel edge detector, but by default uses the internal one in dbdet.
+
 
 #### GUI
 For an initial visual exploration of the edge detector's parameters,
@@ -268,10 +273,18 @@ accessed through the commandline or GUI as described below.
 ### Computing curve fragments
 
 The symbolic edge linker Amir Tamrakkar is originally used. There are several
-improvements by Yuliang Guo which can also be used.  There are variants for
+improvements by Yuliang Guo which are used by default.  There are variants for
 color images and texture that you may want to try, but below is the basics of how to compute
 this. The basic classes are all open-sourced, located in `vxl/contrib/brl/bseg/sdet/*symbolic*`,
-with additional code in `vxd/contrib/brld/bsegd/sdetd`.
+with additional code in `vxd/contrib/brld/bsegd/sdetd`. By default we use
+private code in lemsvxl/*/dbdet (not the public one from vxd), which is the
+latest research code we have for the edge linkers. But we can use any of them.
+The commands dborl_compute_contours computes linked contours and
+optionally compute curvelets. This command can be made to use any edge linker,
+but by default it will use the one in dbdet.
+
+
+
 
 
 #### GUI
@@ -398,7 +411,31 @@ Merging is only applied if curves are close enough (3px);
 Deletion is only applied if only one curve is selected (to prevent accidental deletion);
 There is no "undo" action yet, be careful.
 
+## Computing the 3D Curve Sketch and Drawing
+
+- After edges and contours have been computed, we can run the multiview curve
+  sketch (mw/cmd/mcs) or the enhanced multiview curve sketch (mw/cmd/mcd). The
+  remaining of the pipeline is in Matlab
+
+- 
+
+
 ## Visualizing the 3D Curve Sketch
+
+
+- Before compiling GUI code, which might be some work, you can use the command
+    mca to print out in text format the number of curves in the reconstruction
+    file 
+- Compile sgui in mw/app
+- Put mw/scripts/ in your path
+- You can now view all images and all edgemaps with typing sg * in the datset folder
+- I used Matlab to look into the reconstructed curves, while anil uses
+     Meshlab (I don't have access to his viewer). Also, some outlier curves
+     might be floating so if you don't tune the parameters of the edge detector,
+     linker and mcs matcher, then you might have a hard time seeing the
+     recontruction because the outlier is so far away. You might want to zoom in
+     greatly to see the actual object if your recontruction is "dirty".
+
 
 ## Multiview curve sketch attributes (`mca`)
 
