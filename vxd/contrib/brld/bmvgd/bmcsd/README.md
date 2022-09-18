@@ -516,8 +516,6 @@ mcs_instances.m is a utility to help building anchor and confirmation views usin
 
 
 
-
-
 ## Multiview curve sketch attributes (`mca`)
 
 ## Credits
