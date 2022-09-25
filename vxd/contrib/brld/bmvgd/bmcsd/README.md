@@ -315,7 +315,7 @@ with additional code in `vxd/contrib/brld/bsegd/sdetd`.
 
 By default we use private code in lemsvxl/*/dbdet (not the public one from vxd),
 which is the latest research code we have for the edge linkers. But we can use
-any of them.  The command dborl_compute_contours computes linked contours and
+any of them.  The command `dborl_compute_contours`computes linked contours and
 optionally computes curvelets. This command can be made to use any edge linker,
 but by default it will use the research one in dbdet.
 
@@ -449,10 +449,9 @@ There is no "undo" action yet, be careful.
 ## Computing the 3D Curve Sketch and Drawing
 
 - After edges and contours have been computed, we can run the multiview curve
-  sketch (mw/cmd/mcs)[1] or the enhanced multiview curve sketch[2] (mw/cmd/mcd). The
-  remaining of the pipeline is in Matlab
-
-- 
+  sketch `mcs` (under vxd/contrib/brld/bmvgd/bmcsd/cmd)[1] or the enhanced
+  multiview curve sketch[2] `mcd` (under `mw/cmd`). The remaining of the pipeline is in
+  Matlab
 
 
 ## Visualizing the 3D Curve Sketch
