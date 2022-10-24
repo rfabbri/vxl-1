@@ -69,3 +69,6 @@ minus-bin-valgrind/
 minus-gcc5/
 minus-tst/
 minus/
+diffgeom2pose-bin/
+diffgeom2pose/
+doc/Compiling LEMSVPE Part 1.mp4
