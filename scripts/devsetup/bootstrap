@@ -18,7 +18,11 @@ else
 
   if command -v apt-get >/dev/null 2>&1; then
     echo "Debian-based tools found"
-    PKGS="qt-sdk libxmu-dev libxi-dev"
+    if [[ $(lsb_release -rs) == "22.04" ]]; then
+      PKGS="qtcreator qtbase5-dev qt5-qmake libxmu-dev libxi-dev"
+    else
+      PKGS="qt-sdk libxmu-dev libxi-dev"
+    fi
     for i in $PKGS; do
       # PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $i |grep "install ok installed")
       echo Checking for $i

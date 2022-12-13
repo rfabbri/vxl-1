@@ -4,7 +4,7 @@
 #include <mw/algo/mw_qualitative_epipolar.h>
 #include <bmcsd/bmcsd_util.h>
 #include <vgl/vgl_polygon.h>
-#include <vpgl/algo/vpgl_fm_compute_ransac.h>
+#include <bpgl/algo/bpgl_fm_compute_ransac.h>
 #include <vpgl/algo/vpgl_fm_compute_8_point.h>
 #include <vpgl/algo/vpgl_fm_compute_7_point.h>
 #include <mvl/FMatrix.h>
@@ -15,7 +15,7 @@
 #include <mvl/HomgInterestPointSet.h>
 
 
-#include "mex.h"
+#include <mex.h>
 
 extern void _main();
 

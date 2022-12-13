@@ -4,7 +4,7 @@
 #include <vgl/algo/vgl_homg_operators_2d.h>
 #include <vsol/vsol_point_2d_sptr.h>
 #include <vsol/vsol_point_2d.h>
-#include <vpgl/algo/vpgl_fm_compute_ransac.h>
+#include <bpgl/algo/bpgl_fm_compute_ransac.h>
 #include <vpgl/algo/vpgl_fm_compute_8_point.h>
 #include <vpgl/algo/vpgl_fm_compute_7_point.h>
 #include <mvl/FMatrix.h>
@@ -65,7 +65,7 @@ void mymex(
 
     if (method == "vpglransac") {
       // -- VPGL normalized 8point Using RANSAC
-      vpgl_fm_compute_ransac fm_estimator;
+      bpgl_fm_compute_ransac fm_estimator;
 //      fm_estimator.set_trace_level(1);
       bool retval = fm_estimator.compute(vp0,vp1,fm);
 

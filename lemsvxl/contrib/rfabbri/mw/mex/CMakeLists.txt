@@ -18,7 +18,7 @@ include_directories( /home/rfabbri/src/GeometricTools/WildMagic4/LibFoundation )
 
 
 find_package(Matlab)
-include_directories(${MATLAB_INCLUDE_DIR})
+include_directories(${Matlab_INCLUDE_DIRS})
 
 
 set( episearch_sources episearch.cxx )

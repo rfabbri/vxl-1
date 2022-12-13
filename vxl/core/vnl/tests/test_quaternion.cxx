@@ -1,3 +1,4 @@
+#include <limits>
 #include <iostream>
 #include <testlib/testlib_test.h>
 #include <vnl/vnl_math.h>

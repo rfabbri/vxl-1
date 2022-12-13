@@ -149,7 +149,7 @@ trinocular_match_initialize(const std::string &fname, unsigned offset_x, unsigne
 
    std::vector<std::string> con_fnames;
    if (!con_filenames(fname,con_fnames))
-      return false;
+      return 0;
 
    std::vector< std::vector<vsol_point_2d_sptr> > *pcurvepts;
    pcurvepts = new std::vector< std::vector<vsol_point_2d_sptr> >;
@@ -161,7 +161,7 @@ trinocular_match_initialize(const std::string &fname, unsigned offset_x, unsigne
 
       std::cout << "Reading: " <<  con_fnames[i] << std::endl;
       if (!load_con_file(con_fnames[i],curvepts[i],&is_open))
-         return false;
+         return 0;
 
       for (unsigned j=0; j<curvepts[i].size(); ++j)
          curvepts[i][j]->add_vector(offset);

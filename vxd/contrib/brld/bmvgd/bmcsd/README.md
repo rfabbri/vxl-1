@@ -1,4 +1,12 @@
-# 3D Curve Sketch
+# 3D Curve Sketch, 3D Curve Drawing and Surfaced Multiview 3D Drawings
+
+This documentation covers both the open source and the private parts of the
+3D curve drawing-based system (which includes surface and albedo reconstruction).
+
+As of this date, only the 3D curve sketch[1] is open sourced.
+Whenever we refer to vxd or vxl, it is publically available online.
+When we mention lemsvxl, this is a private repository you need explicit
+permission to access.
 
 
 ## Introduction
@@ -14,14 +22,20 @@ For digging into the code, we recommend looking into the file
 You must give proper credit for the privilege to access this software
 system and its source code.
 
-- 3D Curve Sketch: Flexible Curve-Based Stereo Reconstruction and Calibration, CVPR 2010, R.Fabbri and B. Kimia. 
+[1] 3D Curve Sketch: Flexible Curve-Based Stereo Reconstruction and Calibration,
+CVPR 2010, R.Fabbri and B. Kimia. 
 
-- The Surfacing of Multiview 3D Drawings via Lofting and Occlusion Reasoning, CVPR
+[2] From Multiview Image Curves to 3D Drawings, ECCV 2016, Ricardo Fabbri, Anil
+Usumezbas and Benjamin Kimia, 
+
+[3] The Surfacing of Multiview 3D Drawings via Lofting and Occlusion Reasoning, CVPR
 2017, R. Fabbri, A. Usumezbas & B. Kimia
 
-- Multiview Differential Geometry of Curves, R. Fabbri and B. Kimia, IJCV, 2016
+[4] Multiview Differential Geometry of Curves, R. Fabbri and B. Kimia, IJCV, 2016
 
-- Camera Pose Estimation Using Curve Differential Geometry, ECCV 2012, Firenze, Italy, R. Fabbri, P. J. Giblin & B. Kimia
+[5] Camera Pose Estimation Using Curve Differential Geometry, IEEE Transactions
+on Pattern Analysis and Machine Intelligence, 2020, Ricardo Fabbri, Peter J.
+Giblin and Benjamin Kimi
 
 ## System requirements
 
@@ -55,13 +69,14 @@ innacurate.
 
 #### How to obtain cameras
 Currently, camera models are estimated using a traditional
-point-based structure from motion system such as Bundler (see also VisualSFM),
-or by manual calibration and pose estimation through specifying point or line
-correspondences. We are in the process of developing fully curve-based
-pipeline for determining the cameras, but this technology is not yet mature.
+point-based structure from motion system such as OpenMVG (see also Bundler,
+VisualSFM, and Colmap), or by manual calibration and pose estimation through
+specifying point or line correspondences. We are in the process of developing
+fully curve-based pipeline for determining the cameras, but this technology is
+not yet mature.
 
-If your scene is modeled and rendered in CAD, you can obtain camera models using
-Blender together with my python scripts:
+If your scene is modeled and rendered in CAD, eg, for ground truth comparison,
+you can obtain camera models using Blender together with my python scripts:
 
 * http://blender.stackexchange.com/questions/38009/3x4-camera-matrix-from-blender-camera
 * http://blender.stackexchange.com/questions/40650/blender-camera-from-3x4-matrix
@@ -115,6 +130,7 @@ Where the first 3x3 numbers form the camera's rotation matrix, and the last line
 forms the camera center (not the translation vector!). 
 
 
+-------------------------------------------------------------------------------
 ## Subpixel Edgemaps
 
 ### Edgemap format
@@ -138,12 +154,30 @@ EDGE_COUNT=114056
 ....
 ```
 
+If you enable Boost in CMake, you can use a gzipped version of this `.edg.gz` for both
+storage and speed.
+
 ### Computing subpixel edges
 
-The third order detector from Amir Tamrakkar is used. There are variants for
-color images that you may want to try, but below is the basics of how to compute
-this. The basic classes are all open-sourced, located in `vxl/contrib/brl/bseg/sdet/*third*`,
+The third order detector from Amir Tamrakkar is used in the open source `vxd`,
+and improvements from Yuliang Guo is used in the internal `lemsvxl`.
+There are variants for color images that you may want to try in both the
+open-source and internal variants. 
+
+The basic classes are all open-sourced, located in `vxl/contrib/brl/bseg/sdet/*third*`,
 with additional code in `vxd/contrib/brld/bsegd/sdetd`.
+
+We, however, by default use the private classes in lemsvxl/*/dbdet which contain the
+latest research code from the group, with improvements and bugfixes by us and by
+Yuliang.
+
+Edges are computed by a commandline script which internally uses the command
+`dborl_edge_third_order` from the internal lemsvxl. This executable may use/link
+to any version of the subpixel edge detector, but by default uses the internal/research one in
+`lemsvxl/*/dbdet`.
+
+Below is the basics of how to compute this using both GUI (recommended for
+tuning the parameters) and commandline (for the actual batch processing. 
 
 #### GUI
 For an initial visual exploration of the edge detector's parameters,
@@ -170,7 +204,7 @@ video`, which will repeat the last used process (edge detection) on each frame.
 
 #### Commandline `edge` program
 
-We provide a commandline program called `edge`, currently located in
+We provide a commandline program called `edge`, currently located in the internal
 `lemsvxl/contrib/rfabbri/mw/scripts`. Example:
 ```
 edge image.png
@@ -189,7 +223,7 @@ parallel edge ::: *.png
 #### Parameter search
 If you have a range of reasonable parameters set in the GUI that may work,
 you can search for the best combination in parallel using a commandline script
-called `edge-scan`.
+called `edge-scan` also from mw/scripts.
 
 #### Details of the `edge` program
 
@@ -228,7 +262,7 @@ fixed threshold has worked for many datasets for purpose (1) above.
 For purpose (2), we suggest sigma at most 2, and a higher threshold. Our
 datasets use:
 
-
+-------------------------------------------------------------------------------
 ## Curve fragment (linked edges) information
 
 ## Curve fragment format
@@ -256,10 +290,12 @@ EDGE_COUNT=38
  [0, 0]  0.0  0.0  [5.36333, 8.15191]  0.0  0.0
  ....
 ```
+If you enable Boost in CMake, you can use a gzipped version of this `.cemv.gz` for both
+storage and speed.
 
 Note that this is different from a `.cem` file, which contains more linking
 information. The original codebase confuses CEM and CEMV throughout the
-codebase; so sometimes a .cem or a function claiming to work on CEM actually
+codebase; so sometimes a `.cem` or a function claiming to work on CEM actually
 expects CEMV-type data. The `V' in CEMV means CEM vsol. It is just a convention.
 The process `dbdet_save_cem_process` saves CEM, while `vidpro1_save_cem_process`
 will save it in the format required for the 3D Curve Sketch. This process is
@@ -267,14 +303,25 @@ accessed through the commandline or GUI as described below.
 
 ### Computing curve fragments
 
-The symbolic edge linker Amir Tamrakkar is originally used. There are several
-improvements by Yuliang Guo which can also be used.  There are variants for
+The symbolic edge linker Amir Tamrakkar is originally used and reside in the
+public `vxd`. There are several
+improvements by Yuliang Guo which are used by default but reside in the private
+`lemsvxl`. There are variants for
 color images and texture that you may want to try, but below is the basics of how to compute
-this. The basic classes are all open-sourced, located in `vxl/contrib/brl/bseg/sdet/*symbolic*`,
-with additional code in `vxd/contrib/brld/bsegd/sdetd`.
+this. 
+
+The basic classes are all open-sourced, located in `vxl/contrib/brl/bseg/sdet/*symbolic*`,
+with additional code in `vxd/contrib/brld/bsegd/sdetd`. 
+
+By default we use private code in lemsvxl/*/dbdet (not the public one from vxd),
+which is the latest research code we have for the edge linkers. But we can use
+any of them.  The command `dborl_compute_contours`computes linked contours and
+optionally computes curvelets. This command can be made to use any edge linker,
+but by default it will use the research one in dbdet.
 
 
 #### GUI
+
 For an initial visual exploration of the edge linker's parameters,
 you can start the GUI `sg`, load an image and edgemap, and compute curve
 fragments.
@@ -340,6 +387,7 @@ called `contour-scan`.
 This command is implemented as a wrapper over `dborl_compute_contours`,
 whose source code is located at `lemsvxl/brcv/rec/dborl/algo/vox_compute_contours`. 
 This performs the following steps: 
+ (todo: describe)
 
 #### Contours prost-processing
 
@@ -364,7 +412,7 @@ There is a GUI called `sg` (Stereo GUI) in the internal LEMSVXL repository at
 results:
 
 ```
-Sg *.edg *.png *.cemv
+sg *.edg *.png *.cemv
 ```
 Will open one (image,edg,fragment) triplet per frame.
 If you want the same image for all frames, pass `-m`: 
@@ -398,7 +446,74 @@ Merging is only applied if curves are close enough (3px);
 Deletion is only applied if only one curve is selected (to prevent accidental deletion);
 There is no "undo" action yet, be careful.
 
+## Computing the 3D Curve Sketch and Drawing
+
+- After edges and contours have been computed, we can run the multiview curve
+  sketch `mcs` (under vxd/contrib/brld/bmvgd/bmcsd/cmd)[1] or the enhanced
+  multiview curve sketch[2] `mcd` (under `mw/cmd`). The remaining of the pipeline is in
+  Matlab
+
+
 ## Visualizing the 3D Curve Sketch
+
+
+- Before compiling GUI code, which might be some work, you can use the command
+    mca to print out in text format the number of curves in the reconstruction file 
+- Compile sgui in mw/app
+- Put mw/scripts/ in your path. This is how I do it: in your ~/.bashrc make sure you have:
+```
+PATH=$PATH:$HOME/bin/mw-scripts:$HOME/bin/mw-cmd:.
+export PATH
+```
+
+Inside ~/bin you symlink to the script and cmd bin folders to have access to all
+executables from the command line:
+/home/rfabbri/bin/mw-scripts -> /home/rfabbri/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/scripts
+/home/rfabbri/bin/mw-cmd -> /Users/rfabbri/cprg/vxlprg/lemsvpe/lemsvxl-bin/contrib/rfabbri/mw/cmd
+
+You need to have them in your path because you rarely will run just the curve
+sketch binary or the dborl edge/contour binaries by hand.  You will run them
+indirectly via scripts as explained in the bmcsd/README.md file
+
+
+- You can now view all images and all edgemaps with typing sg * in the datset folder
+- I used Matlab to look into the reconstructed curves, while anil uses
+     Meshlab (I don't have access to his viewer). 
+- some outlier curves might be floating so if you don't tune the parameters of
+  the edge detector, linker and mcs matcher, then you might have a hard time
+  seeing the recontruction because the outlier is so far away. You might want to
+  zoom in greatly to see the actual object if your recontruction is "dirty".
+
+### Matlab scripts
+
+These reside in mw/app/matlab
+
+In there, sexp/mcs_roc matlab script generates the ROC curves in CVPR'10.
+After a curve sketch run, to read the curve sketch the commands are all in matlab/sexp/tracer (it is called tracer because the 3D curve sketch is actually an automated version of a GUI reconstruction tool to trace corresponding curves in multiple views and reconstruct them; my GUI still works, you can actually see which curves are matched and the reprojections to debug errors; the output of this GUI can also be visualized just the same with these tools).
+
+To read the 3D curve sketch:
+read_curve_sketch.m
+At the same time, the supports for each curves will be a text file after running mcs or mcd, and this can be loaded as:
+load supports
+This can be used to experiment with pruning curves based on support or length scores inside matlab.
+The input is the file after mcs/mcd is run, namely the file with this regexp: *-3dcurve-*-points*dat
+
+To plot all the 3D curves:
+plot_all_recs.m
+This automatically also saves a .fig file in a file  'all_recs.fig', so if you see this file inside datasets, it means you can open the .fig in matlab,
+and if you want access to the curves without rerunning the curve sketch, there is a utility to extract these curves from the plot back into a curve sketch
+data structure.
+
+To impose a bounding box and a good view angle for the paper,  for example, for the capitol sequence, for better visualization:
+capitol_results.m
+
+Other utiities are there that we can use to inspect the 3D curve sketch, prune short curves, to get back the curves from a saved .fig reconstruction,
+another utility can be used to append / join two reconstrutions together (say join one for the overall capitol building, and another which is a zoom of the stairs)
+(image-commands-util.sh).
+
+mcs_instances.m is a utility to help building anchor and confirmation views using a more customized formula computed in matlab, if desired, instead of manually writing down the anchor and confirmation views.
+
+
 
 ## Multiview curve sketch attributes (`mca`)
 

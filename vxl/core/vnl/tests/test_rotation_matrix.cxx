@@ -5,6 +5,7 @@
 //  \brief Program to test vnl_rotation_matrix() functions
 
 
+#include <limits>
 #include <iostream>
 
 #include <testlib/testlib_test.h>
