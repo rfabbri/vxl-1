@@ -1,6 +1,9 @@
 % BOXPLOT DO TEMPO DE EXECUCÃO DO SOLVER PARA PONTOS ALEATÓRIOS (uniformemente distribuídos) COM COORDENADAS a)ENTRE O E 1; b) ENTRE 0 E 1000 E idTANGENTES 0 E 1- 1000 vezes para cada ponto
 % GRÁFICO DOS PONTOS ALEATÓRIOS
-% EXPERIMENTOS FEITOS EM 14/01/22 - 4 CPUs
+%EXPERIMENTOS FEITOS EM JANEIRO E FEVEREIRO DE 2022
+
+
+% EXPERIMENTOS FEITOS EM 14/01/22  - 4 CPUs
 
 clear all
 close all
@@ -49,16 +52,15 @@ for j=1:2
 end
 
 
-str={'A', 'B'}; %caso A: coord entre 0 e 1; caso B: coord entre 0 e 1000
+str={'a', 'b'}; %caso A: coord entre 0 e 1; caso B: coord entre 0 e 1000
 figure      %Boxplot com os pontos obedecendo a posicão relativa deles em relacão à reta r
-
 boxplot(t, str)
 xlabel('Caso')
 ylabel('Tempo (ms)')
 hold on
 plot(A(:,2),'o') % marcacão das médias
 hold off
-title('Tempo de execucão minus-chicago com os pontos 620, 3389 e pontos aleatórios (4 CPUS)')
+title('Tempo de execucão minus-chicago com pontos aleatórios (4 CPUS)')
 legend('Tempo médio')
 
 figure
@@ -108,9 +110,9 @@ for m=1:2
 end
 
 
-str2={'A', 'B'}; %caso A: coord entre 0 e 1; caso B: coord entre 0 e 1000
-figure      %Boxplot com os pontos obedecendo a posicão relativa deles em relacão à reta r
+str2={'a', 'b'}; %caso A: coord entre 0 e 1; caso B: coord entre 0 e 1000
 
+figure      %Boxplot com os pontos obedecendo a posicão relativa deles em relacão à reta r
 boxplot(t2, str2)
 xlabel('Caso')
 ylabel('Tempo (ms)')

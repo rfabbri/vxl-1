@@ -6,9 +6,9 @@
 clear all
 close all
 
-
+nt=100; % # de testes
 %%% Carrega vários arquivos
-for j=1:20
+for j=1:nt
     i=string(j);
     str1=join(['tracks700' i 'txt'], ["-", "."]);
     str2=join(['time-sol700' i 'txt'], ["-", "."]);
@@ -16,18 +16,17 @@ for j=1:20
     timesoltrack700(:,:,j)=load(str2);
 end
 %%%%%%%%%%%%%%%%%%%%%%%%
-
 % Tempo médio e track média total dos 20 problemas juntos
 tmed700=sum(timesoltrack700(:,2,:));
-tsum=sum(tmed700)/10000;
+tsum=sum(tmed700);
 trsum700=sum(tracks700);
-trmed=sum(trsum700)/3120000;
-txtemptra700=sum(tmed700)/sum(trsum700);
-% Tméd= 1450,3 ms
-% Trméd= 227,1326
-% 0,020465 ms/track =20 microsegundos/track
+trmed=sum(trsum700);
+txtemptra700=tsum/trmed;
+% Tméd= 1450,3 ms por teste (10000 testes)
+% Trméd= 227,1326 tracks por raiz
+%0,0168 ms / track = 16,8 microsegundos/track
 
-for a=1:20 %Problemas 1 - 20
+for a=1:nt %Problemas 1 - nt
     
     for p=1:500 %100*5 testes
         timesoltrack700(p,4,a)=sum(tracks700(312*(p-1)+1:312*p,a)); %Total de tracks700 em cada teste
@@ -42,8 +41,10 @@ for a=1:20 %Problemas 1 - 20
                                    
             if timesoltrack700(5*(i-1)+j,3,a)==313 % TRASOL é a matriz do número de iteracões na raiz que é solucão em CADA TESTE (CONSIDERA OS 500 TESTES EM CADA PROBLEMA)
                 TRASOL700(5*(i-1)+j,a)=NaN; % Caso em que não encontra a solucão
+                TIMESOL700(5*(i-1)+j,a)=NaN; % TIMESOL é a matriz dos tempos dos testes em que se encontra a solucão
             else
                  TRASOL700(5*(i-1)+j,a)=tracks700(1560*(i-1)+312*(j-1)+timesoltrack700(5*(i-1)+j,3,a)+1,a); % soma 1 pq as raízes vão 0-311
+                 TIMESOL700(5*(i-1)+j,a)=timesoltrack700(5*(i-1)+j,2,a);
             end
             
         end
@@ -61,7 +62,7 @@ end
 
 
 %%%%%%%%% BOXPLOT (Foram considerados os 500 testes juntos) %%%%%%%%%%
-for a=1:20
+for a=1:nt
     time(:,a)=timesoltrack700(:,2,a);
     solu(:,a)=timesoltrack700(:,3,a);
     totra(:,a)=timesoltrack700(:,4,a); % total de iteracões
@@ -84,13 +85,13 @@ figure
 boxplot(time(:,1:10),stra1)
 xlabel('Problema')
 ylabel('Tempo (ms)')
-title('Tempo de execucão minus-chicago para os Problemas 1 a 10')
+title('Tempo de execucão minus-chicago para os Problemas700 1 a 10')
 
 figure
 boxplot(time(:,11:20),stra2)
 xlabel('Problema')
 ylabel('Tempo (ms)')
-title('Tempo de execucão minus-chicago para os Problemas 11 a 20')
+title('Tempo de execucão minus-chicago para os Problemas700 11 a 20')
 
 
 % Iteracões em cada raiz
@@ -98,26 +99,26 @@ figure
 boxplot(tracks700(:,1:10))
 xlabel('Problema')
 ylabel('Número de iteracões em cada raiz')
-title('Número de iteracões em cada raiz no minus-chicago para os Problemas 1 a 10')
+title('Número de iteracões em cada raiz no minus-chicago para os Problemas700 1 a 10')
 
 figure
 boxplot(tracks700(:,11:20),'label',stra2)
 xlabel('Problema')
 ylabel('Número de iteracões em cada raiz')
-title('Número de iteracões em cada raiz no minus-chicago para os Problemas 11 a 20')
+title('Número de iteracões em cada raiz no minus-chicago para os Problemas700 11 a 20')
 
 % Total de iteracões
 figure
 boxplot(totra(:,1:10))
 xlabel('Problema')
 ylabel('Número total de iteracões')
-title('Número total de iteracões no minus-chicago para os Problemas 1 a 10')
+title('Número total de iteracões no minus-chicago para os Problemas700 1 a 10')
 
 figure
 boxplot(totra(:,11:20),'label',stra2)
 xlabel('Problema')
 ylabel('Número total de iteracões')
-title('Número total de iteracões no minus-chicago para os Problemas 11 a 20')
+title('Número total de iteracões no minus-chicago para os Problemas700 11 a 20')
 
 
 % Iteracões na raiz que é solucão
@@ -125,21 +126,107 @@ figure
 boxplot(TRASOL700(:,1:10))
 xlabel('Problema')
 ylabel('Número de iteracões')
-title('Número de iteracões no minus-chicago para a determinacão da raiz que é solucão dos Problemas 1 a 10')
+title('Número de iteracões no minus-chicago para a determinacão da raiz que é solucão dos Problemas700 1 a 10')
 
 figure
 boxplot(TRASOL700(:,11:20),'label',stra2)
 xlabel('Problema')
 ylabel('Número de iteracões')
-title('Número de iteracões no minus-chicago para a determinacão da raiz que é solucão dos Problemas 11 a 20')
+title('Número de iteracões no minus-chicago para a determinacão da raiz que é solucão dos Problemas700 11 a 20')
 
+
+
+%%% Juntando o número de iteracões em cada raiz de todos os problemas. O
+%%% mesmo para o # de iteracões na raiz que é solucão e o tempo de execucão
+%%% nos testes em que acha a solucão
+for m=1:nt
+    for n=1:312*500 %(#raízes*#testes)
+        jointracks700(n+312*500*(m-1),1)=tracks700(n,m);  % Junta as iteracões em cada raiz
+    end
+    
+    for o=1:500
+        joinTRASOL700(o+500*(m-1),1)=TRASOL700(o,m);   % Junta as iteracões na raiz que é solucão
+        joinTIMESOL700(o+500*(m-1),1)=TIMESOL700(o,m); % Junta os tempos dos testes em que se encontra solucão
+    end
+end
+
+
+join700=[jointracks700; joinTRASOL700];
+g1=repmat({'Todas as raízes'},312*500*nt,1);
+g2=repmat({'Raiz que é solucão'},500*nt,1);
+g700=[g1; g2];   %junta os vetores de dimensões diferentes em uma matriz
+
+figure
+boxplot(join700,g700);
+ylabel('Número de iteracões em cada raiz')
+xlabel('Tipo de raiz')
+title('Número de iteracões em cada raiz e apenas na raiz que é solucão no minus-chicago - Problemas 1 a 20 (nmax=700)')
+
+%%%%%%%%%%%%%%%%%%%%%%
+%%% Tratando apenas as solucões reais  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% realsol700: Matriz com as RAÍZES REAIS que NÃO são solucão em cada teste em cada um dos 20 problemas
+
+
+
+%%%     ATENCÃO
+
+% No arquivo realsol700-20.txt aparentemente falta 1 conjunto de raízes
+% reais por alguma razão desconhecida até o momento.
+realsol700=[];
+for k=1:nt
+    m=string(k);
+    str=join(['realsol700' m 'txt'],["-" , "."]);
+    aux=load(str);
+    auxb=length(realsol700);
+    realsol700(auxb+1:auxb+length(aux),1:2)=aux;
+end
+aux1=0;
+aux3=1;
+for p=1:length(realsol700)-1
+    if realsol700(p,1)>=realsol700(p+1,1)
+       nind700(aux3,1)=p-aux1+1; %nind é o vetor do número de raízes reais em cada teste (as que Não são e a que é solucão)
+       aux1=p;
+       aux3=aux3+1;
+    end
+end
+nind700(500*nt,1)=length(realsol700)-sum(nind700(1:500*nt-1,1))+499*1+1;
+% mean(nind700)=50,8980 (nt=100)
+% median(nind700)=51
+nind700(:,2)=nind700(:,1)-1; % # raiz reais que NÃO são solucão
+figure
+boxplot(nind700(:,1),{'Raízes reais'})
+xlabel('Tipo de raiz')
+ylabel('Número de raízes')
+title('Número de raízes reais em cada teste no minus-chicago - Problemas 1 a 100 (nmax=700)') 
+
+% PROSSEGUIR CORRECÃO DAQUI
+aux5=1;
+for r=1:length(nind700) % # do teste, considerando todos os problemas juntos
+    for s=aux5:sum(nind700(1:r,2)) %intervalo das raízes reais do mesmo teste que Não são solucão
+        realsol700(s,3)=jointracks700(realsol700(s,1)+1+312*(r-1));
+    end
+    aux5=sum(nind700(1:r,2))+1;
+end
+
+join700A=[realsol700(:,3); joinTRASOL700];
+g3=repmat({'Raízes reais que NÃO são solucão'},length(realsol700),1);
+g4=repmat({'Raízes reais que são solucão'},500*nt,1);
+G700=[g3; g4];   %junta os vetores de dimensões diferentes em uma matriz
+
+figure
+boxplot(join700A,G700);
+ylabel('Número de iteracões em cada raiz')
+xlabel('Tipo de raiz')
+title('Número de iteracões em cada raiz real no minus-chicago - Problemas 1 a 20 (nmax=700)')
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
 
 %%% Verificando em quais testes na raiz que é solucão o número de iteracões
 %%% ultrapassa o limite
-clear p r s aux1 aux2 Sol700 SRT700
+% clear p r s aux1 aux2 Sol700 SRT700
 for p=700:-100:300
     Sol700=TRASOL700;
-    for r=1:20
+    for r=1:nt
         auxN1=isnan(TRASOL700(:,r));
         aux1=sum(auxN1(:,1)==1);
         for s=1:500
@@ -155,8 +242,8 @@ for p=700:-100:300
 end
             
        
-figure
-    bar(transpose(SRT700))
+% figure
+%     bar(transpose(SRT700))
 
 % RESULTADO: EM TODOS os testes em pelo menos 1 raiz o limite de iteracões é ultrapassado 
     
@@ -170,7 +257,7 @@ figure
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % ---------- GRÁFICOS DE BARRAS (para vários problemas)---------
-for n=1:20
+for n=1:nt
         for o=1:5
             MinSol(n,o)=sum(Sol(:,7,n)==o); % (n x o):quantidade de experimentos no Problema n em que são necessários o testes para alcancar a solucão correta 
             RiSol(n,o+1)=sum(Sol(:,6,n)==o); % (n x o):quantidade de experimentos no Problema n em que o testes falham
@@ -194,8 +281,8 @@ for t=1:10
     t1=string(t);
     aux=t+10;
     t2=string(aux);
-    strPa(t)=join(['P' t1],[""])
-    strPb(t)=join(['P' t2],[""])
+    strPa(t)=join700(['P' t1],[""])
+    strPb(t)=join700(['P' t2],[""])
 end
 
 
@@ -205,7 +292,7 @@ figure
 bar(C1,MinSol(:,1:10));
 xlabel('Número de testes')
 ylabel('Percentual de experimentos')
-title('Percentual de experimentos por número de testes necessários para encontrar a solucão correta nos Problemas 1 a 10')
+title('Percentual de experimentos por número de testes necessários para encontrar a solucão correta nos Problemas700 1 a 10')
 % legend('P1','P2','P3','P4','P5','P6','P7','P8','P9','P10')
 legend(strPa)
 
@@ -213,7 +300,7 @@ figure
 bar(C1,MinSol(:,11:20));
 xlabel('Número de testes')
 ylabel('Percentual de experimentos')
-title('Percentual de experimentos por número de testes necessários para encontrar a solucão correta nos Problemas 11 a 20')
+title('Percentual de experimentos por número de testes necessários para encontrar a solucão correta nos Problemas700 11 a 20')
 % legend('P11','P12','P13','P14','P15','P16','P17','P18','P19','P20')
 legend(strPb)
 
@@ -224,14 +311,14 @@ figure
 bar(C3, TAcumuSol(:,1:10));
 xlabel('Teste')
 ylabel('Percentual de experimentos')
-title('Frequência acumulada de experimentos nos quais se encontra a solucão correta em algum teste nos Problemas 1 a 10')
+title('Frequência acumulada de experimentos nos quais se encontra a solucão correta em algum teste nos Problemas700 1 a 10')
 legend(strPa)
 
 figure
 bar(C3, TAcumuSol(:,11:20));
 xlabel('Teste')
 ylabel('Percentual de experimentos')
-title('Frequência acumulada de experimentos nos quais se encontra a solucão correta em algum teste nos Problemas 11 a 20')
+title('Frequência acumulada de experimentos nos quais se encontra a solucão correta em algum teste nos Problemas700 11 a 20')
 legend(strPb)
 
 
@@ -242,14 +329,14 @@ bar(C2,RiSol(:,1:10));
 xlabel('Número de testes que falham')
 ylabel('Percentual de experimentos')
 legend(strPa)
-title('Percentual de falha na determinacão da solucão correta nos experimentos dos Problemas 1 a 10')
+title('Percentual de falha na determinacão da solucão correta nos experimentos dos Problemas700 1 a 10')
 
 figure
 bar(C2,RiSol(:,11:20));
 xlabel('Número de testes que falham')
 ylabel('Percentual de experimentos')
 legend(strPb)
-title('Percentual de falha na determinacão da solucão correta nos experimentos dos Problemas 11 a 20')
+title('Percentual de falha na determinacão da solucão correta nos experimentos dos Problemas700 11 a 20')
 
 
 %   ------HISTOGRAMAS (para 1 problema) -----------
