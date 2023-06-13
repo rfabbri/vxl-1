@@ -187,7 +187,7 @@ http://wiki.nosdigitais.teia.org.br/VXL
   make
 
   # now build the rest
-  cd $LEMSVPE
+  cd $LEMSVXL
   make -j9 -k
 ```
 
