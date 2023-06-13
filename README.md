@@ -183,7 +183,7 @@ http://wiki.nosdigitais.teia.org.br/VXL
   make
 
   # $LEMSVPE will be set if you followed scripts/devsetup/tips
-  cd $LEMSVPE/contrib/edge_det
+  cd $LEMSVXL/contrib/edge_det
   make
 
   # now build the rest
