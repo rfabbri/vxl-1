@@ -2191,11 +2191,11 @@ int dbsk3d_ms_hypg_trans::A14_c_c_merge_xform (dbsk3d_ms_curve* MC1, dbsk3d_ms_c
   }
 
   //1-3) Skip xform if MC1 and MC2 not in baseMS's main halfedge chain.
-  if (find_E_in_next_chain (baseMS->halfedge(), MC1) == false) {
+  if (find_E_in_next_chain (baseMS->halfedge(), MC1) == nullptr) {
     vul_printf (std::cout, "Skip xform: C%d not in MS%d's he chain.\n", MC1->id(), baseMS->id());
     return MSXT_SKIP;
   }
-  if (find_E_in_next_chain (baseMS->halfedge(), MC2) == false) {
+  if (find_E_in_next_chain (baseMS->halfedge(), MC2) == nullptr) {
     vul_printf (std::cout, "Skip xform: C%d not in MS%d's he chain.\n", MC2->id(), baseMS->id());
     return MSXT_SKIP;
   }
@@ -2329,11 +2329,11 @@ int dbsk3d_ms_hypg_trans::A1A3II_c_c_merge_xform (dbsk3d_ms_curve* MC1, dbsk3d_m
   }
 
   //1-3) Skip xform if MC1 and MC2 not in baseMS's main halfedge chain.
-  if (find_E_in_next_chain (baseMS->halfedge(), MC1) == false) {
+  if (find_E_in_next_chain (baseMS->halfedge(), MC1) == nullptr) {
     vul_printf (std::cout, "Skip xform: C%d not in S%d's he chain.\n", MC1->id(), baseMS->id());
     return MSXT_SKIP;
   }
-  if (find_E_in_next_chain (baseMS->halfedge(), MC2) == false) {
+  if (find_E_in_next_chain (baseMS->halfedge(), MC2) == nullptr) {
     vul_printf (std::cout, "Skip xform: C%d not in S%d's he chain.\n", MC2->id(), baseMS->id());
     return MSXT_SKIP;
   }

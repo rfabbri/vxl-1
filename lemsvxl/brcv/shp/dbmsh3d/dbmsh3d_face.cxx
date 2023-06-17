@@ -746,7 +746,7 @@ bool dbmsh3d_face::check_integrity ()
         assert (0);
         return false;
       }
-      if (Es_sharing_V (HE->edge(), nextHE->edge()) == false) {
+      if (Es_sharing_V (HE->edge(), nextHE->edge()) == nullptr) {
         assert (0);
         return false;      
       }

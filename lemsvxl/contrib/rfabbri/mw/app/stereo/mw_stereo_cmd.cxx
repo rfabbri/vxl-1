@@ -60,7 +60,7 @@ main(int argc, char **argv)
   vul_arg<bool> a_write_perturb_camera("-write_perturb_camera", "write perturbed cameras", false);
   vul_arg<unsigned> a_trinocular_radius("-trinocular_nrad", "trinocular neighborhood radius", 10);
   vul_arg<double> a_err_pos("-err_pos", "localization error range", 2);
-  vul_arg<bool> a_remove_epitangency("-no_epitangency",false);
+  vul_arg<bool> a_remove_epitangency("-no_epitangency",nullptr,false);
   vul_arg<std::string> a_cam_type("-cam_type","camera type: intrinsic_extrinsic or projcamera","");
 
   vul_arg_parse(argc,argv);

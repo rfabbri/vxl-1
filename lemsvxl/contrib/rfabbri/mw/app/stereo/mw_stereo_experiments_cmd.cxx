@@ -137,7 +137,7 @@ initialize(int argc, char ** argv)
   static   vul_arg<bool> a_write_perturb_camera("-write_perturb_camera", "write perturbed cameras", false);
   static   vul_arg<unsigned> a_trinocular_radius("-trinocular_nrad", "trinocular neighborhood radius", 10);
   static   vul_arg<double> a_err_pos("-err_pos", "localization error range", 2);
-  static   vul_arg<bool> a_remove_epitangency("-no_epitangency",false);
+  static   vul_arg<bool> a_remove_epitangency("-no_epitangency",nullptr,false);
 
   static   vul_arg<std::string> a_fname_id("-fname_id","special name part to be included in filename (e.g. PID)","");
 

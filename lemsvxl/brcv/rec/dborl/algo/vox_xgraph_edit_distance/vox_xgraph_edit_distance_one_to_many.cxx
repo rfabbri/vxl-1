@@ -339,7 +339,7 @@ normalize_xgraph(const dbsksp_xshock_graph_sptr& xgraph)
   normalize_process.add_input(input_storage);
   bool success = normalize_process.execute();
   if (!success)
-    return false;
+    return nullptr;
 
   //3) retrieve output
   dbsksp_xgraph_storage_sptr output_storage = 0;
@@ -370,7 +370,7 @@ mirror_xgraph(const dbsksp_xshock_graph_sptr& xgraph)
   mirror_process.add_input(input_storage);
   bool success = mirror_process.execute();
   if (!success)
-    return false;
+    return nullptr;
 
   //3) retrieve output
   dbsksp_xgraph_storage_sptr output_storage = 0;

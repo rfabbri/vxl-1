@@ -1003,7 +1003,7 @@ void connect_breaking_HE_loop (dbsk3d_ms_sheet* MS, dbsk3d_ms_sheet* MSn,
     eV = HE->edge()->other_V (eV);    
     dbmsh3d_halfedge* nextHE2;
     nextHE = _find_nextHE_in_loop_3inc (HE, eV, HEvec, nextHE2);
-    assert (nextHE2 == false);
+    assert (nextHE2 == nullptr);
     HE = nextHE;
   }
   MS_HEs.push_back (HEe);

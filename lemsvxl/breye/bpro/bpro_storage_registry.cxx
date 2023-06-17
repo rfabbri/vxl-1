@@ -1,6 +1,6 @@
 // This is bpro/bpro_storage_registry.cxx
 #include "bpro_storage_registry.h"
-
+#include<iostream>
 
 //Declare initial value for static member
 std::map<std::string, bpro_storage_sptr> 

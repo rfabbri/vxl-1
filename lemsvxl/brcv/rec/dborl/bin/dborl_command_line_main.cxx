@@ -68,12 +68,12 @@ int main(int argc, char *argv[]) {
   vul_arg<bool> print_usage_only(arg_list,"-usage", "print usage info and exit",false);
   vul_arg<bool> print_help(arg_list,"-help", "print usage info and exit",false);
 
-  vul_arg<bool> prepare_ground_truth_from_pascal_annot_ver_one_arg(arg_list, "-prepare-gt-pascal-annot-ver-one", false);
+  vul_arg<bool> prepare_ground_truth_from_pascal_annot_ver_one_arg(arg_list, "-prepare-gt-pascal-annot-ver-one", nullptr, false);
   vul_arg<std::string> category(arg_list, "-category", "category name", "");
 
-  vul_arg<bool> prepare_flat_index_from_dataset_list_arg(arg_list, "-prepare-flat-index-from-dataset-list", false);
+  vul_arg<bool> prepare_flat_index_from_dataset_list_arg(arg_list, "-prepare-flat-index-from-dataset-list", nullptr, false);
 
-  vul_arg<bool> rename_ground_truth_files_arg(arg_list, "-rename-gts", false);
+  vul_arg<bool> rename_ground_truth_files_arg(arg_list, "-rename-gts", nullptr, false);
 
   vul_arg_include(arg_list);
   vul_arg_parse(argc, argv);

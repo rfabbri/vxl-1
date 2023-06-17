@@ -300,14 +300,14 @@ int dbsk3d_ms_sheet::_get_axial_nonsw_chain (const dbmsh3d_halfedge* headHE,
   do {
     dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) HE->edge();
     if (MC->c_type() == C_TYPE_AXIAL) {
-      if (MC->is_n_incident_to_one_S(3) == false) { //non A5-swallowtail.
+      if (MC->is_n_incident_to_one_S(3) == nullptr) { //non A5-swallowtail.
         axial_set.push_back (MC);
         count++;
       }      
     }
     else if (MC->c_type() == C_TYPE_DEGE_AXIAL) {
       unsigned int n = MC->n_incident_Fs();
-      if (MC->is_n_incident_to_one_S(n) == false) { //non A5-swallowtail.
+      if (MC->is_n_incident_to_one_S(n) == nullptr) { //non A5-swallowtail.
         axial_set.push_back (MC);
         count++;
       }      

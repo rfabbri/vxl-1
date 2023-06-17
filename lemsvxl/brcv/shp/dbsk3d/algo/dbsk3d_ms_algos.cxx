@@ -196,7 +196,7 @@ void ms_hypg_rib_smooth_within_face (dbsk3d_ms_hypg* ms_hypg, const float psi, c
     std::map<int, dbmsh3d_face*>::iterator it = MS->facemap().begin();
     for (; it != MS->facemap().end(); it++) {
       dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*it).second;
-      if (FF->find_1st_bnd_HE() == false)
+      if (FF->find_1st_bnd_HE() == nullptr)
         continue;
       
       //Detect and remove tiny bnd edges.

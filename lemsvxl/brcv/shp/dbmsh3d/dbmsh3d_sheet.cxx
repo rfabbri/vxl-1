@@ -1396,9 +1396,9 @@ bool dbmsh3d_sheet::detect_fix_2_sep_Es (const dbmsh3d_halfedge* headHE)
       unsigned int ip = _get_round (HE_vec.size(), int(i+1));
       unsigned int jm = _get_round (HE_vec.size(), int(j-1));
       unsigned int jp = _get_round (HE_vec.size(), int(j+1));
-      if (Es_sharing_V (HE_vec[im]->edge(), HE_vec[jp]->edge()) == false)
+      if (Es_sharing_V (HE_vec[im]->edge(), HE_vec[jp]->edge()) == nullptr)
         continue;
-      if (Es_sharing_V (HE_vec[ip]->edge(), HE_vec[jm]->edge()) == false) 
+      if (Es_sharing_V (HE_vec[ip]->edge(), HE_vec[jm]->edge()) == nullptr) 
         continue;
 
       //Move HE_vec[i+1] to HE_[jm] to a new circular icurve-loop.
@@ -1670,7 +1670,7 @@ bool dbmsh3d_sheet::check_integrity ()
         assert (0);
         return false;
       }
-      if (Es_sharing_V (HE->edge(), nextHE->edge()) == false) {
+      if (Es_sharing_V (HE->edge(), nextHE->edge()) == nullptr) {
         assert (0);
         return false;
       }
@@ -1787,7 +1787,7 @@ bool dbmsh3d_sheet::check_integrity ()
             assert (0);
             return false;
           }
-          if (Es_sharing_V (HE->edge(), nextHE->edge()) == false) {
+          if (Es_sharing_V (HE->edge(), nextHE->edge()) == nullptr) {
             assert (0);
             return false;
           }

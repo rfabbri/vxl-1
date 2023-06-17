@@ -512,7 +512,7 @@ void dbsk3d_fs_segre::add_bnd_links_to_queue ()
       dbmsh3d_halfedge* HE = FF->halfedge();
         do {
           dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) HE->edge();  
-          if (FE->b_inf() == false && FE->bnd_face() == false) {
+          if (FE->b_inf() == false && FE->bnd_face() == nullptr) {
             L_compute_gap_cost (FE, 2);
             if (FE->cost() != SEG_OVERSIZE_COST)
               _add_to_L_2nd_queue (FE);

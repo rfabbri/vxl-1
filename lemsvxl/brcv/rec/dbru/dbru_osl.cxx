@@ -158,7 +158,7 @@ vsol_polygon_2d_sptr dbru_osl::get_polygon(unsigned i, unsigned j) {
     dbru_object_sptr obj = osl_[i];
     return obj->get_polygon(j);
   } else 
-    return false;
+    return NULL;
 }
 
 //: get a particular prototype of a particular object in osl

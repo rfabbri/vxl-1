@@ -981,14 +981,14 @@ insert_A_infty_branch(const dbsksp_shock_node_sptr& node,
                    const dbsksp_shock_edge_sptr& ref_edge)
 {
   // preliminary check
-  if (!ref_edge->is_vertex(node)) return false;
+  if (!ref_edge->is_vertex(node)) return nullptr;
 
   // only handle degree-2 node right now
   if (node->degree() != 2) 
   {
     std::cerr << 
       "ERROR: add_A_infty_branch currently can only handle degree-2 nodes.\n";
-    return false;
+    return nullptr;
   }
 
   // topology
@@ -1151,7 +1151,7 @@ squeeze_shock_edge(const dbsksp_shock_edge_sptr& e,
   if (!source->insert_shock_edge(e_left, front_edge))
   {
     std::cout << "ERROR: Could not insert left terminal edge.\n";
-    return false;
+    return nullptr;
   };
   
   dbsksp_shock_node_descriptor_sptr dleft = source->descriptor(e_left);

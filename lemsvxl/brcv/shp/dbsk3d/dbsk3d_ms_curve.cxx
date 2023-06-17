@@ -359,7 +359,7 @@ void clone_ms_curve_sg_sa (dbsk3d_ms_curve* targetSC, dbsk3d_ms_curve* inputSC,
 //  (exclude the end points of A1A3 or A14 node element)
 dbsk3d_fs_vertex* closest_MN_MC (dbsk3d_ms_node* MN, dbsk3d_ms_curve* MC)
 {
-  double min_dist = HUGE;
+  double min_dist = HUGE_VAL;
   dbsk3d_fs_vertex* closestN = NULL;
   std::vector<dbmsh3d_vertex*> N_vec;
   MC->get_V_vec (N_vec);
@@ -383,7 +383,7 @@ dbsk3d_fs_vertex* closest_MN_MC (dbsk3d_ms_node* MN, dbsk3d_ms_curve* MC)
 double closest_MC_MC (dbsk3d_ms_curve* SC1, dbsk3d_ms_curve* SC2, 
                       dbsk3d_fs_vertex* & closestN1, dbsk3d_fs_vertex* & closestN2)
 {
-  double min_dist = HUGE;  
+  double min_dist = HUGE_VAL;  
   std::vector<dbmsh3d_vertex*> SC1_FVs;
   SC1->get_V_vec (SC1_FVs);
   assert (SC1_FVs.size() > 1);
