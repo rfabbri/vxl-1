@@ -24,22 +24,20 @@ for j=30:-1:1
 end
 
 writematrix(frpt1,'FRePTcorrigido.txt', 'Delimiter', 'space');
-clear a;
-a=1;
+
 for p=1:970
     for q=1:970
         if p~=q
             for r=1:3
-                l(1,r)=(frpt1(p,r)==frpt1(q,1))||(frpt1(p,r)==frpt1(q,2))||(frpt1(p,r)==frpt1(q,3));
-                l(1,r+3)=(frpt1(p,r+3)==frpt1(q,4))||(frpt1(p,r+3)==frpt1(q,5))||(frpt1(p,r+3)==frpt1(q,6));
-            end
-            if l(1,:)==[1 1 1 1 1 1]
-                erro1(a,1)=p;
-                erro1(a,2)=q;
-                a=a+1;
+                l(p,r)=(frpt1(p,r)==frpt1(q,1))||(frpt1(p,r)==frpt1(q,2))||(frpt1(p,r)==frpt1(q,3));
+                l(p,r+3)=(frpt1(p,r+3)==frpt1(q,4))||(frpt1(p,r+3)==frpt1(q,5))||(frpt1(p,r+3)==frpt1(q,6));
             end
         end
     end
 end
+for k=1:970
+        s(k,1)=sum(l(k,:));
+end
+sum(s==6)%=0
 % NÃO HÁ PROBLEMAS REPETIDOS!!!
                     

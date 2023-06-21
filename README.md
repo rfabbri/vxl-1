@@ -176,18 +176,18 @@ http://wiki.nosdigitais.teia.org.br/VXL
 
   # For any project that uses edge detection, you can try building the edge
   # stuff first
-  cd ../seg/dbdet/tests
+  cd ../brcv/seg/dbdet/tests
   make
 
   cd ../algo/tests        # dbdet/algo/tests
   make
 
-  # $LEMSVPE will be set if you followed scripts/devsetup/tips
-  cd $LEMSVPE/contrib/edge_det
+  # $LEMSVXL will be set if you followed scripts/devsetup/tips
+  cd $LEMSVXL/contrib/edge_det # We suggest, if you are not in lemsvxl-bin folder, use sw command
   make
 
   # now build the rest
-  cd $LEMSVPE
+  cd $LEMSVXL
   make -j9 -k
 ```
 

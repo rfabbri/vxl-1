@@ -1,5 +1,5 @@
 
-% Problem x Time x track NÚMERO MÁXIMO DE TRACKS=700
+% Problem x Time x track
 % 1000 Problemas, 100 experimentos de 5 testes cada
 % Aqui estão sendo considerados os problemas no arquivo FrePTcorrigido.txt
 
