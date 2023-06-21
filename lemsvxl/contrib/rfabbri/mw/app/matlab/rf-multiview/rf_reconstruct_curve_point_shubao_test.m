@@ -2,7 +2,7 @@ num_samples_per_point = 10
 [pts1,pts2,fm,pr1,pr2,tgts1,tgts2,pts3d_gt,tgts3d_gt] = synthetic_data('0,2',0,1);
 [pts2,pts3,fm,pr2,pr3,tgts2,tgts3,pts3d_gt,tgts3d_gt] = synthetic_data('2,4',0,1);
 
-noiselevel = 0.3;
+noiselevel = 0.4; %0.3;
 pts1 = perturb(pts1,noiselevel);
 pts2 = perturb(pts2,noiselevel);
 pts3 = perturb(pts3,noiselevel);
