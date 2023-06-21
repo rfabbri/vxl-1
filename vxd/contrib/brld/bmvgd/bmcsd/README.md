@@ -452,7 +452,10 @@ There is no "undo" action yet, be careful.
   sketch `mcs` (under vxd/contrib/brld/bmvgd/bmcsd/cmd)[1] or the enhanced
   multiview curve sketch[2] `mcd` (under `mw/cmd`). The remaining of the pipeline is in
   Matlab
-
+- Tip: the `mcs` will be binary will be in located in `vxd-bin/bin`. Add an alias inside `.bashrc` in order to run `mcs` without need for locate the entire path as follows
+  ```
+  alias mcsbin='$LEMSVPE/vxd-bin/bin/mcs'
+  ```
 
 ## Visualizing the 3D Curve Sketch
 
