@@ -12,3 +12,8 @@ from Ricardo Fabbri (http://wiki.nosdigitais.teia.org.br/VXL)
 `vxd/contrib/brld/bmvgd/bmcsd/cmd`
 
 Read vxd/contrib/brld/bmvgd/bmcsd/README.md
+
+## Datasets
+The input datasets where we are doing 3D rec for the 3D Curve Drawwings CVPR'10 paper have *-mcs-work suffix.
+You can download them at:
+- TODO: insert drive link here
