@@ -452,10 +452,12 @@ There is no "undo" action yet, be careful.
   sketch `mcs` (under vxd/contrib/brld/bmvgd/bmcsd/cmd)[1] or the enhanced
   multiview curve sketch[2] `mcd` (under `mw/cmd`). The remaining of the pipeline is in
   Matlab
-- Tip: the `mcs` will be binary will be in located in `vxd-bin/bin`. Add an alias inside `.bashrc` in order to run `mcs` without need for locate the entire path as follows
-  ```
-  alias mcsbin='$LEMSVPE/vxd-bin/bin/mcs'
-  ```
+- The `mcs` executable will be binary will be in located in `vxd-bin/bin`. Include this in your PATH.
+- Instead of running `mcs` by hand, internally to LEMS we have the script
+```
+  lemsvxl/*/mw/scripts/mcs_rec_capitol
+```
+Copy this to `mcs_rec_dataset` with a suffix of choice and and modify the script
 
 ## Visualizing the 3D Curve Sketch
 
@@ -520,6 +522,10 @@ mcs_instances.m is a utility to help building anchor and confirmation views usin
 
 
 ## Multiview curve sketch attributes (`mca`)
+
+
+## See also
+internal lemsvpe/doc/3d-curve-drawing.md
 
 ## Credits
 
