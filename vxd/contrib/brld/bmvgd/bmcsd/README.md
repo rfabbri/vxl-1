@@ -465,14 +465,15 @@ There is no "undo" action yet, be careful.
 - Compile sgui in mw/app
 - Put mw/scripts/ in your path. This is how I do it: in your ~/.bashrc make sure you have:
 ```
-PATH=$PATH:$HOME/bin/mw-scripts:$HOME/bin/mw-cmd:.
-export PATH
+export PATH=$HOME/bin:$HOME/bin/mw-scripts:$HOME/bin/mw-cmd:$PATH
 ```
 
-Inside ~/bin you symlink to the script and cmd bin folders to have access to all
+Inside ~/bin you symlink to the script and cmd bin folders from mw to have access to all
 executables from the command line:
-/home/rfabbri/bin/mw-scripts -> /home/rfabbri/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/scripts
-/home/rfabbri/bin/mw-cmd -> /Users/rfabbri/cprg/vxlprg/lemsvpe/lemsvxl-bin/contrib/rfabbri/mw/cmd
+```
+~/bin/mw-scripts -> ~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/scripts
+~/bin/mw-cmd -> ~/cprg/vxlprg/lemsvpe/lemsvxl-bin/contrib/rfabbri/mw/cmd
+```
 
 You need to have them in your path because you rarely will run just the curve
 sketch binary or the dborl edge/contour binaries by hand.  You will run them
