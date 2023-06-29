@@ -20,3 +20,7 @@ You can download them at:
 - 3D Curve Sketch dataset recovered by Hongyi: 
     - https://drive.google.com/drive/folders/0ByTILAQRKQoLMHpmRTBWWlhpTTQ
     - seems to be part of what was used for the 3D curve drawing paper
+
+## Presentation on reviving the code
+doc/3d-code-efforts.key
+This is updated to: https://docs.google.com/presentation/d/1v6S7F-9oL92CpOHQlcLdq8eL13A_PrQiXaCyId27LVs
