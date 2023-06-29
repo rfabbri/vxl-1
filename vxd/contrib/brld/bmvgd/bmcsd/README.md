@@ -459,6 +459,26 @@ There is no "undo" action yet, be careful.
 ```
 Copy this to `mcs_rec_dataset` with a suffix of choice and and modify the script
 
+### Doing what mcs_rec_dataset script does, by hand
+
+#### Generate mcs_*_list.txt files 
+
+These list all image files and edg lists, just an artifact of parsing.
+These are generated automatically by running 
+```
+vxd/contrib/brld/bmvgd/bmcsd/scripts/mcs_gen_filelist  [image file extension]
+```
+If its png we'd run mcs_gen_filelist png inside the images folder.
+
+#### Generate mcs_stereo_instances.txt files 
+
+(containing the hypothesis-confirmation image indices for each curve sketch run)
+An example of the format is given in vxd/contrib/brld/bmvgd/bmcsd/tests/mcs_stereo_instances_example.txt
+
+It can also be generated automatically for a large reconstruction. I used a
+simple Matlab for this. (TODO: locate)
+
+
 ## Visualizing the 3D Curve Sketch
 
 
