@@ -30,4 +30,4 @@ print('ncurves = ',len(output_data))
 # Create output to plot
 with open("all_rec_curves.txt","w") as rec:
     for crv in output_data:
-        rec.write(''.join([str(el) for el in crv])+'\n')
+        rec.write('\n'.join([str(el) for el in crv]))

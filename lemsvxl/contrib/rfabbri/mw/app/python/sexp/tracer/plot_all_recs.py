@@ -11,4 +11,19 @@ sys.path.append('../../utils')
 import myreadv
 import numpy as np
 import matplotlib.pyplot as plt
+import re, ast
 
+#crvs = np.loadtxt("all_rec_curves.txt", delimiter=",")
+crvs = []
+with open("all_rec_curves.txt","r") as rec:
+    f = rec.readlines()
+    print(f)
+    for r in rec:
+        a =np.fromstring(r,dtype=float)
+        #print(a)
+        crvs.append(r)
+print(crvs)
+#ax = plt.figure().add_subplot(projection='3d')
+#
+#plt.title('Main reconstruction')
+#plt.show()
