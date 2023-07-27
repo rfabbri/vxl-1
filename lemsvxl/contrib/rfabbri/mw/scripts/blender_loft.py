@@ -1,3 +1,4 @@
+
 # Loft curves given by files into surface
 #
 # INPUT 
@@ -28,6 +29,7 @@
 #
 # AUTHOR
 #   Ricardo Fabbri <rfabbri@gmail.com>, 3 Dec 2015
+#   Updated by Zichang Gao 2023 for Blender 3 / latest
 #
 import bpy
 import bpy_extras
@@ -40,7 +42,9 @@ def new_curve_from_points(p0,name_prefix):
     npts = len(p0)
     c0 = bpy.data.curves.new(name_prefix + 'CurveToLoft', 'CURVE')
     o0 = bpy.data.objects.new(name_prefix + 'CurveToLoft', c0)
-    bpy.context.scene.objects.link(o0)
+    # bpy.context.scene.objects.link(o0)
+    bpy.context.scene.collection.objects.link(o0)
+
     c0.dimensions = "3D"
 
     spline = o0.data.splines.new('BEZIER')
@@ -95,9 +99,11 @@ def loft(pts):
     npts = len(pts)
     for i in range(npts):
         c, o, s = new_curve_from_points(pts[i],'curve-p'+str(i))
-        bpy.data.objects[o.name].select = True
+        # bpy.data.objects[o.name].select = True
+        bpy.data.objects[o.name].select_set(True)
         os.append(o)
-    bpy.context.scene.objects.active = bpy.data.objects[os[npts-1].name]
+    # bpy.context.scene.objects.active = bpy.data.objects[os[npts-1].name]
+    bpy.context.view_layer.objects.active = bpy.data.objects[os[npts-1].name]
 
     # join curves into a group
     bpy.ops.object.join('INVOKE_REGION_WIN')
@@ -105,16 +111,14 @@ def loft(pts):
     # create a mesh to store the final surface
     me = bpy.data.meshes.new("outputLoft")
     ob = bpy.data.objects.new("outputLoft", me)
-    scn = bpy.context.scene
-    scn.objects.link(ob)
-    scn.objects.active = ob
-    ob.select = True
+    bpy.context.scene.collection.objects.link(ob)
+    bpy.context.view_layer.objects.active = ob
+    ob.select_set(True)
+    bpy.context.scene.bsurfaces.SURFSK_mesh = ob
+    bpy.context.scene.bsurfaces.SURFSK_curve = bpy.data.objects[os[npts-1].name]
+    bpy.context.scene.bsurfaces.SURFSK_guide = 'Curve'
 
-    # curves + object should be selected
-    # call lofting
-    bpy.ops.object.mode_set('INVOKE_REGION_WIN', mode='EDIT', toggle=True)
-    bpy.ops.mesh.reveal()
-    bpy.ops.gpencil.surfsk_add_surface('INVOKE_DEFAULT')
+    bpy.ops.mesh.surfsk_add_surface('INVOKE_DEFAULT')
 
 
 def test2():
