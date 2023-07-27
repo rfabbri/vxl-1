@@ -44,6 +44,25 @@ Mac OS. The main developer uses both Mac OS and GNU/Linux but originally
 developed the system on a Gentoo Linux workstation. Many of his students and
 collaborators use Ubuntu Linux. The system will run fastest under GNU/Linux.
 
+### Setting up your environment
+
+
+- Put mw/scripts/ in your path. This is how I do it: in your ~/.bashrc make sure you have:
+```
+export PATH=$HOME/bin:$HOME/bin/mw-scripts:$HOME/bin/mw-cmd:$PATH
+```
+
+Inside ~/bin you symlink to the script and cmd bin folders from mw to have access to all
+executables from the command line:
+```
+~/bin/mw-scripts -> ~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/scripts
+~/bin/mw-cmd -> ~/cprg/vxlprg/lemsvpe/lemsvxl-bin/contrib/rfabbri/mw/cmd
+```
+
+You need to have them in your path because you rarely will run just the curve
+sketch binary or the edge/contour detector binaries by hand.  You will run them
+indirectly via scripts as explained below.
+
 
 ## Input dataset
 
@@ -196,7 +215,7 @@ sg image-000.png image-001.png image-002.png   # and so on
 ```
 or
 ```
-sg *.png
+sg \*.png
 ```
 Which will open one image per frame. You can navigate the frames using the arrow
 keys. After detecting edges in the first frame, you can say `Process and Play
@@ -363,7 +382,7 @@ We recommend compute it in parallel by installing GNU Parallel. You can then
 compute the edges for all images of your dataset in parallel:
 
 Case 1) If you want to recompute the edgemaps from scratch (to possibly use
-different parameters than what you used to generate the `.edg` above:
+different parameters than what you used to generate the `.edg` above):
 ```
 parallel contours ::: *.png
 ```
@@ -452,7 +471,7 @@ There is no "undo" action yet, be careful.
   sketch `mcs` (under vxd/contrib/brld/bmvgd/bmcsd/cmd)[1] or the enhanced
   multiview curve sketch[2] `mcd` (under `mw/cmd`). The remaining of the pipeline is in
   Matlab
-- The `mcs` executable will be binary will be in located in `vxd-bin/bin`. Include this in your PATH.
+- The `mcs` executable will be binary and located in `vxd-bin/bin`. Include this in your PATH.
 - Instead of running `mcs` by hand, internally to LEMS we have the script
 ```
   lemsvxl/*/mw/scripts/mcs_rec_capitol
@@ -461,91 +480,103 @@ Copy this to `mcs_rec_dataset` with a suffix of choice and and modify the script
 
 ### Doing what mcs_rec_dataset script does, by hand
 
-#### Generate mcs_*_list.txt files 
+#### Generate `mcs_*_list.txt` files 
 
 These list all image files and edg lists, just an artifact of parsing.
 These are generated automatically by running 
 ```
 vxd/contrib/brld/bmvgd/bmcsd/scripts/mcs_gen_filelist  [image file extension]
 ```
-If its png we'd run mcs_gen_filelist png inside the images folder.
+If its png we'd run `mcs_gen_filelist png` inside the images folder.
 
 #### Generate mcs_stereo_instances.txt files 
 
 (containing the hypothesis-confirmation image indices for each curve sketch run)
-An example of the format is given in vxd/contrib/brld/bmvgd/bmcsd/tests/mcs_stereo_instances_example.txt
+An example of the format is given in `vxd/contrib/brld/bmvgd/bmcsd/tests/mcs_stereo_instances_example.txt`
 
 It can also be generated automatically for a large reconstruction. I used a
-simple Matlab for this. (TODO: locate)
-
+simple Matlab script `mcs_instances.m` for this, located in internal
+`mw/app/matlab/sexp/tracer`
 
 ## Visualizing the 3D Curve Sketch
 
+- View all images and all edgemaps with typing sg * in the dataset folder
+  - This `sg` GUI allows one to load a curve sketch and project it on all views,
+    although it is not the primary way of visualizing the curve sketch, it is
+    useful for relating it to the input data and for debugging.
 
-- Before compiling GUI code, which might be some work, you can use the command
-    mca to print out in text format the number of curves in the reconstruction file 
-- Compile sgui in mw/app
-- Put mw/scripts/ in your path. This is how I do it: in your ~/.bashrc make sure you have:
-```
-export PATH=$HOME/bin:$HOME/bin/mw-scripts:$HOME/bin/mw-cmd:$PATH
-```
+- The command `mca` prints out in text format the number of curves in the reconstruction file
+  and other attributes. This is useful without compiling GUI code or in a remote cluster environment
+  for quick sanity checks. It is a 3D analogous to `imfinfo` in matlab or `identify` in
+  the commandline that prints stats of an image without GUI.
 
-Inside ~/bin you symlink to the script and cmd bin folders from mw to have access to all
-executables from the command line:
-```
-~/bin/mw-scripts -> ~/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/scripts
-~/bin/mw-cmd -> ~/cprg/vxlprg/lemsvpe/lemsvxl-bin/contrib/rfabbri/mw/cmd
-```
+- I used Matlab to look and interact with the reconstructed curves.
 
-You need to have them in your path because you rarely will run just the curve
-sketch binary or the dborl edge/contour binaries by hand.  You will run them
-indirectly via scripts as explained in the bmcsd/README.md file
-
-
-- You can now view all images and all edgemaps with typing sg * in the datset folder
-- I used Matlab to look into the reconstructed curves, while anil uses
-     Meshlab (I don't have access to his viewer). 
+- Meshlab: while Anil used
+  a more beautiful yet less interactive Meshlab visualizer 
+  (I haven't used his viewer in a while, seemingly his 3D Drawing code outputs a PLY
+  already with the visualization attributes and we just run Meshlab on it,
+  TODO: can this be used for the curve sketch results without drawing?). 
 - some outlier curves might be floating so if you don't tune the parameters of
   the edge detector, linker and mcs matcher, then you might have a hard time
   seeing the recontruction because the outlier is so far away. You might want to
   zoom in greatly to see the actual object if your recontruction is "dirty".
 
-### Matlab scripts
+### Additional Matlab scripts
 
-These reside in mw/app/matlab
+These reside in `mw/app/matlab`
 
-In there, sexp/mcs_roc matlab script generates the ROC curves in CVPR'10.
-After a curve sketch run, to read the curve sketch the commands are all in matlab/sexp/tracer (it is called tracer because the 3D curve sketch is actually an automated version of a GUI reconstruction tool to trace corresponding curves in multiple views and reconstruct them; my GUI still works, you can actually see which curves are matched and the reprojections to debug errors; the output of this GUI can also be visualized just the same with these tools).
+3D Curve sketch-specific code reside in `mw/app/matlab/sexp/tracer` 
+        After a curve sketch run, to read the curve sketch and perform other
+        processing the commands are all in this folder.
+            It is called tracer because the 3D curve sketch is actually
+            an automated version of a GUI reconstruction tool to trace corresponding curves
+            in multiple views and reconstruct them; my GUI still works, you can actually see
+            which curves are matched and the reprojections to debug errors; the output of
+            this GUI can also be visualized just the same with these tools.
 
-To read the 3D curve sketch:
-read_curve_sketch.m
+#### Read the 3D curve sketch:
+`read_curve_sketch.m`
 At the same time, the supports for each curves will be a text file after running mcs or mcd, and this can be loaded as:
+```
 load supports
-This can be used to experiment with pruning curves based on support or length scores inside matlab.
-The input is the file after mcs/mcd is run, namely the file with this regexp: *-3dcurve-*-points*dat
+```
+This can be used to experiment with *pruning curves based on support or length scores* inside Matlab.
+The input is the file after `mcs/mcd` is run, namely the file with this regexp: `*-3dcurve-*-points*dat`
 
-To plot all the 3D curves:
-plot_all_recs.m
-This automatically also saves a .fig file in a file  'all_recs.fig', so if you see this file inside datasets, it means you can open the .fig in matlab,
-and if you want access to the curves without rerunning the curve sketch, there is a utility to extract these curves from the plot back into a curve sketch
+#### Plot all the 3D curves:
+`plot_all_recs.m`
+This automatically also saves a `.fig` file in a file  `all_recs.fig`, so if you
+see this file inside datasets, it means you can open the .fig in matlab, and if
+you want access to the curves without rerunning the curve sketch, there is a
+utility to extract these curves from the plot back into a curve sketch
 data structure.
 
-To impose a bounding box and a good view angle for the paper,  for example, for the capitol sequence, for better visualization:
-capitol_results.m
+To impose a bounding box and a good view angle for the paper,  for example, for
+the capitol sequence, for better visualization: `capitol_results.m`
 
-Other utiities are there that we can use to inspect the 3D curve sketch, prune short curves, to get back the curves from a saved .fig reconstruction,
-another utility can be used to append / join two reconstrutions together (say join one for the overall capitol building, and another which is a zoom of the stairs)
-(image-commands-util.sh).
+#### Other Matlab utilities
+Other utities are there that we can use to inspect the 3D curve sketch, prune
+short curves, to get back the curves from a saved .fig reconstruction, another
+utility can be used to append / join two reconstrutions together (say join one
+for the overall capitol building, and another which is a zoom of the stairs)
+(`image-commands-util.sh`).
 
-mcs_instances.m is a utility to help building anchor and confirmation views using a more customized formula computed in matlab, if desired, instead of manually writing down the anchor and confirmation views.
+`mcs_instances.m` is a utility to help building anchor and confirmation views
+using a more customized formula computed in Matlab, if desired, instead of
+manually writing down the anchor and confirmation views, as already mentioned above.
 
-
+`sexp/mcs_roc` script generates the ROC curves in CVPR'10.
 
 ## Multiview curve sketch attributes (`mca`)
 
+This was wexplaineda above. TODO: detailed its use.
+
 
 ## See also
-internal lemsvpe/doc/3d-curve-drawing.md
+- Internal lemsvpe/doc/3d-curve-drawing.md
+- Source code for mcs, mcd, mca is readable and explain the different
+  parameters in detail
 
 ## Credits
 
