@@ -169,8 +169,10 @@ class vgl_h_matrix_3d
   void set_reflection_plane(vgl_plane_3d<double> const& p);
 
   bool is_rotation() const;
+  bool is_rotation(const double eps) const; // You can set error to 10^(-7)
   bool is_identity() const;
   bool is_euclidean() const;
+  bool is_euclidean(const double eps) const; // You can set error to 10^(-7)
   bool is_affine() const;
 
   //: Compute transform to projective basis given five points, no 4 of which coplanar

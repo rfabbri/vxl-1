@@ -82,11 +82,11 @@ class vgl_rotation_3d
 
   //: Construct from a vgl_h_matrix_3d.
   explicit vgl_rotation_3d( vgl_h_matrix_3d<T> const& h )
-    : q_(h.get_upper_3x3_matrix().transpose()) { assert(h.is_rotation()); }
+    : q_(h.get_upper_3x3_matrix().transpose()) { assert(h.is_rotation(0.00001)); }
 
   //: Construct from a vgl_h_matrix_3d.
   vgl_rotation_3d& operator=( vgl_h_matrix_3d<T> const& h )
-  { assert(h.is_rotation()); q_ = h.get_upper_3x3_matrix().transpose(); return *this; }
+  { assert(h.is_rotation(0.0000001)); q_ = h.get_upper_3x3_matrix().transpose(); return *this; }
 
   //: Construct to rotate (direction of) vector a to vector b
   //  The input vectors need not be of unit length
