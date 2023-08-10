@@ -60,12 +60,8 @@ lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/tst.pdf
 lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/tst2.pdf
 lemsvxl/contrib/rfabbri/mw/app/matlab/pose-from-curves/tst3.pdf
 lemsvxl/contrib/rfabbri/pathdef.m
-minus-bin
-minus-bin-dbg-sanitize/
-minus-bin-dbg/
-minus-bin-gcc6/
-minus-bin-rel/
-minus-bin-valgrind/
+minus-bin*
+OpenMVG-bin*
 minus-gcc5/
 minus-tst/
 minus/
