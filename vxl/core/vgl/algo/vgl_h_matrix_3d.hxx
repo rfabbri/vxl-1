@@ -390,16 +390,6 @@ vgl_h_matrix_3d<T>::set_reflection_plane(vgl_plane_3d<double> const& l)
 
 
 template <class T>
-bool vgl_h_matrix_3d<T>::is_rotation() const
-{
-
-  return t12_matrix_.get(0,3) == (T)0
-      && t12_matrix_.get(1,3) == (T)0
-      && t12_matrix_.get(2,3) == (T)0
-      && this->is_euclidean();
-}
-
-template <class T>
 bool vgl_h_matrix_3d<T>::is_rotation(const double eps) const
 {
 
@@ -407,25 +397,6 @@ bool vgl_h_matrix_3d<T>::is_rotation(const double eps) const
       && t12_matrix_.get(1,3) == (T)0
       && t12_matrix_.get(2,3) == (T)0
       && this->is_euclidean(eps);
-}
-
-template <class T>
-bool vgl_h_matrix_3d<T>::is_euclidean() const
-{
-  T eps = 10*std::numeric_limits<T>::epsilon();
-  if ( t12_matrix_.get(3,0) != (T)0 ||
-       t12_matrix_.get(3,1) != (T)0 ||
-       t12_matrix_.get(3,2) != (T)0 ||
-       std::fabs(t12_matrix_.get(3,3)-T(1)) > eps)
-    return false; // should not have a projective part
-
-  // use an error tolerance on the orthonormality constraint
-  vnl_matrix_fixed<T,3,3> R = get_upper_3x3_matrix();
-  R *= R.transpose();
-  R(0,0) -= T(1);
-  R(1,1) -= T(1);
-  R(2,2) -= T(1);
-  return R.absolute_value_max() <= eps;
 }
 
 template <class T>
