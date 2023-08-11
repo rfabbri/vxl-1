@@ -67,7 +67,7 @@ public:
   int nj() const { return nj_; }
 
   //: Has view spanning tree?
-  bool has_tree() const {return tree_ != 0; }
+  bool has_tree() const {return tree_ != nullptr; }
 
   //: Set view spanning tree. User must alloc it; we will delete it
   void set_tree(dbkpr_view_span_tree_sptr &ptr) {tree_ = ptr;}
