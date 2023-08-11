@@ -31,7 +31,7 @@ main(int argc, char **argv)
 
   vnl_double_3x3 Kmatrix;
   bdifd_turntable::internal_calib_olympus(Kmatrix, x_max_scaled, crop_origin_x_, crop_origin_y_);
-  K[1][1] = K[0][0];       // aspect ratio 1 -- the only difference to generate_synth_sequence_3
+  Kmatrix[1][1] = Kmatrix[0][0];       // aspect ratio 1 -- the only difference to generate_synth_sequence_3
 
   vpgl_calibration_matrix<double> K(Kmatrix);
   std::vector<vpgl_perspective_camera<double> > cam_vpgl;
