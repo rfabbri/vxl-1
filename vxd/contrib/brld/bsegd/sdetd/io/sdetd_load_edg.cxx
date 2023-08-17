@@ -1,4 +1,5 @@
 #include "sdetd_load_edg.h"
+#include "sdetd_io_config.h"
 #include <cstring>
 #include <locale>
 
@@ -14,6 +15,7 @@
 #include <boost/iostreams/copy.hpp>
 #include <boost/iostreams/filter/gzip.hpp>
 #endif
+
 
 bool sdetd_load_edg(std::string input_file, bool bSubPixel, bool blines, double scale,
                     std::vector< vsol_spatial_object_2d_sptr > &edgels)
@@ -139,6 +141,7 @@ bool sdetd_load_edg(std::string input_file, bool bSubPixel, bool blines, double 
 }
 
 #ifdef HAS_BOOST
+//std::cout << "BOOST!\n"; 
 static bool sdetd_load_edg_gzip(std::string input_file, bool bSubPixel, double scale, sdet_edgemap_sptr &edge_map);
 static bool sdetd_save_edg_gzip(std::string filename, sdet_edgemap_sptr edgemap);
 #endif

@@ -199,6 +199,7 @@ bool bsold_save_con_file(char const* filename,
 
 
 #ifdef HAS_BOOST
+//std::cout << "BOOST FOUND\n";
 static bool bsold_load_cem_gzip(std::vector< vsol_spatial_object_2d_sptr >& contours, std::string filename);
 static bool bsold_save_cem_gzip(std::vector< vsol_spatial_object_2d_sptr >& vsol_list, std::string filename);
 #endif
@@ -248,14 +249,19 @@ bool bsold_load_cem_ascii(std::vector< vsol_spatial_object_2d_sptr >& contours, 
   int ix, iy;
   double idir, iconf, dir, conf;
 
-  //1)If file open fails, return.
+  //1)If file open fails or boost not found with .gz, return.
   std::ifstream infp(filename.c_str(), std::ios::in);
+  std::string ext = vul_file::extension(filename);
 
   if (!infp){
     std::cout << " Error opening file  " << filename.c_str() << std::endl;
     return false;
   }
 
+  if (ext == ".gz"){
+    std::cout << " Boost was not found! Error!  " << filename.c_str() << std::endl;
+    return false;
+  }
   //2)Read in each line
   while (infp.getline(lineBuffer,1024)) {
 
@@ -290,7 +296,7 @@ bool bsold_load_cem_ascii(std::vector< vsol_spatial_object_2d_sptr >& contours, 
       for (int j=0; j< numEdges; j++){
         //the rest should have data that goes into the current contour
         infp.getline(lineBuffer,1024);
-        sscanf(lineBuffer," [%d, %d]\t%f\t%f\t[%f, %f]\t%f\t%f",&(ix), &(iy),
+        sscanf(lineBuffer," [%d, %d]\t%lf\t%lf\t[%f, %f]\t%lf\t%lf",&(ix), &(iy),
               &(idir), &(iconf), &(x), &(y), &(dir), &(conf));
 
         //VJ's current CEM is in degrees rather than radians so need to convert

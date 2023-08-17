@@ -8,7 +8,8 @@
 //\date 09/16/2009 01:38:11 PM PDT
 //
 
-#cmakedefine Boost_IOSTREAMS_LIBRARY_FOUND
+//#cmakedefine Boost_IOSTREAMS_LIBRARY_FOUND
+#define Boost_FOUND @Boost_FOUND@
 #ifdef Boost_FOUND
 #define HAS_BOOST 1
 #endif

@@ -1,7 +1,6 @@
 # lemsvxlsrc/bbasd/bsold/CMakeLists.txt
 # The Development Brown Spatial Object Library
 project(bsold)
-
 include_directories( ${VXL_GEL_INCLUDE_DIR} )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 
@@ -27,11 +26,12 @@ set( bsold_sources
 aux_source_directory(Templates bsold_sources)
 
 add_library(bsold ${bsold_sources})
-
+find_package(Boost COMPONENTS iostreams)
 if(Boost_FOUND)
   target_link_libraries(bsold bgld bgld_algo vgl vsol ${Boost_LIBRARIES})
   include_directories( ${Boost_INCLUDE_DIRS} )
 else()
+  #message("boost har inte funnit")
   target_link_libraries(bsold bgld bgld_algo vgl vsol)
 endif()
 
