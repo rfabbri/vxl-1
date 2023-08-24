@@ -1882,10 +1882,10 @@ cameras_olympus_spherical(
       bdifd_vector_3d z(-r[0],-r[1],-r[2]);
       
       if (perturb) {
-        std::cout << "z before " << z << std::endl;
+        //std::cout << "z before " << z << std::endl;
         z += bdifd_vector_3d(0.01*random01(),0.01*random01(),0.01*random01());
         z.normalize(); 
-        std::cout << "z after " << z << std::endl;
+        //std::cout << "z after " << z << std::endl;
       }
       
       if (enforce_minimum_separation) {
@@ -1952,7 +1952,7 @@ cameras_olympus_spherical(
       R[2][2] = z[2];
       
       vgl_h_matrix_3d<double> Rhmg(R,bdifd_vector_3d(0,0,0));
-      assert(Rhmg.is_euclidean());
+      assert(Rhmg.is_euclidean(1e-10));
       cams.push_back(vpgl_perspective_camera<double>(K, C, vgl_rotation_3d<double>(Rhmg)));
       ++i;
   } while (i < nviews);
