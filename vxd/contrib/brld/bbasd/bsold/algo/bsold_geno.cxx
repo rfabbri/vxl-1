@@ -96,7 +96,7 @@ interpolate3_approx(bsold_geno_curve_2d *c, std::vector<vsol_point_2d_sptr> cons
 
   unsigned i;
 
-  double delta_angle_threshold=vnl_math::pi/2;
+  double delta_angle_threshold=vnl_math::pi_over_2;
 
   bsold_geno_curve_2d arc_geno;
   interpolate(&arc_geno,pts,closed);
@@ -116,14 +116,14 @@ interpolate3_approx(bsold_geno_curve_2d *c, std::vector<vsol_point_2d_sptr> cons
     
     if (std::fabs(angle1 - angle0) > vnl_math::pi) {
       mid = mid + vnl_math::pi;
-      delta = 2*vnl_math::pi - std::fabs(angle1 - angle0);
+      delta = vnl_math::twopi - std::fabs(angle1 - angle0);
     } else
       delta = std::fabs(angle1 - angle0);
 
     if (delta > delta_angle_threshold)
       tangent_reliable[i] = false;
       
-    tangents[i] = std::fmod(mid,2*vnl_math::pi);
+    tangents[i] = std::fmod(mid,vnl_math::twopi);
   }
 
   tangents[i] = arc_geno[i-1].tangent_angle_at(1);

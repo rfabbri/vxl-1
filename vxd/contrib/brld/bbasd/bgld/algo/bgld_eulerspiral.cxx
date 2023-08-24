@@ -98,9 +98,9 @@ bgld_eulerspiral(const bgld_eulerspiral & es )
 //: Set the start angle, converted to the range [0, 2*pi)
 void bgld_eulerspiral::
 set_start_angle( double start_angle ){
-  double theta = std::fmod(start_angle, vnl_math::pi * 2);
+  double theta = std::fmod(start_angle, vnl_math::twopi);
   if (theta < 0.0)
-    theta = theta + vnl_math::pi * 2;
+    theta = theta + vnl_math::twopi;
   this->start_angle_ = theta;
 }
 
@@ -108,9 +108,9 @@ set_start_angle( double start_angle ){
 //: Set end angle of the biarc, converted to the range [0, 2*pi)
 void bgld_eulerspiral::
 set_end_angle( double end_angle ){
-  double theta = std::fmod(end_angle, vnl_math::pi * 2);
+  double theta = std::fmod(end_angle, vnl_math::twopi);
   if (theta < 0.0)
-    theta = theta + vnl_math::pi * 2;
+    theta = theta + vnl_math::twopi;
   this->end_angle_ = theta;
 }
 
@@ -145,12 +145,8 @@ tangent_at( double s) const {
 //: Returns the angle (in radian) in [0, 2PI] of the tangent at arclength s 
 // of the parameter along the curve.
 double bgld_eulerspiral::tangent_angle_at_length(double s) const {
-  double angle = this->start_angle() + s*(this->k0() + 0.5*this->gamma()*s);
   // make sure angle is in [0, 2pi)
-  angle = std::fmod(angle, vnl_math::pi*2);
-  if (angle <0)
-    angle = angle + vnl_math::pi*2;
-  return angle;
+  return bmcsd_util::angle0To2Pi(/* angle: */ this->start_angle() + s*(this->k0() + 0.5*this->gamma()*s));
 }
 
 double bgld_eulerspiral::tangent_angle_at(double s) const {
@@ -346,8 +342,8 @@ compute_end_pt( double k0, double gamma, double len, bool normalized ) const {
   if (normalized){
     start_pt.set(0, 0);
     // convert this->psi - this->start_angle to the range [0, 2pi) and assign to theta
-    theta = std::fmod(this->start_angle()-this->psi_, 2*vnl_math::pi);
-    theta = (theta < 0)? theta+2*vnl_math::pi : theta;
+    theta = std::fmod(this->start_angle()-this->psi_, vnl_math::twopi);
+    theta = (theta < 0)? theta+vnl_math::twopi : theta;
   }
   else{
     start_pt = this->start();
@@ -408,7 +404,7 @@ compute_es_params_use_simple_gradient_descent( bool use_lookup_table ){
   // psi is the angle of line from start point to end point
   this->psi_ = std::atan2(v.y(), v.x());
   if (this->psi_ < 0)
-    this->psi_ += vnl_math::pi * 2;
+    this->psi_ += vnl_math::twopi;
 
   //degeneracy check
   if (d < bgld_eulerspiral_e_error){
@@ -443,8 +439,8 @@ compute_es_params_use_simple_gradient_descent( bool use_lookup_table ){
       // the correct turning angle should be close to the estimated turning angle
       turning_angle_est = k0_est*len_est + 0.5*gamma_est*len_est*len_est;
       int num_offset_cycle;
-      num_offset_cycle = vnl_math::rnd((this->end_angle()-this->start_angle() - turning_angle_est)/(  vnl_math::pi*2) );
-      this->turning_angle_ = (this->end_angle()-this->start_angle()) - num_offset_cycle*vnl_math::pi*2;
+      num_offset_cycle = vnl_math::rnd((this->end_angle()-this->start_angle() - turning_angle_est)/(  vnl_math::twopi) );
+      this->turning_angle_ = (this->end_angle()-this->start_angle()) - num_offset_cycle*vnl_math::twopi;
       k0_init_est = k0_est;
       len_init_est = len_est;
  //     dstep = bgld_eulerspiral_lookup_table::instance()->dt() ;
@@ -567,7 +563,7 @@ compute_es_params_use_levenberg_marquardt(bool use_lookup_table ){
   // psi is the angle of line from start point to end point
   this->psi_ = std::atan2(v.y(), v.x());
   if (this->psi_ < 0)
-    this->psi_ += vnl_math::pi * 2;
+    this->psi_ += vnl_math::twopi;
 
   vnl_vector< double > k0_len_estimate(2);
   bool k0_len_initialized = false;
@@ -593,8 +589,8 @@ compute_es_params_use_levenberg_marquardt(bool use_lookup_table ){
       // the correct turning angle should be close to the estimated turning angle
       turning_angle_est = k0_est*len_est + 0.5*gamma_est*len_est*len_est;
       int num_offset_cycle;
-      num_offset_cycle = vnl_math::rnd((this->end_angle()-this->start_angle() - turning_angle_est)/(  vnl_math::pi*2) );
-      this->turning_angle_ = (this->end_angle()-this->start_angle())-num_offset_cycle*vnl_math::pi*2;
+      num_offset_cycle = vnl_math::rnd((this->end_angle()-this->start_angle() - turning_angle_est)/(  vnl_math::twopi) );
+      this->turning_angle_ = (this->end_angle()-this->start_angle())-num_offset_cycle*vnl_math::twopi;
       // initialized k0 and len with values from lookup table
       k0_len_estimate.put(0, k0_est);
       k0_len_estimate.put(1, len_est);
@@ -743,7 +739,7 @@ bgld_eulerspiral_lookup_table::bgld_eulerspiral_lookup_table(){
   in_stream.close();
 
   //compute the dtt
-  this->dt_ = 2* vnl_math::pi/npts_;
+  this->dt_ = vnl_math::twopi/npts_;
 }
 
 //: Destructor
@@ -766,10 +762,10 @@ look_up(double start_angle, double end_angle, double* k0, double* gamma, double*
   double a, b;
 
   // convert to range [0, 2pi)
-  start_angle = std::fmod(start_angle, 2*vnl_math::pi);
-  start_angle = (start_angle < 0) ? start_angle+2*vnl_math::pi : start_angle;
-  end_angle = std::fmod(end_angle, 2*vnl_math::pi);
-  end_angle = (end_angle < 0) ? end_angle+2*vnl_math::pi : end_angle;
+  start_angle = std::fmod(start_angle, vnl_math::twopi);
+  start_angle = (start_angle < 0) ? start_angle+vnl_math::twopi : start_angle;
+  end_angle = std::fmod(end_angle, vnl_math::twopi);
+  end_angle = (end_angle < 0) ? end_angle+vnl_math::twopi : end_angle;
 
   // find high and low index for each
   // start_angle

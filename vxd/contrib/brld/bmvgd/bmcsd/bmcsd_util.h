@@ -45,9 +45,9 @@
 extern int n8[8][2];
 extern int n4[4][2];
 
-#define remainder_div_2pi(x) ((x) - ((int)((x)/(2*vnl_math::pi)))*(x) )
+#define remainder_div_2pi(x) ((x) - ((int)((x)/(vnl_math::twopi)))*(x) )
 
-static const double rad_to_degree_ratio = vnl_math::pi/180.0;
+static const double rad_to_degree_ratio = vnl_math::pi_over_180;
 
 bool load_con_file(
       std::string filename, 
@@ -244,7 +244,7 @@ inline double bmcsd_util::angle_unit(const bmcsd_vector_3d &t1, const bmcsd_vect
 inline double bmcsd_util::angle_difference(double angle1, double angle2) 
 { 
    double dt_angle = std::fabs(angle1 - angle2);
-   return (dt_angle > vnl_math::pi)? (2*vnl_math::pi - dt_angle) : dt_angle;
+   return (dt_angle > vnl_math::pi)? (vnl_math::twopi - dt_angle) : dt_angle;
 }
 
 //: user must ensure vector is not empty
@@ -324,26 +324,22 @@ inline double bmcsd_util::clump_to_acos(double x)
 inline double bmcsd_util::
 angle0To2Pi (double angle)
 {
-  double a;
-  if (angle>=2*vnl_math::pi)
-    a = std::fmod (angle,vnl_math::pi*2);
+  if (angle>=vnl_math::twopi)
+    angle = std::fmod(angle, vnl_math::twopi);
   else if (angle < 0)
-    a = (2*vnl_math::pi+ std::fmod (angle,2*vnl_math::pi));
-  else 
-    a= angle;
+    angle = vnl_math::twopi + std::fmod(angle, vnl_math::twopi);
 
   // added by Nhon: these two lines of code is to fix the bug when
-  // angle = -1.1721201390607859e-016
+  // angle is at this point = -1.1721201390607859e-016
   // then after all the computation, we get
-  // a = 6.2831853071795862 == 2*vnl_math::pi !!!!!!!
-  // the only case this can happen is when a is very close to zero.
+  // angle = 6.2831853071795862 == 2*vnl_math::pi !!!!!!!
+  // the only case this can happen is when angle is very close to zero.
 
-  if (!(a>=0 && a<2*vnl_math::pi)) {
-    a = 0;
-  }
+  if (!(angle>=0 && angle<vnl_math::twopi))
+    angle = 0;
 
-  // assert (a>=0 && a<2*vnl_math::pi);
-  return a;
+  // assert (angle>=0 && angle<2*vnl_math::pi);
+  return angle;
 }
 
 inline vgl_homg_line_2d<double>
