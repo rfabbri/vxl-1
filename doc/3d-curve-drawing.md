@@ -18,7 +18,13 @@ Update that bmcsd/README.md with public info, leave most private info to this fi
 
 ### 3D Curve Drawing
 
-lemsvpe/3d-drawing-code (ric)
+The code has been put into git at:
+
+`lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/3d-drawing`
+
+Some info can be found in:
+
+lemsvpe/3d-drawing (ric, some notes)
 
 Hongyi's drive with Anil's files for 3D Drawing. Matlab code is `Anil_3DDrawing`
 https://drive.google.com/drive/folders/1p_Cp0y2FmivoVsyvWPv-0zo3YUaak4YS
