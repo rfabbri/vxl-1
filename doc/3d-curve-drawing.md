@@ -29,6 +29,8 @@ lemsvpe/3d-drawing (ric, some notes)
 Hongyi's drive with Anil's files for 3D Drawing. Matlab code is `Anil_3DDrawing`
 https://drive.google.com/drive/folders/1p_Cp0y2FmivoVsyvWPv-0zo3YUaak4YS
 
+I will refer to this as 3d-drawing-drive-folder
+
 Meeting with anil recorded Oct'22: https://drive.google.com/file/d/1cnQUdt1g60lMwF9zhjRR8kE43v0rvvml
 
 Dat files for 3D drawing: https://drive.google.com/drive/folders/1wux89jbcT8d20pZqJTwTqbTm8l8LMdqh?usp=sharing
@@ -58,7 +60,24 @@ Edit it and change the path to the file.
 
 Make sure to download both the code .zip and the above data link.
 
-### Display curves with meshlab
+
+### Visualizing
+
+Matlab: 
+
+`show_Anil_curve_drawing_result`
+
+Meshlab visualizer:
+
+
+#### Visualizing without running (precoumputed)
+
+in 3d-drawing-drive-folder curve_graph_amsterdam.mat
+
+You can open that .mat file and visualize it using the another attached matlab script show_Anil_curve_drawing_result.m. Looks like there are many small fragmented curves which can be simply pruned by curve length thresholding. While waiting for the code running from scratch on this dataset, try on this 3D curve drawing result first.A-- Chiang-Heng jul 2022
+
+problably same as in a 3d-drawing-drive-folder
+
 
 
 ## Datasets
