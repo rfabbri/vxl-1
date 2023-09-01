@@ -1,4 +1,4 @@
-
+% see lemsvpe/doc/3d-curve-drawing.md
 
 
 yy = load('curve_graph_amsterdam.mat');
