@@ -72,7 +72,7 @@ Meshlab visualizer:
 
 #### Visualizing without running (precoumputed)
 
-in 3d-drawing-drive-folder curve_graph_amsterdam.mat
+in 3d-drawing-drive-folder curve_graph_amsterdam.mat ???
 
 You can open that .mat file and visualize it using the another attached matlab script show_Anil_curve_drawing_result.m. Looks like there are many small fragmented curves which can be simply pruned by curve length thresholding. While waiting for the code running from scratch on this dataset, try on this 3D curve drawing result first.A-- Chiang-Heng jul 2022
 
@@ -80,9 +80,156 @@ In `show_Anil_curve_drawing.m`, modify the line yy = load.. to contain each
 differetn .mat file.
 
 Here is a summary of each .mat file:
-TODO: biao
 
+you can see all outputs of show_Anil_curve_drawing_result.m pictures in show_Anil_curve_drawing_result_pictures folder. These pictures are in Anil_3DDrawing folder as well, but matlab don't open them.
 
+display amsterdam house or some part of it:
+1-curve.mat --> half of the house appears and nothing of the can
+complete_curve_graph.mat
+complete_curve_graph_fixed.mat
+complete_curve_graph_fixed_all_baseline.mat
+complete_quarter_curve_graph_with_junctions_2wide-2wide.mat
+curve_graph_amsterdam.mat
+curve_graph_amsterdam_half.mat
+curve_graph_amsterdam_half_3-2_strong-completion_dist-fix-0.001.mat
+curve_graph_amsterdam_quarter-final.mat
+curve_graph_amsterdam_quarter.mat
+subset_curve_graph.mat
+subset_with_junctions.mat
+
+display barcelona pavilion or some part of it:
+curve_drawing_pavilion_half_10.mat
+curve_drawing_pavilion_half_11.mat
+curve_drawing_pavilion_half_12.mat
+curve_drawing_pavilion_half_5.mat
+curve_drawing_pavilion_half_6.mat
+curve_drawing_pavilion_half_6_10x_prune.mat
+curve_drawing_pavilion_half_7.mat
+curve_drawing_pavilion_half_8.mat
+curve_drawing_pavilion_half_9.mat
+curve_drawing_pavilion_midday_half_6_10x_prune_medium_conv.mat
+curve_drawing_pavilion_midday_half_6_10x_prune_strong_conv.mat
+curve_drawing_pavilion_midday_half_6_10x_prune_strong_merge.mat
+curve_drawing_pavilion_mixed_half_10.mat
+curve_drawing_pavilion_mixed_half_11.mat
+curve_drawing_pavilion_mixed_half_12.mat
+curve_drawing_pavilion_mixed_half_5.mat
+curve_drawing_pavilion_mixed_half_6.mat
+curve_drawing_pavilion_mixed_half_7.mat
+curve_drawing_pavilion_mixed_half_8.mat
+curve_drawing_pavilion_mixed_half_9.mat
+help.mat
+
+display vase or some part of it:
+curve_drawing_vase_5.mat
+curve_drawing_vase_6.mat
+curve_drawing_vase_7.mat
+curve_drawing_vase_8.mat
+curve_drawing_vase_9.mat
+vase-first-run.mat
+
+display capitol or some part of it:
+curve_graph_capitol.mat
+
+display fountain or some part of it:
+curve_graph_fountain.mat
+
+Unrecognized field name "complete_curve_graph".
+Error in show_Anil_curve_drawing_result (line 3)
+All .mat files bellow they don't have "complete_curve_graph" 
+and so matlab did not display picture:
+analysis-intermediate.mat
+averageCurve.mat 
+clusters-1x-10-vs-8.mat 
+clusters-1x-10.mat
+clusters-1x.mat
+clusters-close-edges_curve-1.mat
+clusters-close-edges_curve-58.mat
+clusters-temp.mat
+clusters.mat
+clusters_view-10.mat
+clusters_view-10_10-edges.mat
+debug.mat
+edge-curve-index.mat
+edge-curve-index_yuliang.mat
+edge-curve-index_yuliang_capitol.mat
+edge-curve-index_yuliang_fountain.mat
+edge-curve-index_yuliang_fullsize.mat
+edge-curve-index_yuliang_pavilion-mixed.mat
+edge-curve-index_yuliang_pavilion.mat
+edge-curve-index_yuliang_pavilion_half.mat
+edge-curve-index_yuliang_vase.mat
+edge-curve-offset_yuliang.mat
+edge-curve-offset_yuliang_capitol.mat
+edge-curve-offset_yuliang_fountain.mat
+edge-curve-offset_yuliang_fullsize.mat
+edge-curve-offset_yuliang_pavilion-mixed.mat
+edge-curve-offset_yuliang_pavilion.mat
+edge-curve-offset_yuliang_pavilion_half.mat
+edge-curve-offset_yuliang_vase.mat
+intermediate-amsterdam-half.mat
+intermediate-complete-quarter.mat
+intermediate-fountain.mat
+intermediate-half-quarter.mat
+intermediate-pavilion-half_4.mat
+intermediate-pavilion-half_5.mat
+intermediate-pavilion-half_6.mat
+intermediate-pavilion-half_7.mat
+intermediate-pavilion-half_8.mat
+intermediate-pavilion-half_9.mat
+intermediate-pavilion-half_10.mat
+intermediate-pavilion-half_11.mat
+intermediate-pavilion-half_12.mat
+intermediate-pavilion-midday-half_6.mat
+intermediate-pavilion-mixed-half_5.mat
+intermediate-pavilion-mixed-half_6.mat
+intermediate-pavilion-mixed-half_7.mat
+intermediate-pavilion-mixed-half_8.mat
+intermediate-pavilion-mixed-half_9.mat
+intermediate-pavilion-mixed-half_10.mat
+intermediate-pavilion-mixed-half_11.mat
+intermediate-pavilion-mixed-half_12.mat
+intermediate-vase.mat
+intermediate-vase_5.mat
+intermediate-vase_6.mat
+intermediate-vase_7.mat
+intermediate-vase_8.mat
+intermediate-vase_9.mat
+pavilion-5-input.mat
+pavilion-6-input.mat
+pavilion-7-input.mat
+pavilion-8-input.mat
+pavilion-9-input.mat
+pavilion-10-input.mat
+pavilion-11-input.mat
+pavilion-12-input.mat
+test.mat
+vase-8-input.mat
+view-10.mat
+weird_edges.mat
+  
+when placing these file, takes longer to load than usual, matlab stops working, closes by itself and the terminal displays the message "Dead". 
+intermediate-amsterdam.mat --- load that file but after 4' matlab closes by itself
+intermediate-capitol.mat --- load that file during 24" and then matlab runs but after 3' it closes by itself
+intermediate-run.mat --- load during 27" and then matlab runs but after 23" it closes by itself
+
+#### Visualizing from averages_curves_final_6.m
+
+output: .ply file
+
+the .ply files are output_from_average_curves_final_6 folder and recognized it by same name of .mat file
+
+bellow follow the .mat file and the time that average_curves_final_6.m took to
+generate .ply file and the matlab answer:
+1-curve -> 5 minutes --> 8080
+
+Undefined variable 'curveIndices'.
+Error in average_curves_final_6 (line 427):
+analysis-intermediate.mat
+
+Unrecognized function or variable 'all_recs'.
+Error in average_curves_final_6 (line 265):
+averageCurve.mat
 
 ## Datasets
 The input datasets where we are doing 3D rec for the 3D Curve Drawings CVPR'10 paper have *-mcs-work suffix.
