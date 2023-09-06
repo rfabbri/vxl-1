@@ -72,7 +72,7 @@ Meshlab visualizer:
 
 #### Visualizing without running (precoumputed)
 
-in 3d-drawing-drive-folder curve_graph_amsterdam.mat ???
+in 3d-drawing-drive-folder curve_graph_amsterdam.mat 
 
 You can open that .mat file and visualize it using the another attached matlab script show_Anil_curve_drawing_result.m. Looks like there are many small fragmented curves which can be simply pruned by curve length thresholding. While waiting for the code running from scratch on this dataset, try on this 3D curve drawing result first.A-- Chiang-Heng jul 2022
 
