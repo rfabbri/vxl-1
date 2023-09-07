@@ -76,12 +76,11 @@ in 3d-drawing-drive-folder curve_graph_amsterdam.mat
 
 You can open that .mat file and visualize it using the another attached matlab script show_Anil_curve_drawing_result.m. Looks like there are many small fragmented curves which can be simply pruned by curve length thresholding. While waiting for the code running from scratch on this dataset, try on this 3D curve drawing result first.A-- Chiang-Heng jul 2022
 
-In `show_Anil_curve_drawing.m`, modify the line yy = load.. to contain each
-differetn .mat file.
+In `show_Anil_curve_drawing.m`, modify the line yy = load.. to contain each different .mat file.
 
 Here is a summary of each .mat file:
 
-you can see all outputs of show_Anil_curve_drawing_result.m pictures in show_Anil_curve_drawing_result_pictures folder. These pictures are in Anil_3DDrawing folder as well, but matlab don't open them.
+you can see all outputs of show_Anil_curve_drawing_result.m images in curve_drawing_result_images folder. Each image is with filename like .mat file that it was loaded. These images are in Anil_3DDrawing folder as well, but matlab don't open them.
 
 display amsterdam house or some part of it:
 1-curve.mat --> half of the house appears and nothing of the can
