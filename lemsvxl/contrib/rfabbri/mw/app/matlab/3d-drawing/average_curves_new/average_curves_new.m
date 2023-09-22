@@ -1,242 +1,160 @@
-% clear all;
-% close all;
-% 
-% numIM = 27;
-% colors = distinguishable_colors(numIM);
-% 
-% all_recs = cell(numIM,1);
-% all_nR = zeros(numIM,1);
-% all_links_3d = cell(numIM,1);
-% all_offsets_3d = cell(numIM,1);
-% all_edge_support_3d = cell(numIM,1);
-% all_flags = cell(numIM,1);
-% 
-% all_num_im_contours = zeros(numIM,1);
-% 
-% for v=1:numIM
-% 
-%     mypath=['./paper-runs/amsterdam_house/',num2str(v-1)];
-%     recs = cell(0,0);
-%     tangs = cell(0,0);
-% 
-%     [ret, myfiles] = unix(['ls ' mypath '/crvs/*-3dcurve-*-points*dat | xargs echo']);
-%     [ret_t, myfiles_t] = unix(['ls ' mypath '/crvs/*-3dcurve-*-tangents*dat | xargs echo']);
-% 
-%     myfiles;
-% 
-%     while length(myfiles) ~= 0
-%       [f,rem]=strtok(myfiles);
-%       myfiles = rem;
-%       if length(f) == 0
-%         break;
-%       end
-%       f = strip_trailing_blanks(f);
-% 
-%       r = myreadv(f);
-%       if isempty(r)
-%         warning(['file is empty: ' f]);
-%       else
-%         recs{1,end+1} = r;
-%       end
-%     end
-% 
-%     while length(myfiles_t) ~= 0
-%       [f_t,rem_t]=strtok(myfiles_t);
-%       myfiles_t = rem_t;
-%       if length(f_t) == 0
-%         break;
-%       end
-%       f_t = strip_trailing_blanks(f_t);
-% 
-%       r_t = myreadv(f_t);
-%       if isempty(r_t)
-%         warning(['file is empty: ' f_t]);
-%       else
-%         tangs{1,end+1} = r_t;
-%       end
-%     end
-%     
-%     
-%     %At this point, all curves are loaded into recs
-%     all_recs{v,1} = recs;
-%     all_nR(v,1) = size(recs,2);
-%     all_flags{v,1} = zeros(size(recs,2),1);
-% end
-% 
-% % read_curve_sketch4;
-% % all_recs{11,1} = recs;
-% % all_nR(11,1) = size(recs,2);
-% % all_flags{11,1} = zeros(size(recs,2),1);
-% % clear recs;
-% % read_curve_sketch4a;
-% % all_recs{14,1} = recs;
-% % all_nR(14,1) = size(recs,2);
-% % all_flags{14,1} = zeros(size(recs,2),1);
-% % clear recs;
-% % read_curve_sketch4b;
-% % all_recs{7,1} = recs;
-% % all_nR(7,1) = size(recs,2);
-% % all_flags{7,1} = zeros(size(recs,2),1);
-% % clear recs;
-% % read_curve_sketch4c;
-% % all_recs{8,1} = recs;
-% % all_nR(8,1) = size(recs,2);
-% % all_flags{8,1} = zeros(size(recs,2),1);
-% % clear recs;
-% % read_curve_sketch4d;
-% % all_recs{9,1} = recs;
-% % all_nR(9,1) = size(recs,2);
-% % all_flags{9,1} = zeros(size(recs,2),1);
-% % clear recs;
-% 
-% load edge-curve-index_yuliang_fullsize.mat;
-% load edge-curve-offset_yuliang_fullsize.mat;
-% 
-% %All the views that will be used in the clustering.
-% %The first view is where the initial seed/query curve is located.
-% all_views = [0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26];
-% numViews = size(all_views,2);
-% num_shared_edges = 3;
-% 
-% %Read all the edge support evidence
-% disp('READING DATA');
-% for v=1:numViews
-% %for v=1:1
-%     all_views(1,v)
-%     cons = read_cons(['./curves/',num2str(all_views(1,v),'%02d'),'.cemv'],[num2str(all_views(1,v),'%08d'),'.jpg'],0,-1);
-%     num_im_contours = size(cons,2);
-%     [all_links_3d{all_views(1,v)+1,1}, all_offsets_3d{all_views(1,v)+1,1}, all_edge_support_3d{all_views(1,v)+1,1}] = read_association_attributes(all_views(1,v),num_im_contours,all_nR(all_views(1,v)+1,1),numIM);
-%     all_num_im_contours(all_views(1,v)+1,1) = num_im_contours;
-%     
-% end
-% 
-% %Process the edge support evidence to map all edges to 3d curve samples
-% %they support
-% all_edges = cell(numIM,1);
-% all_edge_links = cell(numIM,1);
-% for v=1:numIM
-%     v
-%     [edg edgmap] = load_edg(['./edges/',num2str(v-1,'%02d'),'.edg']);
-%     num_im_edges = size(edg,1);
-%     all_edge_links{v,1} = cell(num_im_edges,1);
-%     all_edges{v,1} = edg;
-% end
-% 
-% %Process all the reconstruction links to add all the first anchor edges to
-% %the edge link table
-% 
-% %Also build a map for 3D curve -> Set of 2D edges
-% all_inverse_links_3d = cell(numIM,1);
-% 
-% for vv=1:numViews
-%     
-%     vv
-%     vview = all_views(1,vv)+1;
-%     links_3d = all_links_3d{vview,1};
-%     offsets_3d = all_offsets_3d{vview,1};
-%     
-%     all_inverse_links_3d{vview,1} = cell(all_nR(vview,1),1);
-%     
-%     cons = read_cons(['./curves/',num2str(all_views(1,vv),'%02d'),'.cemv'],[num2str(all_views(1,vv),'%08d'),'.jpg'],0,-1);
-%     num_im_contours = size(cons,2);
-%     
-%     %Load the image curve-edge links for this view
-%     fid = fopen(['./curve-edge/',num2str(all_views(1,vv),'%02d'),'.txt']);
-%     
-%     for ic=1:num_im_contours
-%         numCurEdges = fscanf(fid,'%d',[1 1]);
-%         edgeIDs = fscanf(fid,'%d',[1 numCurEdges]); 
-%         
-%         cur_curves = links_3d{ic,1}+1;
-%         cur_offsets = offsets_3d{ic,1};
-%         
-%         for c=1:size(cur_curves,2)
-%            curveID = cur_curves(1,c); 
-%            cur_curve = all_recs{vview,1}{1,curveID}; 
-%            cur_size = size(cur_curve,1);
-%            cur_offset = cur_offsets(1,c);
-%            
-%            %Fill the inverse maps
-%            all_inverse_links_3d{vview,1}{curveID,1} = cell(cur_size,1);
-%            
-%            for s=1:cur_size
-%                cur_edge = edgeIDs(1,s+cur_offset);
-%                all_inverse_links_3d{vview,1}{curveID,1}{s,1} = cur_edge;
-%                all_edge_links{vview,1}{cur_edge+1,1} = [all_edge_links{vview,1}{cur_edge+1,1}; [vview curveID s]];
-%            end
-%            
-%         end
-%         
-%     end
-%     
-%     fclose(fid);
-% end
-% 
-% %Process all the edge support data of each curve to fill in the edge link
-% %table for all non-anchor views
-% for vv=1:numViews
-%     vv
-%     vview = all_views(1,vv)+1;
-%     other_views = [];
-%     for ov=1:numViews
-%         if(ov~=vv)
-%             other_views = [other_views all_views(1,ov)];
-%         end
-%     end
-%     
-%     edge_support_3d = all_edge_support_3d{vview,1};
-%     if(isempty(edge_support_3d))
-%         continue;
-%     end
-%     
-%     for crv = 1:all_nR(vview,1)      
-%         queryCurve = all_recs{vview,1}{1,crv}; 
-%         querySupport = edge_support_3d{crv,1};
-%         numSamples = size(queryCurve,1);
-%         
-%         for v=1:numIM
-%             
-%             if(v==vview)
-%                 continue;
-%             end
-% 
-%             edge_support = querySupport{v,1};
-%             edg = all_edges{v,1};
-% 
-%             fid = fopen(['./calibration/',num2str(v-1,'%02d'),'.projmatrix']);
-%             curP = (fscanf(fid,'%f',[4 3]))';
-%             fclose(fid);
-%             
-%             for s=1:numSamples
-%                 
-%                 if(isempty(edge_support))
-%                     continue;
-%                 end
-%                 
-%                 edges = edge_support{s,1};
-% 
-%                 for e=1:size(edges,2)
-% 
-%                     edge = edges(1,e);     
-%                     
-%                     cur_sample = [queryCurve(s,:)';1];
-%                     imSample = curP*cur_sample;
-%                     imSample = imSample./imSample(3,1);
-%                     im_pixel = imSample(1:2,1)+1;
-%                     cur_edge = edg(edge+1,1:2)';
-%                     edge_dist = norm(cur_edge - im_pixel);
-%                     
-%                     if(edge_dist<=1)
-%                         all_edge_links{v,1}{edge+1,1} = [all_edge_links{v,1}{edge+1,1}; [vview crv s]];
-%                     end
-%                     
-%                 end
-%             end
-%             
-%         end
-%         
-%     end
-% end
+clear all;
+close all;
+
+definitions_12
+load_curve_sketch
+
+colors = distinguishable_colors(numIM);
+all_recs = cell(numIM,1);
+all_nR = zeros(numIM,1);
+all_links_3d = cell(numIM,1);
+all_offsets_3d = cell(numIM,1);
+all_edge_support_3d = cell(numIM,1);
+all_flags = cell(numIM,1);
+all_num_im_contours = zeros(numIM,1);
+
+load_curve_sketch_without_associations
+load edge-curve-index_yuliang_fullsize.mat;
+load edge-curve-offset_yuliang_fullsize.mat;
+
+%Read all the edge support evidence
+disp('READING DATA');
+for v=1:numViews
+%for v=1:1
+    all_views(1,v)
+    cons = read_cons(['./curves/',num2str(all_views(1,v),'%02d'),'.cemv'],[num2str(all_views(1,v),'%08d'),'.jpg'],0,-1);
+    num_im_contours = size(cons,2);
+    [all_links_3d{all_views(1,v)+1,1}, all_offsets_3d{all_views(1,v)+1,1}, all_edge_support_3d{all_views(1,v)+1,1}] = read_association_attributes(all_views(1,v),num_im_contours,all_nR(all_views(1,v)+1,1),numIM);
+    all_num_im_contours(all_views(1,v)+1,1) = num_im_contours;
+end
+
+%Process the edge support evidence to map all edges to 3d curve samples
+%they support
+all_edges = cell(numIM,1);
+all_edge_links = cell(numIM,1);
+for v=1:numIM
+    v
+    [edg edgmap] = load_edg(['./edges/',num2str(v-1,'%02d'),'.edg']);
+    num_im_edges = size(edg,1);
+    all_edge_links{v,1} = cell(num_im_edges,1);
+    all_edges{v,1} = edg;
+end
+
+%Process all the reconstruction links to add all the first anchor edges to
+%the edge link table
+
+%Also build a map for 3D curve -> Set of 2D edges
+all_inverse_links_3d = cell(numIM,1);
+
+for vv=1:numViews
+    
+    vv
+    vview = all_views(1,vv)+1;
+    links_3d = all_links_3d{vview,1};
+    offsets_3d = all_offsets_3d{vview,1};
+    
+    all_inverse_links_3d{vview,1} = cell(all_nR(vview,1),1);
+    
+    cons = read_cons(['./curves/',num2str(all_views(1,vv),'%02d'),'.cemv'],[num2str(all_views(1,vv),'%08d'),'.jpg'],0,-1);
+    num_im_contours = size(cons,2);
+    
+    %Load the image curve-edge links for this view
+    fid = fopen(['./curve-edge/',num2str(all_views(1,vv),'%02d'),'.txt']);
+    
+    for ic=1:num_im_contours
+        numCurEdges = fscanf(fid,'%d',[1 1]);
+        edgeIDs = fscanf(fid,'%d',[1 numCurEdges]); 
+        
+        cur_curves = links_3d{ic,1}+1;
+        cur_offsets = offsets_3d{ic,1};
+        
+        for c=1:size(cur_curves,2)
+           curveID = cur_curves(1,c); 
+           cur_curve = all_recs{vview,1}{1,curveID}; 
+           cur_size = size(cur_curve,1);
+           cur_offset = cur_offsets(1,c);
+           
+           %Fill the inverse maps
+           all_inverse_links_3d{vview,1}{curveID,1} = cell(cur_size,1);
+           
+           for s=1:cur_size
+               cur_edge = edgeIDs(1,s+cur_offset);
+               all_inverse_links_3d{vview,1}{curveID,1}{s,1} = cur_edge;
+               all_edge_links{vview,1}{cur_edge+1,1} = [all_edge_links{vview,1}{cur_edge+1,1}; [vview curveID s]];
+           end
+           
+        end
+        
+    end
+    
+    fclose(fid);
+end
+
+%Process all the edge support data of each curve to fill in the edge link
+%table for all non-anchor views
+for vv=1:numViews
+    vv
+    vview = all_views(1,vv)+1;
+    other_views = [];
+    for ov=1:numViews
+        if(ov~=vv)
+            other_views = [other_views all_views(1,ov)];
+        end
+    end
+    
+    edge_support_3d = all_edge_support_3d{vview,1};
+    if(isempty(edge_support_3d))
+        continue;
+    end
+    
+    for crv = 1:all_nR(vview,1)      
+        queryCurve = all_recs{vview,1}{1,crv}; 
+        querySupport = edge_support_3d{crv,1};
+        numSamples = size(queryCurve,1);
+        
+        for v=1:numIM
+            
+            if(v==vview)
+                continue;
+            end
+
+            edge_support = querySupport{v,1};
+            edg = all_edges{v,1};
+
+            fid = fopen(['./calibration/',num2str(v-1,'%02d'),'.projmatrix']);
+            curP = (fscanf(fid,'%f',[4 3]))';
+            fclose(fid);
+            
+            for s=1:numSamples
+                
+                if(isempty(edge_support))
+                    continue;
+                end
+                
+                edges = edge_support{s,1};
+
+                for e=1:size(edges,2)
+
+                    edge = edges(1,e);     
+                    
+                    cur_sample = [queryCurve(s,:)';1];
+                    imSample = curP*cur_sample;
+                    imSample = imSample./imSample(3,1);
+                    im_pixel = imSample(1:2,1)+1;
+                    cur_edge = edg(edge+1,1:2)';
+                    edge_dist = norm(cur_edge - im_pixel);
+                    
+                    if(edge_dist<=1)
+                        all_edge_links{v,1}{edge+1,1} = [all_edge_links{v,1}{edge+1,1}; [vview crv s]];
+                    end
+                    
+                end
+            end
+            
+        end
+        
+    end
+end
 
 clear all;
 close all;
