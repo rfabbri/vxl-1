@@ -11,5 +11,5 @@
 // automatically from dbtest_where_root_dir.h.in
 
 #ifndef DBTEST_SOURCE_ROOT_DIR // file guard
-#define DBTEST_SOURCE_ROOT_DIR "${lems_SOURCE_DIR}"
+#define DBTEST_SOURCE_ROOT_DIR "${LEMS_ROOT_SOURCE_DIR}"
 #endif
