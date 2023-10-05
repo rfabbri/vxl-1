@@ -1,5 +1,5 @@
-numIM = 27;
-load_pattern_12
+numIM = 25;           % OK
+load_pattern_12       % OK
 
 %All the views that will be used in the clustering.
 %The first view is where the initial seed/query curve is located.

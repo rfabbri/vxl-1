@@ -1,4 +1,4 @@
-% to be called in average_curves_*
+% to be called in average_curves_* (now main.m)
 
 for v=1:numIM
 
@@ -8,6 +8,11 @@ for v=1:numIM
 
     [ret, myfiles] = unix(['ls ' mypath '/crvs/*-3dcurve-*-points*dat | xargs echo']);
     [ret_t, myfiles_t] = unix(['ls ' mypath '/crvs/*-3dcurve-*-tangents*dat | xargs echo']);
+
+    dmy_files = dir([mypath,'crvs/']);
+    if(size(dmy_files,1)<=2)
+        continue;
+    end
 
     myfiles;
 
