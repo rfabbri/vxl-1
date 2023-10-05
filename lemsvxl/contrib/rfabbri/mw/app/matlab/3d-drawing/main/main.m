@@ -18,12 +18,6 @@ load_curve_sketch_without_associations
 load edge-curve-index_yuliang_pavilion-mixed.mat;
 load edge-curve-offset_yuliang_pavilion-mixed.mat;
 
-%All the views that will be used in the clustering.
-%The first view is where the initial seed/query curve is located.
-all_views = 0:24;
-numViews = size(all_views,2);
-num_shared_edges = 3;
-
 % %Read all the edge support evidence
 % disp('READING DATA');
 % for v=1:numViews
