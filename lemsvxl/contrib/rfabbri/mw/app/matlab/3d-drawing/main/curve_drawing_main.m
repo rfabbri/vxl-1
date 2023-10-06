@@ -18,6 +18,9 @@ load_curve_sketch_without_associations
 load edge-curve-index_yuliang_pavilion-mixed.mat;
 load edge-curve-offset_yuliang_pavilion-mixed.mat;
 
+
+load_edge_and_curve_files
+
 % %Read all the edge support evidence
 % disp('READING DATA');
 % for v=1:numViews
