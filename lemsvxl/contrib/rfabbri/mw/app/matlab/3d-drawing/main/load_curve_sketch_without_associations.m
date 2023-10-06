@@ -1,4 +1,4 @@
-% to be called in average_curves_* (now main.m)
+% to be called in _main.m
 
 for v=1:numIM
 
