@@ -89,7 +89,7 @@ av_cntr = 0;
                     all_recs_iter{all_views(1,av)+1,1}{1,curveID} = queryCurve_next;
                     %write_curve_to_vrml(queryCurve_next,[255 0 0],['./ply/after/view',num2str(all_views(1,av)),'_curve',num2str(curveID),'.ply']);
 
-                end
+                  end
 
             end
 
