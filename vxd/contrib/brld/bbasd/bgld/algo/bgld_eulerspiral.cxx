@@ -142,11 +142,33 @@ tangent_at( double s) const {
   return tangent_at_length(s*length());
 }
 
+//: Copied from sdetd_sel1.h then from bmcsd_util.hh
+static inline double 
+angle0To2Pi (double angle)
+{
+  if (angle>=vnl_math::twopi)
+    angle = std::fmod(angle, vnl_math::twopi);
+  else if (angle < 0)
+    angle = vnl_math::twopi + std::fmod(angle, vnl_math::twopi);
+
+  // added by Nhon: these two lines of code is to fix the bug when
+  // angle is at this point = -1.1721201390607859e-016
+  // then after all the computation, we get
+  // angle = 6.2831853071795862 == 2*vnl_math::pi !!!!!!!
+  // the only case this can happen is when angle is very close to zero.
+
+  if (!(angle>=0 && angle<vnl_math::twopi))
+    angle = 0;
+
+  // assert (angle>=0 && angle<2*vnl_math::pi);
+  return angle;
+}
+
 //: Returns the angle (in radian) in [0, 2PI] of the tangent at arclength s 
 // of the parameter along the curve.
 double bgld_eulerspiral::tangent_angle_at_length(double s) const {
   // make sure angle is in [0, 2pi)
-  return bmcsd_util::angle0To2Pi(/* angle: */ this->start_angle() + s*(this->k0() + 0.5*this->gamma()*s));
+  return angle0To2Pi(/* angle: */ this->start_angle() + s*(this->k0() + 0.5*this->gamma()*s));
 }
 
 double bgld_eulerspiral::tangent_angle_at(double s) const {
