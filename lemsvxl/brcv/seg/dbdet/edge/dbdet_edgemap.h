@@ -99,7 +99,6 @@ public:
     edge_cells(yy, xx).push_back(e);
     e->id = edgels.size(); //assign unique id
     e->gpt = vgl_point_2d<int>(xx, yy); //record grid location
-
     edgels.push_back(e);
   }
 
@@ -108,15 +107,9 @@ public:
   {
     //determine appropriate cell to put this token into
     int xx = dbdet_round(e->pt.x());
-    if(xx==0)
-	xx++;
-    if(xx>=width())
-	xx=width()-1;
+    assert(xx < width());
     int yy = dbdet_round(e->pt.y());
-    if(yy==0)
-	yy++;
-    if(yy>=height())
-	yy=height()-1;
+    assert(yy < height());
     insert(e, xx, yy);
   }
 

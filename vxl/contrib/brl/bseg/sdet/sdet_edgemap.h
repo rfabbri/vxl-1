@@ -80,13 +80,11 @@ public:
         delete j;
 
     edge_cells.clear();
-
-    //also clear the list of edgels
-    edgels.clear();
+    edgels.clear(); // also clear the list of edgels
   }
 
   //Access functions
-  unsigned width() const { return edge_cells.cols(); }
+  unsigned width() const  { return edge_cells.cols(); }
   unsigned height() const { return edge_cells.rows(); }
   unsigned ncols() const  { return edge_cells.cols(); }
   unsigned nrows() const  { return edge_cells.rows(); }
@@ -99,9 +97,8 @@ public:
   void insert(sdet_edgel* e, int xx, int yy)
   {
     edge_cells(yy, xx).push_back(e);
-    e->id = edgels.size(); //assign unique id
+    e->id  = edgels.size(); //assign unique id
     e->gpt = vgl_point_2d<int>(xx, yy); //record grid location
-
     edgels.push_back(e);
   }
 
@@ -110,15 +107,9 @@ public:
   {
     //determine appropriate cell to put this token into
     unsigned xx = sdet_round(e->pt.x());
-    if(xx==0)
-        xx++;
-    if(xx>=width())
-        xx=width()-1;
+    assert(xx < width());
     unsigned yy = sdet_round(e->pt.y());
-    if(yy==0)
-        yy++;
-    if(yy>=height())
-        yy=height()-1;
+    assert(yy < height());
     insert(e, xx, yy);
   }
 };
