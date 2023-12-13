@@ -52,9 +52,9 @@ activate ()
 
   // Get curves
   { 
-    vidpro1_vsol2D_storage_sptr sto=NULL;
+    vidpro1_vsol2D_storage_sptr sto = 0;
     sto.vertical_cast(MANAGER->repository()->get_data_at("vsol2D",frame_v_[0]));
-    if (sto == NULL) {
+    if (!sto) {
       std::cerr << "Tool error: Could not find a vsol.\n";
       return;
     }

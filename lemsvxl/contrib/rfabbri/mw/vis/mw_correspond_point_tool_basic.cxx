@@ -50,7 +50,7 @@ bool mw_correspond_point_tool_basic::
 set_tableau( const vgui_tableau_sptr& tableau )
 {
   edgel_tableau_current_.vertical_cast(tableau);
-  if( edgel_tableau_current_ == 0 )  {
+  if (!edgel_tableau_current_)  {
     std::cerr << "Warning: working in a tableau which is not expected\n";
     return false;
   }

@@ -88,7 +88,7 @@ dbetl_point_track::cost_func() const
   std::vector<vgl_point_2d<double> > pts;
   std::vector<dbetl_point_2d_sptr>::const_iterator p_itr = points_.begin();
   for(int i=0; i<num_points_; ++i, ++p_itr){
-    while(*p_itr == NULL) 
+    while(!(*p_itr)) 
       ++p_itr;
 
     pts.push_back((*p_itr)->pt());
@@ -114,7 +114,7 @@ dbetl_point_track::estimate_mean_3d()
   std::vector<double> errors;
   std::vector<dbetl_point_2d_sptr>::const_iterator p_itr = points_.begin();
   for(int i=0; i<num_points_; ++i, ++p_itr){
-    while(*p_itr == NULL) 
+    while(!*p_itr) 
       ++p_itr;
     cameras.push_back(*(*p_itr)->camera());
     pts.push_back((*p_itr)->pt());
@@ -244,7 +244,7 @@ dbetl_point_track::image_cost() const
   std::vector<dbetl_point_2d_sptr> pts(points_);
   for(unsigned int i=0; i<mean_3d_above_.size(); ++i){
     for(unsigned int j=0; j<pts.size(); ++j){
-      if(pts[j] != NULL) 
+      if(pts[j]) 
         pts[j] = pts[j]->next();
     }
     cost += this->image_cost(pts);
@@ -253,7 +253,7 @@ dbetl_point_track::image_cost() const
   pts = points_;
   for(unsigned int i=0; i<mean_3d_below_.size(); ++i){
     for(unsigned int j=0; j<pts.size(); ++j){
-      if(pts[j] != NULL) 
+      if(pts[j]) 
         pts[j] = pts[j]->prev();
     }
     cost += this->image_cost(pts);
@@ -273,7 +273,7 @@ dbetl_point_track::image_cost(const std::vector<dbetl_point_2d_sptr>& pts) const
   int num = 0;
   for( std::vector<dbetl_point_2d_sptr>::const_iterator p_itr = pts.begin();
        p_itr != pts.end();  ++p_itr ){
-    if(*p_itr == NULL) 
+    if(!(*p_itr)) 
       continue;
     mean_near += (*p_itr)->stats_near().int_mean();
     mean_far  += (*p_itr)->stats_far().int_mean();
@@ -284,7 +284,7 @@ dbetl_point_track::image_cost(const std::vector<dbetl_point_2d_sptr>& pts) const
 
   for( std::vector<dbetl_point_2d_sptr>::const_iterator p_itr = pts.begin();
        p_itr != pts.end();  ++p_itr ){
-    if(*p_itr == NULL) 
+    if(!(*p_itr)) 
       continue;
     error += (*p_itr)->stats_near().intensity_cost(mean_near);
     error += (*p_itr)->stats_far().intensity_cost(mean_far);

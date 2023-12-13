@@ -44,7 +44,7 @@ void test_formulas(
   std::vector <vsol_point_2d_sptr> &gama1_img
   );
 
-void write_geno_info_super_sample(const bsold_geno_curve_2d &gc, char *suffix);
+void write_geno_info_super_sample(const bsold_geno_curve_2d &gc, const char *suffix);
 
 void
 write_geno_info( const bsold_geno_curve_2d &gc, const bsold_geno_curve_2d &gc_circle, 

@@ -178,7 +178,7 @@ activate ()
     vidpro1_vsol2D_storage_sptr sto=0;
 
     sto.vertical_cast(MANAGER->storage_from_tableau(views[v]->selector()->active_tableau()));
-    if (sto == 0) {
+    if (!sto) {
       std::cerr << "Tool error: Could not find an active vsol in 2nd frame.\n";
       return;
     }

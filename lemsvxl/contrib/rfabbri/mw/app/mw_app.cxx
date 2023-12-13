@@ -2232,7 +2232,7 @@ write_geno_arc_info(
 //: fine sampling of geno information, to verify the interpolation within
 // intervals
 void
-write_geno_info_super_sample(const bsold_geno_curve_2d &gc, char *suffix)
+write_geno_info_super_sample(const bsold_geno_curve_2d &gc, const char *suffix)
 {
   std::ofstream fgama1_g_super_sample;
 

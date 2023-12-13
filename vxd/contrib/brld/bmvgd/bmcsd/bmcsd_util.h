@@ -45,8 +45,6 @@
 extern int n8[8][2];
 extern int n4[4][2];
 
-#define remainder_div_2pi(x) ((x) - ((int)((x)/(vnl_math::twopi)))*(x) )
-
 static const double rad_to_degree_ratio = vnl_math::pi_over_180;
 
 bool load_con_file(

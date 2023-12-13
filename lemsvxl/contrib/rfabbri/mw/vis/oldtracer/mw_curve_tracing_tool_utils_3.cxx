@@ -17,7 +17,7 @@ mw_curve_tracing_tool_3::set_tableau( const vgui_tableau_sptr& tableau )
 {
 
   curve_tableau_current_.vertical_cast(tableau);
-  if( curve_tableau_current_ == 0 )  {
+  if(!curve_tableau_current_)  {
     std::cerr << "Warning: working in a tableau which is not expected\n";
     return false;
   }

@@ -71,7 +71,7 @@ bool
 mw_curve_tracing_tool_2_maro::set_tableau( const vgui_tableau_sptr& tableau )
 {
   curve_tableau_current_.vertical_cast(tableau);
-  if( curve_tableau_current_ == 0 )  {
+  if(!curve_tableau_current_)  {
     std::cerr << "Warning: working in a tableau which is not expected\n";
     return false;
   }
@@ -1038,10 +1038,10 @@ get_vsols(
     std::vector< vsol_polyline_2d_sptr > *pcurves) const
 {
   std::vector< vsol_polyline_2d_sptr > &curves = *pcurves;
-  vidpro1_vsol2D_storage_sptr sto = NULL;
+  vidpro1_vsol2D_storage_sptr sto = 0;
 
   sto.vertical_cast(MANAGER->storage_from_tableau(view->selector()->active_tableau()));
-  if (sto == NULL) {
+  if (!sto) {
     std::cerr << "Warning: Could not find an active vsol, which is ok if you have SEL.\n";
     return false;
   }
