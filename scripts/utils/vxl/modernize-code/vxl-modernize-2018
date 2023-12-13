@@ -1,0 +1,4 @@
+# place subst.sed
+#lsc -r |xargs /Users/rfabbri/src/utils-macambira/vxl/modernize-code/vxl-modernize-2018.subst
+for i in `lsc -r`; do (python /Users/rfabbri/cprg/vxlprg/lemsvpe/vxl/scripts/VCL_ModernizeNaming.py $i) & done
+

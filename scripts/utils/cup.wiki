@@ -1,0 +1,209 @@
+[[Image:Ubuntu-logox45.png|right]]This is a checklist and a set of tips on setting up a complete ubuntu installation suitable for software development and scientific research.  
+
+These instructions were tested on Ubuntu 16.10 but are almost the same for 12.04, 11.10, down to 11.04.
+
+==Partitioning for Programming==
+
+For programming, I use the following partition guidelines
+* <tt>/</tt> : from 20 to 100GB (usually a full-fledged Ubuntu install for multimedia development will consume 16GB, from my experience)
+* <tt>/linux2</tt> : I place another Linux partition here, so that I can have 2 linux distros. The size is the same guidelines as I mentioned above for '/'.
+* <tt>/home</tt> : your files that are visible to all linux distros and remain untouched between reinstalls.
+* Swap: if you do heavy simulations, double your RAM is a good rule of thumb here; otherwise, you'll do fine with just a couple GB here.
+
+File system: choose ext4, it performs very well on most circumstances.
+
+In the case of a laptop with a small internal SSD and a large slow HD, I've successfully used the following sheme
+* <tt>/</tt>: goes into the SSD, minus /var
+* <tt>/var</tt>: goes into the slow HD. 20GB should be more than enough here.
+
+In the case of most modern UEFI firmware (replacing BIOS), you need to make sure there's an EFI partition.
+
+
+== Installing Packages and Configurations ==
+
+Be resourceful. Install most of the stuff you'll ever need so you don't have to worry about it later. After this, your system will consume about 15GB total
+
+
+<syntaxhighlight lang="python" line>
+#!/bin/sh
+#
+# DESCRIPTION
+#
+#   This script was based on the instructions from
+#     http://wiki.nosdigitais.teia.org.br/Configuring_Ubuntu_for_Programming
+#
+# USAGE
+#   
+#   sudo sh configure-ubuntu-for-programming
+#
+# TODO
+#
+#   Scheme to download all packages into one computer and reuse them for the
+#   remaining computers of a large Lab, in order to save time and bandwidth.
+#
+# AUTHOR
+#   Ricardo Fabbri, Lab Macambira Team, UERJ IPRJ Team
+#
+apt-get -y install kdenlive meshlab kino texlive-full blender konqueror konq-plugins glade gtk-gnutella emacs scilab octave ipython ddd xmaxima gap r-base r-base-dev r-recommended lynx gnuplot imagemagick inkscape gimp digikam compizconfig-settings-manager pitivi python-kiwi apache2 ssh recordmydesktop mplayer mpv gxine vlc ffmpeg puredata puredata-import git-core git-svn git-cvs kubuntu-full amarok cmake cmake-curses-gui autoconf automake libtool ekiga chromium-browser konsole  gitk gitg irssi xfig gv amule amule-emc qbittorrent nicotine gtk-gnutella kubuntu-full kubuntu-desktop vim-gnome mesa-utils dconf-tools sshfs pdftk libmagick++-dev gimp-data-extras gimp-plugin-registry gnome-tweak-tool v4l-utils php synaptic libv4l-dev swig tcllib ardour audacity audacious jackd qjackctl unrar unison-gtk libproc-processtable-perl guvcview exuberant-ctags gthumb xzgv apt-file apt-rdepends unity-tweak-tool okular python-setuptools python3-setuptools python-pip
+
+# if you get any error, remove the package one by one.
+
+apt-get -y build-dep blender evince okular mplayer mpv gimp libreoffice empathy kino vlc gxine puredata lmms inkscape
+
+# if you get any error, remove the package one by one.
+# Even if you get a "but it is not going to be installed" message, remove the
+# package from the above line. For Ubuntu 15.10, I removed scilab and firefox.
+# But you can try them anyways
+#
+#
+# Try:
+# apt-get -y build-dep scilab
+# apt-get -y build-dep firefox
+#
+
+# Remove the unified menu
+#
+apt-get remove indicator-appmenu 
+
+# Diodon clipboard history manager
+#
+# Newer ubuntu ship this by default
+# For older ubuntu, you might have to uncomment the following lines
+#sudo add-apt-repository ppa:diodon-team/stable
+#sudo apt-get update
+sudo apt-get -y install diodon
+echo Tip: go to diodon preferences and set all options
+
+# Multiload system usage indicator
+# Newer ubuntu ship this by default
+# For older ubuntu, you might have to uncomment the following lines
+#sudo add-apt-repository ppa:indicator-multiload/stable-daily
+#sudo apt-get update
+sudo apt-get -y install indicator-multiload
+
+# Apt-file to search for packages containing a specified file (useful for compiling)
+#
+# apt-file find example.h will locate package that has it
+sudo apt-file update
+
+# install the latest stable git possible
+# this is important for certain features, specially for subtrees
+# and submodules. Also cool for diff highlighting and other sugar
+
+sudo apt-add-repository ppa:git-core/ppa
+sudo apt-get update
+sudo apt-get upgrade git
+
+# so you can use locate to search for files
+sudo updatedb
+
+
+# enable workspaces, linearly for consistency with Mac OS workflows
+gsettings set org.compiz.core:/org/compiz/profiles/unity/plugins/core/ hsize 4
+gsettings set org.compiz.core:/org/compiz/profiles/unity/plugins/core/ vsize 1
+
+
+# Tweaks
+#  ...... and this is why Linux is much more professional than Mac OS for
+#  advanced (truly pro) users
+#
+# Run:
+#   unity-tweak-tool
+# And enable auto-hide for the launcher
+#
+# Enable focus follow mouse. This is excellent for productivity as you can
+# copy paste between windows without clicking, without messing up window order- R. Fabbri
+# - Go to General -> Additional. Focus mode: Sloppy or Mouse.
+# Basically try out sloppy or mouse, see what works with Alt-Tab etc.
+#
+#
+# Tray Icons 
+#
+#   I regorganize all icons on the unity tray as follows:
+#     - 1. browser 2. terminal 3. vim
+#
+# Firefox tweaks
+#   Reduce firefox font and menu sizes
+#
+#   Reduce UI size for Unity
+#
+# gnome-tweak-tool
+#     Enable Capslock as an additional Ctrl under Typing
+#
+# dconf-editor
+#     org > gtk > settings > file-chooser set Location Mode path-bar
+#
+
+#
+# Preload the mostly used apps in RAM. Just do:
+# sudo apt install preload
+
+
+# IRC
+# Configure your client. I use IRSSI, but if you're a Newbie, use XChat :P
+# Add it to startup applications per
+# 
+# http://wiki.nosdigitais.teia.org.br/IRC
+
+
+# Apt-rdepends sample usage:
+# apt-rdepends --reverse (packagename)
+
+# == Cuda ==
+# The following steps makes CUDA (for NVidia cards) work with software such as
+# [[Blender]]
+# [http://blender.stackexchange.com/questions/7485/enabling-gpu-rendering-for-cycles]
+# [http://blender.stackexchange.com/questions/31045/cuda-rendering-on-linux-mint-or-ubuntu-variants/31111#31111] 
+
+# Install the proprietary NVIDIA drivers.
+# Go to System Settings -> Software Updates -> Additional Drivers Tab and select the latest stable.
+# Install some cuda-specific packages: 
+#
+# sudo apt-get install nvidia-modprobe nvidia-cuda-toolkit
+</syntaxhighlight>
+
+==Other Configs==
+
+* nvidia-drivers
+* wish 8.5 (see listamacambira email) - nice tcl/tk GUI
+
+You might want to change UID to same as the UID of your other computers or external hard drives (same with GID)
+
+ usermod -u UID username
+ groupmod -g GID username
+
+This will take care of everything inside /home/username, /etc/passwd and the like. Remember to edit /etc/login.defs if your UID is below 1000
+
+=== Other CUDA Instructions ===
+You can try to follow this:
+ http://hdfpga.blogspot.com/2011/05/install-cuda-40-on-ubuntu-1104.html
+[[Image:Ubuntu-logox45.png|right]]
+[[Category:Lab Macambira]]
+[[Category:Linux]]
+=== Getting back to Ubuntu / Unity (for 13.10 users) ===
+The above commands installs kubuntu-full to get programs and libs from ubuntu. But if you want to go back to unity just do this:
+* edit the file /etc/lightdm/lightdm.conf  
+* change the line user-session to be
+ user-session=ubuntu
+* change the line greeter-session to be
+ greeter-session=unity-greeter 
+== Automation Script ==
+The latest instructions on this page are automated inside an install script that is shipped as part of the [[Lab Macambira]] utils Git repository:
+
+http://labmacambira.git.sourceforge.net/git/gitweb.cgi?p=labmacambira/utils;a=blob;f=configure-ubuntu-for-programming;hb=HEAD
+
+You can download it using Git (for easily downloading later updates) like this:
+
+
+    $ git clone git://labmacambira.git.sourceforge.net/gitroot/labmacambira/utils
+
+Or, if you are a [[Lab Macambira]] comitter or if you have a sourceforge user:
+
+    $ git clone ssh://<usuario>@labmacambira.git.sourceforge.net/gitroot/labmacambira/utils
+
+The above script is pretty much like achieving a developer's distro on top of a raw ubuntu installation.
+
+== See also ==
+* [[Manual do Novato]] for [[Lab Macambira]] n00b guidance
+* [[Mac|Configuring Mac OS X for programming]] open source and beyond
+
