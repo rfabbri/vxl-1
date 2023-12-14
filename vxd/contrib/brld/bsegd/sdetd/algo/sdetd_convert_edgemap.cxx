@@ -159,7 +159,7 @@ sdetd_convert_edgemap_to_grayscale_image(const sdet_edgemap& edgemap,
                                     const vgl_box_2d<int >& roi_box)
 {
   // reset the size of the image
-  bw_image.set_size(roi_box.width()+1, roi_box.height()+1);
+  bw_image.set_size(roi_box.width(), roi_box.height());
   bw_image.fill(0);
 
   for (std::vector<sdet_edgel *>::const_iterator
