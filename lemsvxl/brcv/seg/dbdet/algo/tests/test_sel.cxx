@@ -24,8 +24,6 @@ MAIN( test_sel )
   dbdet_edgel* eB = new dbdet_edgel(vgl_point_2d<double>(1.0,0.0), 0.0);
   dbdet_edgel* eC = new dbdet_edgel(vgl_point_2d<double>(2.0,0.0), 0.0);
  
-  TEST("Constructor", &eA!=0, true);
-
   //*******************************************************
   START (" Test dbdet_ES_curve_model class");
 
@@ -135,8 +133,6 @@ MAIN( test_sel )
 
   //dbdet_sel constructors
   dbdet_sel<dbdet_ES_curve_model> edge_linker(edgemap, cvlet_map, edge_link_graph, curve_frag_graph);
-
-  TEST("Constructor", &edge_linker != 0, true);
 
   //*******************************************************
  

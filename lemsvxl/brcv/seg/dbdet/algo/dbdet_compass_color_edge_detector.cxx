@@ -168,8 +168,8 @@ int ClusterPoints(vil_image_view<double>& L,
     for (int j = 0; j < CDIM; j++)
       cluster[i][j] = temp[i * CDIM + j];
 
-  delete points;
-  delete weights;
+  delete[] points;
+  delete[] weights;
 
   return nclusters;
 }
@@ -424,7 +424,7 @@ void dbdet_compute_compass_color_gradient( vil_image_view<double>& L,
   //garbage collection
   delete mask;
   delete masksum;
-  delete wHist;
+  delete[] wHist;
 
   //allocate space for computing the final contrast magnitude and orientation
   hist_ori.set_size(L.ni(), L.nj());
@@ -467,8 +467,7 @@ void dbdet_compute_compass_color_gradient( vil_image_view<double>& L,
     }
   }
 
-  delete dist;
-
+  delete[] dist;
 }
 
 //: Detect edges using the compass operator
@@ -675,7 +674,7 @@ dbdet_detect_compass_color_edges(vil_image_view<double>& L,
   //garbage collection
   delete mask;
   delete masksum;
-  delete wHist;
+  delete[] wHist;
 
   //allocate space for computing the final contrast magnitude and orientation
   vil_image_view<double> hist_ori(L.ni(), L.nj());
@@ -717,7 +716,7 @@ dbdet_detect_compass_color_edges(vil_image_view<double>& L,
     }
   }
 
-  delete dist;
+  delete[] dist;
 
   //temp
   vil_image_view<double> dx(L.ni(), L.nj());
