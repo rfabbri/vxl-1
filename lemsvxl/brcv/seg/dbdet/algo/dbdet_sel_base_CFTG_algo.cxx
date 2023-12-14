@@ -1665,6 +1665,7 @@ void dbdet_sel_base::Construct_Hypothesis_Tree()
 		}
 	}
 
+*/
 /*
   	// Add by Yuliang, a indicator shows edges participating in unambiguous frags and hypothesis trees
 	std::cout << "counting in participate edges" << std::endl;
@@ -4075,27 +4076,23 @@ bool dbdet_sel_base::is_cross_over(dbdet_edgel_chain* chain_1, dbdet_edgel_chain
 }
 
 
-void dbdet_sel_base::prune_extreme_short_curve_frags() //  those isolated frags with only 2 edges, or single long link
+// those isolated frags with only 2 edges, or single long link
+void dbdet_sel_base::prune_extreme_short_curve_frags() 
 {
 	dbdet_edgel_chain_list_iter clit0;
-	for( clit0= curve_frag_graph_.frags.begin(); clit0!=curve_frag_graph_.frags.end(); clit0++)
-	{
+  dbdet_edgel_chain_list to_remove;
+	for (clit0 = curve_frag_graph_.frags.begin(); clit0!=curve_frag_graph_.frags.end(); clit0++) {
 		int eS_id = (*clit0)->edgels.front()->id;
 		int eE_id = (*clit0)->edgels.back()->id;
-		if((*clit0)->edgels.size()==2 && curve_frag_graph_.cFrags[eS_id].size() + curve_frag_graph_.pFrags[eS_id].size()==1
-				&& curve_frag_graph_.cFrags[eE_id].size() + curve_frag_graph_.pFrags[eE_id].size()==1 )
-		{
-			curve_frag_graph_.extract_fragment(*clit0);
-			clit0--;
-			continue;
-		}
-		if((*clit0)->edgels.size()==2 && compute_path_len((*clit0)->edgels)>2)
-		{
-			curve_frag_graph_.extract_fragment(*clit0);
-			clit0--;
-			continue;
-		}
+		if ((*clit0)->edgels.size()==2 
+     && (curve_frag_graph_.cFrags[eS_id].size() + curve_frag_graph_.pFrags[eS_id].size() == 1
+	   &&  curve_frag_graph_.cFrags[eE_id].size() + curve_frag_graph_.pFrags[eE_id].size() == 1 
+     ||  compute_path_len((*clit0)->edgels)>2))
+      to_remove.push_back(*clit0);
 	}
+
+	for (clit0 = to_remove.begin(); clit0 != to_remove.end(); clit0++)
+    curve_frag_graph_.extract_fragment(*clit0);
 }
 
 //:  those frags with only <=3 edges, with avg step length > 1
