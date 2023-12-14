@@ -3,8 +3,64 @@
 #include <bmcsd/bmcsd_util.h>
 #include <mw/pro/bmcsd_stereo_driver.h>
 
-
 #define MW_ASSERT(msg, a, b) if ((a) != (b)) { std::cerr << (msg) << std::endl; exit(1); }
+
+bool
+write_edge_support(vcl_string prefix, const vcl_vector<dbmcs_curve_3d_attributes> &attr)
+{
+    vcl_string myprefix = prefix + vcl_string("/crvs/rec-3dcurve-");
+
+    for (unsigned c=0; c < attr.size(); ++c) {
+
+        vcl_ostringstream crv_id;
+        crv_id << vcl_setw(vcl_ceil(vcl_log(attr.size())/vcl_log(10.0))+1) << vcl_setfill('0');
+        crv_id << c;
+
+        vcl_string filename = myprefix + crv_id.str() + vcl_string("-support.txt");
+
+        vcl_ofstream attr_file;
+
+        attr_file.open(filename.c_str());
+
+        if (!attr_file) {
+            vcl_cerr << "write_edge_support: error, unable to open file name" << vcl_endl;
+            return false;
+        }
+
+        vcl_vector<vcl_set<int> > supportingEdgels = attr[c].supportingEdgelsPerConfView_;
+        unsigned numConfViews = supportingEdgels.size();
+            
+        dbmcs_stereo_views_sptr stereoViews = attr[c].v_;
+        assert(stereoViews->num_confirmation_views()==numConfViews);
+
+        unsigned numSupportingViews = 0;
+        //Count how many confirmation views have nonzero support
+
+        for (unsigned m=0; m<numConfViews; ++m)
+            if(!supportingEdgels[m].empty())
+                numSupportingViews++;
+
+        attr_file << numSupportingViews << vcl_endl;
+
+        for (unsigned m=0; m<numConfViews; ++m) {
+            unsigned confView = stereoViews->confirmation_view(m);
+            vcl_set<int> edgelList = supportingEdgels[m];
+
+            if(!edgelList.empty()) {
+                attr_file << confView << " " << edgelList.size() << " ";
+
+                vcl_set<int>::const_iterator list_it;
+
+                for (list_it = edgelList.begin(); list_it != edgelList.end(); ++list_it)
+                    attr_file << *list_it << " ";
+
+                attr_file << vcl_endl;
+            }
+        }  
+
+        attr_file.close();
+    }
+}
 
 int
 main(int argc, char **argv)
