@@ -414,7 +414,6 @@ bool vgl_h_matrix_3d<T>::is_euclidean(const double eps) const
   R(0,0) -= T(1);
   R(1,1) -= T(1);
   R(2,2) -= T(1);
-  std::cout << "R abs: " << R.absolute_value_max() << std::endl; 
   return R.absolute_value_max() <= eps;
 }
 
