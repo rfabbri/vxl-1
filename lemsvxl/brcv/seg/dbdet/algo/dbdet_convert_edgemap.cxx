@@ -1,9 +1,6 @@
 //This is dbdet/edge/dbdet_edgemap_to_image.cxx
-
 //:
 //\file
-
-
 #include "dbdet_convert_edgemap.h"
 #include <dbdet/sel/dbdet_sel_utils.h>
 
@@ -146,8 +143,6 @@ dbdet_convert_edgemap_to_grayscale_image(const dbdet_curve_fragment_graph& CFG,
       }
     }
   }
-
-
   return true;
 }
 
@@ -188,7 +183,6 @@ dbdet_convert_edgemap_to_grayscale_image(const dbdet_edgemap& edgemap,
 {
   vgl_box_2d<int > bbox;
   bbox.add(vgl_point_2d<int > (0, 0));
-  bbox.add(vgl_point_2d<int > (edgemap.width()-1, edgemap.height()-1) );
+  bbox.add(vgl_point_2d<int > (edgemap.width()-1, edgemap.height()-1));
   return dbdet_convert_edgemap_to_grayscale_image(edgemap, bw_image, bbox);
 }
-

@@ -13,11 +13,9 @@
 //\endverbatim
 
 #include <vil/vil_image_view.h>
-
 #include <dbdet/edge/dbdet_edgemap.h>
 #include <dbdet/edge/dbdet_edgemap_sptr.h>
 #include <dbdet/sel/dbdet_curve_fragment_graph.h>
-
 #include <vsol/vsol_spatial_object_2d_sptr.h>
 #include <vgl/vgl_box_2d.h>
 
