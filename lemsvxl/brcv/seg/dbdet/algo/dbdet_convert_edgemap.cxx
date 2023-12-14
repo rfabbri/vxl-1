@@ -98,7 +98,6 @@ dbdet_convert_edgemap_to_image(const dbdet_edgemap& edgemap,
 #endif
     }
   }
-
   return true;
 }
 
@@ -173,7 +172,6 @@ dbdet_convert_edgemap_to_grayscale_image(const dbdet_edgemap& edgemap,
       bw_image(image_i, image_j) = 255 * e->strength;
     }
   }
-
   return true;
 }
 
