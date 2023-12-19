@@ -3,7 +3,7 @@
 #define bmcsd_curve_3d_sketch_e_h
 //:
 //\file
-//\brief File to hold 3D curves and attributes
+//\brief File to hold 3D curves and attributes, enhanced version
 //\author Ricardo Fabbri (rfabbri), Brown University  (@gmail.com)
 //\date 11/11/09 18:24:24 EST
 //
@@ -26,7 +26,7 @@ public:
   // curve itself.
   bmcsd_curve_3d_sketch_e(
       const std::vector< bdifd_1st_order_curve_3d > &crv3d,
-      const std::vector< bmcsd_curve_3d_attributes > &attr)
+      const std::vector< bmcsd_curve_3d_attributes_e > &attr)
   : 
     crv3d_(crv3d),
     attr_(attr)
@@ -36,7 +36,7 @@ public:
 
 
   void set(const std::vector< bdifd_1st_order_curve_3d > &crv3d,
-      const std::vector< bmcsd_curve_3d_attributes > &attr)
+      const std::vector< bmcsd_curve_3d_attributes_e > &attr)
   {
     crv3d_ = crv3d;
     attr_ = attr;
@@ -49,7 +49,7 @@ public:
   // in text format.
   bool write_dir_format(std::string dirname) const;
   bool read_dir_format(std::string dirname);
-  short dir_format_version() const { return 2;}
+  short dir_format_version() const { return 3;} // 3 is enhanced curve sketch, 2 for original curve sketch
   unsigned num_curves() const { return crv3d_.size(); }
   unsigned total_num_points() const {
     unsigned npts=0;
