@@ -383,6 +383,9 @@ public:
   // \param[in]   
   void compute_epipolar_beam_candidates();
 
+  //Anil: A version of the above function to compute epipolar candidates on any confirmation view
+  void compute_epipolar_beam_candidates_on_conf_views(unsigned v);
+
   // A curve in view[v1()] has to intercept at least \p min_intercepts epipolar
   // lines of subcurve() in order to qualify as a candidate.
   void set_min_epipolar_overlap(unsigned m) { tau_min_epipolar_overlap_ = m; }
@@ -414,6 +417,9 @@ protected:
   //: set of curves at each view. vsols_[v0()] and vsols_[v1()] are required.
   // The others are optional.
   std::vector<std::vector< vsol_polyline_2d_sptr > > vsols_; 
+
+  //Anil: Storing the unreliable samples of each curve
+  vcl_vector<vcl_vector<vcl_vector<bool> > > vsol_flags_;
 
 private:
   //: cameras for each view
