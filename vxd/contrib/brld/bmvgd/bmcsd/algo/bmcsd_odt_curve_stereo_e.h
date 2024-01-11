@@ -1,6 +1,6 @@
-// This is bmcsd_odt_curve_stereo.h
-#ifndef bmcsd_odt_curve_stereo_h
-#define bmcsd_odt_curve_stereo_h
+// This is bmcsd_odt_curve_stereo_e.h
+#ifndef bmcsd_odt_curve_stereo_e_h
+#define bmcsd_odt_curve_stereo_e_h
 //:
 //\file
 //\brief Multiview curve stereo using distance transforms and orientation
@@ -25,155 +25,73 @@
 
 class bmcsd_discrete_corresp;
 
-class bmcsd_odt_curve_stereo : public bmcsd_dt_curve_stereo {
+class bmcsd_odt_curve_stereo_e : public bmcsd_odt_curve_stereo {
 public:
-  bmcsd_odt_curve_stereo();
-  virtual ~bmcsd_odt_curve_stereo() {}
+  bmcsd_odt_curve_stereo_e();
+  virtual ~bmcsd_odt_curve_stereo_e() {}
 
   // Setters and Getters ------------------------------------------------------
 
-  //: \see base class
-  virtual bool set_nviews(unsigned nviews);
+  //: Anil: get/set original curve sizes for each view
+  void set_original_curve_sizes(const vcl_vector<vcl_vector<unsigned> > &original_curve_sizes);
+  unsigned get_original_curve_size(unsigned v, unsigned c);
 
-  //: set the edgemaps for each view.
-  void set_all_edgemaps(const std::vector<sdet_edgemap_sptr> &em);
+  //: Anil: get/set number of image curves for v0()
+  void set_num_image_curves_v0(const unsigned &num_image_curves_v0);
+  unsigned get_num_image_curves_v0();
 
-  //: set the symbolic edge linker storages for each view.
-  void set_all_sels(const std::vector<sdetd_sel_storage_sptr> &sels);
+  //Anil: get/set subsequence set stored in this class
+  void set_sseq(const vcl_vector<dbbl_subsequence_set> &sseq);
+  vcl_vector<dbbl_subsequence_set> get_sseq();
 
-  //: set the tangents for the samples of the curve fragments. The indexing goes
-  // tangents[id_view][id_curve][id_sample]
-  void set_tangents(const std::vector<std::vector<std::vector<double> > > &tangents);
+  //Anil: A version of the matching function to be used with mate curves
+  bool match_mate_curves_using_orientation_dt_extras(unsigned long *votes_ptr, unsigned v, unsigned ic);
 
-  //: sets the threshold in angular difference (radians) for wich an edgel is
-  //considered an inlier to the reprojected curve point-tangent sample in each
-  //view.
-  void set_dtheta_threshold(double dtheta) { tau_dtheta_ = dtheta; }
-  double dtheta_threshold() const { return tau_dtheta_; }
-  unsigned min_inliers_per_view() const { return tau_min_inliers_per_view_; }
-  unsigned min_total_inliers() const { return tau_min_total_inliers_; }
+  //: Anil: Another version of the function that returns a list of supporting edgel IDs as well as inlier view IDs
+  bool match_using_orientation_dt_extras(vcl_vector<unsigned long> *votes_ptr, vcl_vector<vcl_vector<vcl_set<int> > > &inlierEdgelsPerCandidate, 
+                                         vcl_vector<vcl_vector<unsigned> > &inlierViewsPerCandidate,vcl_vector<vcl_vector<unsigned> > &edge_support_count_per_candidate,
+					 vcl_vector<vcl_vector<vcl_vector<int> > > *edge_index_chain_per_candidate_ptr = NULL);
 
-  //: Sets the minimum number of inliers per view. If a view has less than this
-  // number of inliers, it will not vote at all towards the curve. This is to
-  // increase robustness to occlusion and is used in the *_extras verion of the
-  // stereo matcher.
-  void set_min_inliers_per_view(unsigned n) { tau_min_inliers_per_view_ = n; }
+  //: Anil: Another version of the function that returns a list of supporting edgel IDs as well as inlier view IDs
+  //: Anil: This version is for matching the selected curve in v0() with particular candidates
+  bool match_using_orientation_dt_extras(vcl_vector<unsigned long> *votes_ptr, vcl_vector<vcl_vector<vcl_set<int> > > &inlierEdgelsPerCandidate, 
+                                         vcl_vector<vcl_vector<unsigned> > &inlierViewsPerCandidate, vcl_set<int> curve_ids,
+					 vcl_vector<vcl_vector<unsigned> > &edge_support_count_per_candidate);
 
-  //: Sets the minimum number of total inliers per curve correspondence. If a
-  // curve correspondence has less than this number of votes, it will have zero
-  // votes.
-  void set_min_total_inliers(unsigned n) { tau_min_total_inliers_ = n; }
+  //: Anil: Another version of the function that returns uncertainty flags for samples, turn markFlag on to mark used samples using usedSamples_ member
+  void reconstruct_candidate_1st_order_with_flags(unsigned ini_id, unsigned end_id, unsigned ic, unsigned curve_id,
+						  const dbdif_rig &rig, dbdif_1st_order_curve_3d *crv_ptr, vcl_vector<bool> &flags, unsigned &recon_shift);
 
-  //: Sets minimum epipolar tangency delta angle. Effective range is
-  // [0,vnl_math::pi/2)
-  void set_min_epiangle(double dtheta) { tau_min_epiangle_ = dtheta; }
+  //: Anil: A version of the flagged function that does reconstructions using confirmation views
+  void reconstruct_candidate_1st_order_with_flags_temp(unsigned ini_id, unsigned end_id, unsigned ic, unsigned curve_id,
+						  const dbdif_rig &rig, dbdif_1st_order_curve_3d *crv_ptr, vcl_vector<bool> &flags, unsigned v);
 
-  //: Sets the lowe-like disambiguation ratio
-  void set_min_first_to_second_best_ratio(double ratio) 
-  { tau_min_first_to_second_best_ratio_ = ratio; }
+  void reconstruct_subcurve_1st_order_with_flags(
+      unsigned ini_id_sub,
+      unsigned end_id_sub,
+      const dbdif_rig &rig,
+      dbdif_1st_order_curve_3d *curve_3d,
+      vcl_vector<bool> &curveFlags
+      );
 
-  double min_first_to_second_best_ratio() const 
-  { return tau_min_first_to_second_best_ratio_; }
+  void reconstruct_subcurve_1st_order_with_flags(
+      unsigned ini_id_sub,
+      unsigned end_id_sub,
+      const dbdif_rig &rig,
+      dbdif_1st_order_curve_3d *curve_3d,
+      vcl_vector<bool> &curveFlags,
+      unsigned v
+      );
 
-  //: The threshold on single unique correspondences when applying lowe's
-  // disambiguation criterion. This will cause lonely corresps to be accepted
-  // only if their #votes surpass tau_min_first_to_second_best_ratio_*tau_lonely_
-  void set_lonely_threshold(unsigned threshold) { tau_lonely_ = threshold; }
-
-  unsigned lonely_threshold() const 
-  { return tau_lonely_; }
-
-  void set_min_num_inlier_edgels_per_curvelet(unsigned m)
-  { tau_min_num_inlier_edgels_per_curvelet_ = m; }
-
-  unsigned min_num_inlier_edgels_per_curvelet()
-  { return tau_min_num_inlier_edgels_per_curvelet_; }
-
-  //: \returns tangents(view id \p v, curve id \p c, point id \p p)
-  // OBS: we might not have tangents for all views. 
-  double curve_tangents(unsigned v, unsigned c, unsigned p) const 
-  { assert(v < curve_tangents_.size()); return curve_tangents_[v][c][p]; }
-
-  bool has_curve_tangents() const { return !pt_tgts_.empty(); }
-
-  // Stereo Matching Methods ---------------------------------------------------
-
-  //: Matches the selected subcurve to another subcurve in its epipolar beam such
-  // that the overlaps reproject with the maximum number of inliers. The inliers
-  // are measured from the distance map. 
-  //
-  // \param[out] i_best : index into \c crv_candidates_ptrs() of top matching curve
-  // \param[out] votes : std::vector of the number of inliers, s.t. votes[i] ==
-  // total number of inliers for crv_candidates_ptrs(i). 
-  //
-  // If there is no reliable curve, or if there are no candidates to begin with,
-  // votes will be empty, but return value will be true.
-  //
-  // \return false if some error ocurred during matching.
-  bool match_using_orientation_dt(unsigned *i_best, std::vector<unsigned long> *votes);
-
-  //: Run match_using_orientation_dt, then perform additional tests to determine
-  // if a match is reliable. The following criterion is used
-  //
-  // view-voting: gather supporting views instead of amassing all edgels
-  // from all views into a single vote. A view is considered an inlier view if
-  // the number of inlier edgels is greater than some threshold.
-  //    new_votes[v] = (votes[v] > min_votes_per_view);
-  //
-  // This is used to prevent influence of clutter from views where the curve is
-  // occluded.
-  //
-  bool match_using_orientation_dt_extras(std::vector<unsigned long> *votes_ptr);
-
-  //: Convenience function returning the index of the best match.
-  bool match_using_orientation_dt_extras(unsigned *i_best, std::vector<unsigned long> *votes_ptr);
-
-  //: Reconstructs given subcurve specified by index ini_id and end_id into
-  // selected_crv_id(v0()), by assuming correspondence to candidate curve with index \p ic.
-  // This version reconstructs the tangent information as well.
-  void reconstruct_candidate_1st_order(unsigned ini_id, unsigned end_id, unsigned ic, 
-      const bdifd_rig &rig, bdifd_1st_order_curve_3d *crv_ptr);
-
-  //: Reconstructs subcurve given by curve selected_crv_id(v0()) and endpoints with
-  // index ini_id_sub, end_id_sub, using view[v0()] and the corresponding
-  // selected_crv_id(v1()) in view[v1()]. This version reconstructs the tangent
-  // information as well.
-  void reconstruct_subcurve_1st_order(
-      unsigned ini_id_sub, 
-      unsigned end_id_sub, 
-      const bdifd_rig &rig,
-      bdifd_1st_order_curve_3d *curve_3d
-      ) const;
-
-  //: Reconstructs a 3D point-tangent, given the 2D image point-tangent \c p_0
-  // in the first view and the index \p v of the second view to use. The point in
-  // the second view is found by intersecting the epipolar line of p_0 with the
-  // selected curve of that view.
-  //
-  // \param[in] di0 is the index of the point p_0 in the selected sub-curve of view 0
-  // \param[in] ini_id is how far the initial point of the subcurve is inside the
-  // containing curve fragment container.
-  //
-  void reconstruct_curve_point_1st_order(
+  void reconstruct_curve_point_1st_order_with_flags(
       unsigned v,
       unsigned ini_id,
-      unsigned di0, 
-      const bdifd_rig &rig,
-      bdifd_1st_order_point_3d *pt_3D
-      ) const;
-
-  //: Projects a 1st order curve from 3D world to 2D image coordinates on \p view.
-  // \todo this is a general-purpose utility. If bdifd was well-designed, it'd
-  // have this.
-  void project_curve_1st_order(
-      unsigned view, 
-      const bdifd_1st_order_curve_3d &crv3d,
-      bdifd_1st_order_curve_2d *proj_ptr
-      ) const;
-
-  //: \return true in case edgemaps, labels, and a curve is selected in view 0,
-  // as well as if other preconditions for oriented matching are satisfied.
-  bool ready_for_oriented_matching();
+      unsigned di0,
+      const dbdif_rig &rig,
+      dbdif_1st_order_point_3d *pt_3D,
+      bool &isConfident,
+      unsigned &curve_v1
+      );
 
   //: The reprojection curve in each view \p c obtained by corresponding
   // the subcurve in view[0] and the epipolar band candidate \p c in view[1].
@@ -196,22 +114,46 @@ public:
       std::vector<std::vector< vsol_polyline_2d_sptr > > *broken_vsols,
       std::vector<bbld_subsequence_set> *ss_ptr
       ) const;
-
   //: Stand-alone episeg breaker using tangent angle information.
   // \see break_curves_into_episegs_pairwise
   static void break_curves_into_episegs_angle(
-    const std::vector< vsol_polyline_2d_sptr >  &vsols,
-    const std::vector<std::vector<double> > &tgts,
+    const vcl_vector< vsol_polyline_2d_sptr >  &vsols,
+    const vcl_vector<vcl_vector<double> > &tgts,
     double min_epiangle,
-    std::vector<vsol_polyline_2d_sptr> *vsols2,
+    vcl_vector<vsol_polyline_2d_sptr> *vsols2,
     const vgl_homg_point_2d<double> &e,
-    bbld_subsequence_set *ss_ptr);
+    dbbl_subsequence_set *ss_ptr, bool print, bool onlyMark,
+    vcl_vector<vcl_vector<bool> > &uncertaintyFlags);
 
-  //: Precondition: set_tangents and set_curve must have been called.
-  virtual void break_into_episegs_and_replace_curve(
-      std::vector<bbld_subsequence_set> *curves_ss);
+  bool dummyFlag;
+  unsigned dummyID;
+  vcl_vector<double> lineCoef;
 
-  bool has_sels() { return !sels_.empty(); }
+  //Anil: For each view, we store the ID curve of that each edgel 
+  //Size should be total number of confirmation views used in the stereo instance
+  vcl_vector<vcl_vector<int> > edge_curve_index_;
+
+  //Anil: Mate curve IDs for a given image curves in v0()
+  //Size should be total number of confirmation views used in the stereo instance
+  vcl_vector<vcl_set<int> > mate_curves_;
+
+  //Anil: Key = mate curve ID, Value = weight, indicating level of support given in number of edges
+  vcl_map<unsigned,unsigned> mate_curve_weights_;
+
+  //Anil: Vector that stores the flags for curve samples used
+  vcl_vector<vcl_vector<vcl_vector<bool> > > usedSamples_;
+
+  //Anil: Buffer for storing the sample IDs on the image curve in v1 that are going to be used in this run
+  vcl_vector<unsigned> curve_samples_v1_;
+
+  //Anil: Curve IDs that are already used in a previous run
+  vcl_vector<vcl_vector<unsigned> > usedCurves_;
+
+  //Anil: Count for the number of curve sample matching operations
+  unsigned matchCount_;
+
+  //Anil: Count for the number of curve sample reconstruction operations
+  unsigned reconCount_;
 
 protected:
   bool has_edgemaps() { return !em_.empty(); }
@@ -240,59 +182,75 @@ private:
   //: \see curve_tangents()
   std::vector<std::vector<std::vector<double> > > curve_tangents_;
   std::vector<std::vector<bcsid_edgel_seq> > reprojection_crv_;
+
+  //Anil: Adding the subsequence set as a member here so we can do
+  //      epipolar tangency stitching after reconstruction
+  vcl_vector<dbbl_subsequence_set> sseq_;
+
+  //Anil: Adding the samples sizes of the original curves
+  vcl_vector<vcl_vector<unsigned> > original_curve_sizes_;
+
+  //Anil: Adding the total number of image curves on v0()
+  unsigned num_image_curves_v0_;
 };
 
-//: Reconstruct all curves that match bewtween two views. 
-// \param[in] s : must be all set and ready to match.
-// \param[in] only_non_empty: true if only non-empty correspondences are
-// reconstructed. You might want this to be false if you want the id into the 3D
-// curve vector to match the id of the curves in the first image.
-// \param[out] crv3d: crv3d[curve_id] == curve 3d for s.curves(v0(), curve_id);
-// \param[out] corresp: corresp[c] == correspondence of s.curves(v0(), c) used for crv3d[c]
-bool bmcsd_match_and_reconstruct_all_curves(
-    bmcsd_odt_curve_stereo &s, 
-    std::vector<bdifd_1st_order_curve_3d> *crv3d,
-    bmcsd_discrete_corresp *corresp
+//: version of dbmcs_match_and_reconstruct_all_curves which fills an attribute
+// for each curve.
+bool dbmcs_match_and_reconstruct_all_curves_attr(
+    mw_odt_curve_stereo &s, 
+    vcl_vector<dbdif_1st_order_curve_3d> *crv3d_ptr,
+    mw_discrete_corresp *corresp_ptr,
+    vcl_vector< dbmcs_curve_3d_attributes > *attr_ptr,
+    bool track_supporting_edges=false
     );
 
-//: version of bmcsd_match_and_reconstruct_all_curves which fills an attribute
-// for each curve.
-bool bmcsd_match_and_reconstruct_all_curves_attr(
-    bmcsd_odt_curve_stereo &s, 
-    std::vector<bdifd_1st_order_curve_3d> *crv3d_ptr,
-    bmcsd_discrete_corresp *corresp_ptr,
-    std::vector< bmcsd_curve_3d_attributes > *attr_ptr
+//: version of dbmcs_match_and_reconstruct_all_curves that makes use of mate curves
+bool dbmcs_match_and_reconstruct_all_curves_attr_using_mates(
+    mw_odt_curve_stereo &s, 
+    vcl_vector<dbdif_1st_order_curve_3d> *crv3d_ptr,
+    mw_discrete_corresp *corresp_ptr,
+    vcl_vector< dbmcs_curve_3d_attributes > *attr_ptr,
+    vcl_vector<vcl_set<int> > mate_curves_v1,
+    bool isFirstRun,
+    bool track_supporting_edges=false
     );
 
 //: Matches all curves bewtween two views.
 // \param[in] s : must be all set and ready to match.
 // \param[out] corresp_ptr : discrete correspondence between the first two
 // views. Only the correspondences passing all thresholds are output.
-bool bmcsd_match_all_curves(
-  bmcsd_odt_curve_stereo &s, 
-  bmcsd_discrete_corresp *corresp_ptr);
+bool dbmcs_match_all_curves(
+  mw_odt_curve_stereo &s, 
+  mw_discrete_corresp *corresp_ptr,
+  bool track_supporting_edges=false);
 
-//: For each curve i, reconstructs from corresp[i].front(). If you want to
-// reconstruct from the best curve, call corresp.keep_only_extreme_cost(true)
-// first. 
-// \param[in] only_non_empty: true if only non-empty correspondences are
-// reconstructed. You might want this to be false if you want the id into the 3D
-// curve vector to match the id of the curves in the first image.
-//
-// \return true if success.
-bool reconstruct_from_corresp(
-    bmcsd_odt_curve_stereo &s, 
-    const bmcsd_discrete_corresp &corresp,
-    std::vector<bdifd_1st_order_curve_3d> *crv3d_ptr
-    );
+//Anil: mcd version of the matching function that iterates the matches using mate curves
+//Anil: can do the initial seed curve matching, as well as the elongation iterations
+bool dbmcs_match_all_curves_using_mates(
+  mw_odt_curve_stereo &s, 
+  mw_discrete_corresp *corresp_ptr,
+  unsigned seed_id,
+  vcl_vector<vcl_set<int> > curve_ids,
+  bool isFirstRun,
+  bool track_supporting_edges=false);
+
 
 //: variant of reconstruct_from_corresp which also outputs attributes.
 bool 
 reconstruct_from_corresp_attr(
-    bmcsd_odt_curve_stereo &s, 
-    const bmcsd_discrete_corresp &corresp,
-    std::vector<bdifd_1st_order_curve_3d> *crv3d_ptr,
-    std::vector< bmcsd_curve_3d_attributes > *attr_ptr
+    mw_odt_curve_stereo &s, 
+    const mw_discrete_corresp &corresp,
+    vcl_vector<dbdif_1st_order_curve_3d> *crv3d_ptr,
+    vcl_vector< dbmcs_curve_3d_attributes > *attr_ptr,
+    unsigned seed_id = 0
     );
 
-#endif // bmcsd_odt_curve_stereo_h
+bool 
+reconstruct_from_corresp_attr_using_mates(
+    mw_odt_curve_stereo &s, 
+    const mw_discrete_corresp &corresp,
+    vcl_vector<dbdif_1st_order_curve_3d> *crv3d_ptr,
+    vcl_vector< dbmcs_curve_3d_attributes > *attr_ptr
+    );
+
+#endif // bmcsd_odt_curve_stereo_e_h
