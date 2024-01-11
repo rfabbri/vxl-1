@@ -464,7 +464,6 @@ break_curves_into_episegs(
     samples.reserve(vsols[i]->size());
     for (unsigned k=0; k < vsols[i]->size(); ++k)
       samples.push_back(vsols[i]->vertex(k));
-
     
     // A2 - apply episeg
     std::vector<becld_episeg_sptr> eps = 
