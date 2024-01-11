@@ -15,6 +15,9 @@ becld_episeg_from_curve_converter::becld_episeg_from_curve_converter(becld_epipo
 {}
 
 //: Convert a digital curve to an episegment
+//: Note on enhanced curve sketch: A. Usumezbas had modified this functino for
+// the enhanced curve sketch, with an additional print parameter, but this was
+// just for his own specific debugging.
 std::vector<becld_episeg_sptr>
 becld_episeg_from_curve_converter::convert_curve(vsol_digital_curve_2d_sptr curve)
 {
@@ -71,6 +74,9 @@ becld_episeg_from_curve_converter::convert_curve(vsol_digital_curve_2d_sptr curv
   return to_return;
 }
 
+//: Note on enhanced curve sketch: A. Usumezbas had modified this functino for
+// the enhanced curve sketch, with an additional print parameter, but this was
+// just for his own specific debugging.
 std::vector<becld_episeg_sptr>
 becld_episeg_from_curve_converter::convert_curve_using_tangents(
     vsol_digital_curve_2d_sptr curve,
@@ -106,6 +112,47 @@ becld_episeg_from_curve_converter::convert_curve_using_tangents(
   return to_return;
 }
 
+/* Anil Usumezbas work in progress, not used at the time but here for
+ * completeness
+ * vcl_vector<dbecl_episeg_sptr>
+dbecl_episeg_from_curve_converter::mark_curve_using_tangents(
+    vsol_digital_curve_2d_sptr curve,
+    vcl_vector<double> tangents,
+    dbbl_subsequence_set *partition,
+    unsigned curve_id
+    )
+{
+  assert(tangents.size() == curve->size());
+  assert(delta_theta_ != uninitialized_delta_theta);
+  vcl_vector<dbecl_episeg_sptr> to_return;
+
+  // We need at least 1 points to make an episegment
+  if (curve->size() < 1)
+    return to_return;
+
+  dbbl_subsequence_set &ss = *partition;
+  dbbl_subsequence original_seq(0, curve->size(), curve_id);
+
+  dbecl_delta_angle_predicate 
+    is_angle_acceptable(curve, tangents, epipole_, delta_theta_);
+  
+  for (unsigned i=0; i<curve->size(); ++i)
+      uncertaintyFlags.push_back(is_angle_acceptable(i));
+
+  dbecl_delta_angle_predicate all_true(curve, tangents, epipole_, 0);
+
+  dbbl_contiguous_partition(original_seq, all_true, &ss);
+  assert(!curve->size() || ss.num_subsequences());
+
+  for (unsigned i=0; i < ss.num_subsequences(); ++i) {
+    // if ( ss[i].size() && is_angle_acceptable(ss[i].ini()) )
+      to_return.push_back(new dbecl_episeg(epipole_, curve, ss[i].ini(), 
+            static_cast<double>(ss[i].end())-1));
+  }
+
+  link_episegs(to_return);
+  return to_return;
+}*/
 
 //: Get the epipolar angle of the given point on the curve
 double

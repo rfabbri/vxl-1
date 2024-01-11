@@ -64,7 +64,16 @@ public:
       std::vector<double> tangents,
       bbld_subsequence_set *partition,
       unsigned curve_id=0);
-  
+
+/* Anil Usumezbas work in progress, not used at the time but here for
+ * completeness
+ *vcl_vector<dbecl_episeg_sptr>
+  mark_curve_using_tangents(
+      vsol_digital_curve_2d_sptr curve,
+      vcl_vector<double> tangents,
+      dbbl_subsequence_set *partition,
+      vcl_vector<bool> &uncertaintyFlags,
+      unsigned curve_id=0);*/
 protected:
   //: The epipole
   becld_epipole_sptr epipole_;
