@@ -20,19 +20,13 @@
 #include <vcl_set.h>
 
 
-// mw_match_attribute is from original (without _e)
+// _match_attribute is from original (without _e)
 
 //: This is to be used within the bmcsd_discrete_corresp_e class;
 struct bmcsd_attributed_object_e : public bmcsd_attributed_object {
 public:
   bmcsd_attributed_object_e() { }
 
-  bmcsd_attributed_object_e(unsigned obj_idx, bool isnull=false, double cost=0)
-   :
-    bmcsd_match_attribute(isnull, cost),
-    obj_(obj_idx)
-  {
-  }
   bmcsd_attributed_object(unsigned obj_idx, unsigned container_idx, bool isnull=false, double cost=0)
    :
     mw_match_attribute(isnull, cost),
@@ -41,8 +35,8 @@ public:
   {
   }
 
-  bmcsd_attributed_object(unsigned obj_idx, std::vector<std::set<int> > supportStructures, 
-                     std::vector<unsigned> inliers, bool isnull=false, double cost=0)
+  bmcsd_attributed_object(unsigned obj_idx, std::vector<std::set<int> > &supportStructures, 
+                     std::vector<unsigned> &inliers, bool isnull=false, double cost=0)
    :
     mw_match_attribute(isnull, cost),
     obj_(obj_idx),
@@ -51,8 +45,8 @@ public:
   {
   }
 
-  bmcsd_attributed_object(unsigned obj_idx, unsigned container_idx, std::vector<std::set<int> > supportStructures, 
-                     std::vector<unsigned> inliers, bool isnull=false, double cost=0)
+  bmcsd_attributed_object(unsigned obj_idx, unsigned container_idx, std::vector<std::set<int> > &supportStructures, 
+                     std::vector<unsigned> &inliers, bool isnull=false, double cost=0)
    :
     mw_match_attribute(isnull, cost),
     obj_(obj_idx),
@@ -62,8 +56,8 @@ public:
   {
   }
 
-  bmcsd_attributed_object(unsigned obj_idx, unsigned container_idx, std::vector<std::set<int> > supportStructures, 
-		       std::vector<unsigned> inliers, std::vector<unsigned> supportCount, 
+  bmcsd_attributed_object(unsigned obj_idx, unsigned container_idx, std::vector<std::set<int> > &supportStructures, 
+		       std::vector<unsigned> &inliers, std::vector<unsigned> &supportCount, 
 		       bool isnull=false, double cost=0, std::vector<std::vector<int> > indexChain=std::vector<std::vector<int> >())
    :
     mw_match_attribute(isnull, cost),
@@ -78,8 +72,6 @@ public:
 
   ~bmcsd_attributed_object_e() {}
   
-
-
   // I/O ------------------------------------------------------------------
 
   //: Binary save self to stream.
@@ -116,11 +108,11 @@ public:
    std::vector<unsigned> inliers_;
 };
 
-class bmcsd_attributed_object_eq : public std::unary_function<bmcsd_attributed_object_eq, bool> {
+class bmcsd_attributed_object_e_eq : public std::unary_function<bmcsd_attributed_object_e_eq, bool> {
   unsigned p_;
 public:
-  explicit bmcsd_attributed_object_eq(const unsigned pp) : p_(pp) { }; 
-  bool operator() (const bmcsd_attributed_object_e &e) const { return e.obj_ == p_; }
+  explicit bmcsd_attributed_object_e_eq(const unsigned pp) : p_(pp) { }; 
+  bool operator() (const bmcsd_attributed_object_e_e &e) const { return e.obj_ == p_; }
 };
 
 //: Binary save vnl_my_class to stream.
