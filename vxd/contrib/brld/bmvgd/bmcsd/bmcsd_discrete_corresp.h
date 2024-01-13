@@ -119,7 +119,6 @@ public:
     return cost_ < that.cost_;
   }
 
-
   // I/O ------------------------------------------------------------------
 
   //: Binary save self to stream.
@@ -165,7 +164,6 @@ inline void vsl_print_summary(std::ostream &os, const bmcsd_attributed_object &p
 {
   p.print_summary(os);
 }
-
 
 //: We support many-to-one, one-to-many, and even zero-to-many and many-to-zero
 // Access is directly on datastructure, since its kinda low-level
@@ -314,7 +312,8 @@ public:
   // If the dummy object has no correspondence, it also counts.
   unsigned count_empty() const { 
     return std::count_if(corresp_.begin(), corresp_.end(), 
-                        std::mem_fun_ref(&one_corresp_list::empty )); 
+                        [](std::list< bmcsd_attributed_object > const &o){return o.empty();});
+  //                         std::mem_fun_ref(&one_corresp_list::empty )); 
   }
 
   void compare_and_print( const bmcsd_discrete_corresp *gt) const;

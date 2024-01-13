@@ -1,6 +1,6 @@
-#include "bmcsd_discrete_corresp_e.h"
 #include <vsl/vsl_vector_io.h>
 #include <vsl/vsl_list_io.h>
+#include "bmcsd_discrete_corresp_e.h"
 #include <algorithm>
 #include <set>
 #include <bmcsd/bmcsd_util.h>
@@ -128,7 +128,6 @@ b_read(vsl_b_istream &is)
   }
 }
 
-//: Return IO version number;
 short 
 bmcsd_attributed_object_e::
 version() const
@@ -150,7 +149,7 @@ print_summary(std::ostream &os) const
 std::string 
 bmcsd_attributed_object_e::
 is_a() const 
-{return "bmcsd_attributed_object_e";}
+{ return "bmcsd_attributed_object_e"; }
 
 
 //: Binary save self to stream.

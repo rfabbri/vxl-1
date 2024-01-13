@@ -17,7 +17,7 @@
 #include <algorithm>
 #include <vsl/vsl_binary_io.h>
 #include <bmcsd/bmcsd_discrete_corresp.h> // for _e version we use some of the original
-#include <vcl_set.h>
+#include <set>
 
 
 // _match_attribute is from original (without _e)
@@ -27,41 +27,37 @@ struct bmcsd_attributed_object_e : public bmcsd_attributed_object {
 public:
   bmcsd_attributed_object_e() { }
 
-  bmcsd_attributed_object(unsigned obj_idx, unsigned container_idx, bool isnull=false, double cost=0)
+  bmcsd_attributed_object_e(unsigned obj_idx, unsigned container_idx, bool isnull=false, double cost=0)
    :
-    mw_match_attribute(isnull, cost),
-    obj_(obj_idx),
+    bmcsd_attributed_object(obj_idx, isnull, cost),
     container_id_(container_idx)
   {
   }
 
-  bmcsd_attributed_object(unsigned obj_idx, std::vector<std::set<int> > &supportStructures, 
+  bmcsd_attributed_object_e(unsigned obj_idx, std::vector<std::set<int> > &supportStructures, 
                      std::vector<unsigned> &inliers, bool isnull=false, double cost=0)
    :
-    mw_match_attribute(isnull, cost),
-    obj_(obj_idx),
+    bmcsd_attributed_object(obj_idx, isnull, cost),
     supportingStructures_(supportStructures),
     inliers_(inliers)
   {
   }
 
-  bmcsd_attributed_object(unsigned obj_idx, unsigned container_idx, std::vector<std::set<int> > &supportStructures, 
+  bmcsd_attributed_object_e(unsigned obj_idx, unsigned container_idx, std::vector<std::set<int> > &supportStructures, 
                      std::vector<unsigned> &inliers, bool isnull=false, double cost=0)
    :
-    mw_match_attribute(isnull, cost),
-    obj_(obj_idx),
+    bmcsd_attributed_object(obj_idx, isnull, cost),
     supportingStructures_(supportStructures),
     inliers_(inliers),
     container_id_(container_idx)
   {
   }
 
-  bmcsd_attributed_object(unsigned obj_idx, unsigned container_idx, std::vector<std::set<int> > &supportStructures, 
+  bmcsd_attributed_object_e(unsigned obj_idx, unsigned container_idx, std::vector<std::set<int> > &supportStructures, 
 		       std::vector<unsigned> &inliers, std::vector<unsigned> &supportCount, 
 		       bool isnull=false, double cost=0, std::vector<std::vector<int> > indexChain=std::vector<std::vector<int> >())
    :
-    mw_match_attribute(isnull, cost),
-    obj_(obj_idx),
+    bmcsd_attributed_object(obj_idx, isnull, cost),
     supportingStructures_(supportStructures),
     inliers_(inliers),
     container_id_(container_idx),
@@ -112,7 +108,7 @@ class bmcsd_attributed_object_e_eq : public std::unary_function<bmcsd_attributed
   unsigned p_;
 public:
   explicit bmcsd_attributed_object_e_eq(const unsigned pp) : p_(pp) { }; 
-  bool operator() (const bmcsd_attributed_object_e_e &e) const { return e.obj_ == p_; }
+  bool operator() (const bmcsd_attributed_object_e &e) const { return e.obj_ == p_; }
 };
 
 //: Binary save vnl_my_class to stream.
@@ -281,7 +277,8 @@ public:
   // If the dummy object has no correspondence, it also counts.
   unsigned count_empty() const { 
     return std::count_if(corresp_.begin(), corresp_.end(), 
-                        std::mem_fun_ref(&one_corresp_list::empty )); 
+                        [](std::list< bmcsd_attributed_object_e > const &o){return o.empty();});
+  //                      std::mem_fun_ref(&one_corresp_list::empty )); 
   }
 
   void compare_and_print( const bmcsd_discrete_corresp_e *gt) const;
