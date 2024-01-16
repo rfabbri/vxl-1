@@ -1,33 +1,39 @@
+//:
+//\file
+//\brief Enhanced Multiview Curve Sketch (mcs_e) main command
+//\author Ricardo Fabbri, Brown & Rio de Janeiro State U. (rfabbri.github.io)
+//\author Anil Usumezbas (extensions)
+//
 #include <vul/vul_arg.h>
 #include <buld/buld_arg.h>
 #include <bmcsd/bmcsd_util.h>
-#include <mw/pro/bmcsd_stereo_driver.h>
+#include <bmcsd/algo/bmcsd_data.h>
+#include <bmcsd/pro/bmcsd_stereo_driver.h>
 
 #define MW_ASSERT(msg, a, b) if ((a) != (b)) { std::cerr << (msg) << std::endl; exit(1); }
 
 bool
-write_edge_support(vcl_string prefix, const vcl_vector<dbmcs_curve_3d_attributes> &attr)
+write_edge_support(std::string prefix, const std::vector<dbmcs_curve_3d_attributes> &attr)
 {
-    vcl_string myprefix = prefix + vcl_string("/crvs/rec-3dcurve-");
+    std::string myprefix = prefix + std::string("/crvs/rec-3dcurve-");
 
     for (unsigned c=0; c < attr.size(); ++c) {
-
-        vcl_ostringstream crv_id;
-        crv_id << vcl_setw(vcl_ceil(vcl_log(attr.size())/vcl_log(10.0))+1) << vcl_setfill('0');
+        std::ostringstream crv_id;
+        crv_id << std::setw(std::ceil(std::log(attr.size())/std::log(10.0))+1) << std::setfill('0');
         crv_id << c;
 
-        vcl_string filename = myprefix + crv_id.str() + vcl_string("-support.txt");
+        std::string filename = myprefix + crv_id.str() + std::string("-support.txt");
 
-        vcl_ofstream attr_file;
+        std::ofstream attr_file;
 
         attr_file.open(filename.c_str());
 
         if (!attr_file) {
-            vcl_cerr << "write_edge_support: error, unable to open file name" << vcl_endl;
+            std::cerr << "write_edge_support: error, unable to open file name" << std::endl;
             return false;
         }
 
-        vcl_vector<vcl_set<int> > supportingEdgels = attr[c].supportingEdgelsPerConfView_;
+        std::vector<std::set<int> > supportingEdgels = attr[c].supportingEdgelsPerConfView_;
         unsigned numConfViews = supportingEdgels.size();
             
         dbmcs_stereo_views_sptr stereoViews = attr[c].v_;
@@ -40,21 +46,21 @@ write_edge_support(vcl_string prefix, const vcl_vector<dbmcs_curve_3d_attributes
             if(!supportingEdgels[m].empty())
                 numSupportingViews++;
 
-        attr_file << numSupportingViews << vcl_endl;
+        attr_file << numSupportingViews << std::endl;
 
         for (unsigned m=0; m<numConfViews; ++m) {
             unsigned confView = stereoViews->confirmation_view(m);
-            vcl_set<int> edgelList = supportingEdgels[m];
+            std::set<int> edgelList = supportingEdgels[m];
 
             if(!edgelList.empty()) {
                 attr_file << confView << " " << edgelList.size() << " ";
 
-                vcl_set<int>::const_iterator list_it;
+                std::set<int>::const_iterator list_it;
 
                 for (list_it = edgelList.begin(); list_it != edgelList.end(); ++list_it)
                     attr_file << *list_it << " ";
 
-                attr_file << vcl_endl;
+                attr_file << std::endl;
             }
         }  
 
@@ -115,10 +121,10 @@ main(int argc, char **argv)
   bmcsd_util::camera_file_type cam_type;
 
   if (a_cam_type() == "intrinsic_extrinsic") {
-    cam_type = bmcsd_util::MW_INTRINSIC_EXTRINSIC;
+    cam_type = bmcsd_util::BMCS_INTRINSIC_EXTRINSIC;
   } else {
     if (a_cam_type() == "projcamera")
-      cam_type = bmcsd_util::MW_3X4;
+      cam_type = bmcsd_util::BMCS_3X4;
     else  {
       std::cerr << "Error: invalid camera type " << a_cam_type() << std::endl;
       return 1;
@@ -127,7 +133,7 @@ main(int argc, char **argv)
 
   bmcsd_curve_stereo_data_path dpath;
   bool retval = 
-    mw_data::read_frame_data_list_txt(a_prefix(), &dpath, cam_type);
+    bmcsd_data::read_frame_data_list_txt(a_prefix(), &dpath, cam_type);
   if (!retval) return 1;
   std::cout << "Dpath:\n" << dpath << std::endl;
 

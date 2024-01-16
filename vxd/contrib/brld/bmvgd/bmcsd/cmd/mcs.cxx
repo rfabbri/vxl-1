@@ -9,7 +9,6 @@
 #include <bmcsd/algo/bmcsd_data.h>
 #include <bmcsd/pro/bmcsd_stereo_driver.h>
 
-
 #define MW_ASSERT(msg, a, b) if ((a) != (b)) { std::cerr << (msg) << std::endl; exit(1); }
 
 int
