@@ -10,6 +10,10 @@ set(mca_stereo_sources
    mca.cxx
 )
 
+set(mca_e_stereo_sources
+   mca_e.cxx
+)
+
 # set(mcr_stereo_sources
 #    mcr.cxx
 # )
@@ -31,8 +35,8 @@ set(mca_stereo_sources
 add_executable(mcs ${mcs_stereo_sources})
 target_link_libraries(mcs bmcsd_pro)
 
-add_executable(mca ${mca_stereo_sources})
-target_link_libraries(mca bmcsd)
+add_executable(mca_e ${mca_e_stereo_sources})
+target_link_libraries(mca_e bmcsd)
 
 # add_executable(mcp ${mcp_stereo_sources})
 # target_link_libraries(mcp mw_pro)
