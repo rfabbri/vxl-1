@@ -1,0 +1,4 @@
+// Instantiation of IO for std::list<bmcsd_attributed_point>
+#include <vsl/vsl_vector_io.hxx>
+#include <bmcsd/bmcsd_curve_3d_attributes_e.h>
+VSL_VECTOR_IO_INSTANTIATE(bmcsd_curve_3d_attributes_e);

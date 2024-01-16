@@ -14,6 +14,7 @@ set( bmcsd_sources
    bmcsd_view_set.cxx bmcsd_view_set.h bmcsd_stereo_views_sptr.h 
    bmcsd_curve_3d_attributes.cxx bmcsd_curve_3d_attributes.h 
    bmcsd_curve_3d_sketch.cxx bmcsd_curve_3d_sketch.h 
+   bmcsd_curve_3d_sketch_e.cxx bmcsd_curve_3d_sketch_e.h 
 )
 
 aux_source_directory(Templates bmcsd_sources)

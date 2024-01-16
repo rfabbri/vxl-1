@@ -9,17 +9,18 @@
 //
 
 #include <bmcsd/bmcsd_curve_3d_attributes.h>
+#include <set>
 
-class bmcsd_curve_3d_attributes_e : bmcsd_curve_3d_attributes {
+class bmcsd_curve_3d_attributes_e : public bmcsd_curve_3d_attributes {
 public:
   //: Anil: the supporting edgel IDs in each confirmation view
-  vcl_vector<vcl_set<int> > supportingEdgelsPerConfView_;
+  std::vector<std::set<int> > supportingEdgelsPerConfView_;
 
   //: Anil: the support count for each hypothesis curve sample
-  vcl_vector<unsigned> edgeSupportCount_;
+  std::vector<unsigned> edgeSupportCount_;
 
   //: Anil: the supporting edges for each curve sample reconstructed
-  vcl_vector<vcl_vector<int> > edge_index_chain_;
+  std::vector<std::vector<int> > edge_index_chain_;
 
   //: Anil: offset between the image curve in v0 and the reconstructed curve
   unsigned imageCurveOffset_;
@@ -46,21 +47,22 @@ public:
   unsigned int_id_v1_;
 
   //: Anil: flags marking reliably-reconstructed 3D samples
-  vcl_vector<bool> certaintyFlags_;
+  std::vector<bool> certaintyFlags_;
 
   //: Anil: mate curves of the 3d curve on all confirmation views
-  vcl_vector<vcl_set<int> > mate_curves_;
+  std::vector<std::set<int> > mate_curves_;
 
   //: Anil; weights of each mate curve on all confirmation views
   //: indicating level of support provided
-  vcl_vector<vcl_map<unsigned,unsigned> > mate_curve_weights_;
+  std::vector<std::map<unsigned,unsigned> > mate_curve_weights_;
 
   //: Anil: Vector of used sample IDs in v1()
-  vcl_vector<unsigned> used_samples_v1_;
+  std::vector<unsigned> used_samples_v1_;
 
 
   bool operator==(const bmcsd_curve_3d_attributes &o) const {
     // XXX
+    abort();
   }
 
   // I/O ---------------------------------
