@@ -6,10 +6,11 @@ include_directories(${VXL_BRL_INCLUDE_DIR})
 
 set( bmcsd_sources
    bmcsd_util.hxx       bmcsd_util_defs.cxx bmcsd_util.h
-   bmcsd_discrete_corresp.cxx      bmcsd_discrete_corresp.h
-   bmcsd_discrete_corresp_e.cxx      bmcsd_discrete_corresp_e.h
-   bmcsd_discrete_corresp_3.cxx      bmcsd_discrete_corresp_3.h
-   bmcsd_discrete_corresp_n.cxx      bmcsd_discrete_corresp_n.h
+   bmcsd_discrete_corresp.cxx     bmcsd_discrete_corresp.h
+   bmcsd_discrete_corresp_e.cxx   bmcsd_discrete_corresp_e.h
+   bmcsd_discrete_corresp_3.cxx   bmcsd_discrete_corresp_3.h
+   bmcsd_discrete_corresp_n.cxx   bmcsd_discrete_corresp_n.h
+   bmcsd_curve_3d_attributes.cxx  bmcsd_curve_3d_attributes.h
    bmcsd_view_set.cxx bmcsd_view_set.h bmcsd_stereo_views_sptr.h 
    bmcsd_curve_3d_attributes.cxx bmcsd_curve_3d_attributes.h 
    bmcsd_curve_3d_sketch.cxx bmcsd_curve_3d_sketch.h 
