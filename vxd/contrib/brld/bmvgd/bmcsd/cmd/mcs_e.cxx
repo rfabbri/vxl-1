@@ -13,7 +13,7 @@
 #define MW_ASSERT(msg, a, b) if ((a) != (b)) { std::cerr << (msg) << std::endl; exit(1); }
 
 bool
-write_edge_support(std::string prefix, const std::vector<dbmcs_curve_3d_attributes> &attr)
+write_edge_support(std::string prefix, const std::vector<dbmcs_curve_3d_attributes_e> &attr)
 {
     std::string myprefix = prefix + std::string("/crvs/rec-3dcurve-");
 
@@ -181,7 +181,7 @@ main(int argc, char **argv)
   MW_ASSERT("Stereo driver run return value", retval, true);
 
   //: Write 3D curves and attributes to file.
-  bmcsd_curve_3d_sketch csk;
+  bmcsd_curve_3d_sketch_e csk;
   s.get_curve_sketch(&csk);
 
   retval = csk.write_dir_format(a_prefix() + std::string("/") + a_out_dir());
