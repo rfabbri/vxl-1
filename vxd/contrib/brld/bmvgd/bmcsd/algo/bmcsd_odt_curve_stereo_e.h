@@ -40,11 +40,11 @@ public:
   void set_num_image_curves_v0(const unsigned &num_image_curves_v0);
   unsigned get_num_image_curves_v0();
 
-  //Anil: get/set subsequence set stored in this class
+  // Anil: get/set subsequence set stored in this class
   void set_sseq(const std::vector<dbbl_subsequence_set> &sseq);
   std::vector<dbbl_subsequence_set> get_sseq();
 
-  //Anil: A version of the matching function to be used with mate curves
+  // Anil: A version of the matching function to be used with mate curves
   bool match_mate_curves_using_orientation_dt_extras(unsigned long *votes_ptr, unsigned v, unsigned ic);
 
   //: Anil: Another version of the function that returns a list of supporting edgel IDs as well as inlier view IDs
@@ -97,41 +97,41 @@ public:
   unsigned dummyID;
   std::vector<double> lineCoef;
 
-  //Anil: For each view, we store the ID curve of that each edgel 
+  // Anil: For each view, we store the ID curve of that each edgel 
   //Size should be total number of confirmation views used in the stereo instance
   std::vector<std::vector<int> > edge_curve_index_;
 
-  //Anil: Mate curve IDs for a given image curves in v0()
+  // Anil: Mate curve IDs for a given image curves in v0()
   //Size should be total number of confirmation views used in the stereo instance
   std::vector<std::set<int> > mate_curves_;
 
-  //Anil: Key = mate curve ID, Value = weight, indicating level of support given in number of edges
+  // Anil: Key = mate curve ID, Value = weight, indicating level of support given in number of edges
   std::map<unsigned,unsigned> mate_curve_weights_;
 
-  //Anil: Vector that stores the flags for curve samples used
+  // Anil: Vector that stores the flags for curve samples used
   std::vector<std::vector<std::vector<bool> > > usedSamples_;
 
-  //Anil: Buffer for storing the sample IDs on the image curve in v1 that are going to be used in this run
+  // Anil: Buffer for storing the sample IDs on the image curve in v1 that are going to be used in this run
   std::vector<unsigned> curve_samples_v1_;
 
-  //Anil: Curve IDs that are already used in a previous run
+  // Anil: Curve IDs that are already used in a previous run
   std::vector<std::vector<unsigned> > usedCurves_;
 
-  //Anil: Count for the number of curve sample matching operations
+  // Anil: Count for the number of curve sample matching operations
   unsigned matchCount_;
 
-  //Anil: Count for the number of curve sample reconstruction operations
+  // Anil: Count for the number of curve sample reconstruction operations
   unsigned reconCount_;
 
 private:
-  //Anil: Adding the subsequence set as a member here so we can do
+  // Anil: Adding the subsequence set as a member here so we can do
   //      epipolar tangency stitching after reconstruction
   std::vector<dbbl_subsequence_set> sseq_;
 
-  //Anil: Adding the samples sizes of the original curves
+  // Anil: Adding the samples sizes of the original curves
   std::vector<std::vector<unsigned> > original_curve_sizes_;
 
-  //Anil: Adding the total number of image curves on v0()
+  // Anil: Adding the total number of image curves on v0()
   unsigned num_image_curves_v0_;
 };
 
@@ -165,8 +165,8 @@ bool dbmcs_match_all_curves(
   mw_discrete_corresp_e *corresp_ptr,
   bool track_supporting_edges=false);
 
-//Anil: mcd version of the matching function that iterates the matches using mate curves
-//Anil: can do the initial seed curve matching, as well as the elongation iterations
+// Anil: mcd version of the matching function that iterates the matches using mate curves
+// Anil: can do the initial seed curve matching, as well as the elongation iterations
 bool dbmcs_match_all_curves_using_mates(
   mw_odt_curve_stereo_e &s, 
   mw_discrete_corresp_e *corresp_ptr,
