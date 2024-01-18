@@ -1,8 +1,5 @@
 #include "bmcsd_stereo_driver_e.h"
-#include <bmcsd/pro/bmcsd_fragment_tangents_filter.h>
-#include <bmcsd/pro/bmcsd_load_curvelet_source.h>
 #include <bmcsd/pro/bmcsd_stereo_filter_e.h>
-#include <algorithm>
 
 bool bmcsd_concurrent_stereo_driver_e::
 init()
