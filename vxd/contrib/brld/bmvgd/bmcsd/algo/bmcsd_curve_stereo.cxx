@@ -464,7 +464,6 @@ break_curves_into_episegs(
     samples.reserve(vsols[i]->size());
     for (unsigned k=0; k < vsols[i]->size(); ++k)
       samples.push_back(vsols[i]->vertex(k));
-
     
     // A2 - apply episeg
     std::vector<becld_episeg_sptr> eps = 
@@ -663,6 +662,65 @@ compute_epipolar_beam_candidates()
   // candidate. By "touches" we mean having a point in the vicinity of an
   // epipolar line. Last time I checked, the threshold was 1.4px
   isets_.compute(crv_prelim_candidates_ptrs, ep(0));
+  crv_candidates_.reserve(isets_.ncurves());
+  crv_candidates_ptrs_.reserve(isets_.ncurves());
+  crv_candidates_id_.reserve(isets_.ncurves());
+
+  std::list<unsigned>::const_iterator itr = crv_prelim_candidates.begin(); 
+  for (unsigned j=0;  j < isets_.ncurves();  ++j, ++itr) {
+    if ( isets_.L_[j].intercepts.size() >= tau_min_epipolar_overlap_) {
+      crv_candidates_.push_back( *itr );
+      crv_candidates_ptrs_.push_back(crv_prelim_candidates_ptrs[j]);
+      crv_candidates_id_.push_back(j);
+    }
+  }
+  // \todo perhaps trim vectors here using the swap trick
+}
+
+void mw_curve_stereo::
+compute_epipolar_beam_candidates_on_conf_views(unsigned v)
+{
+  //: index into s->vsols_[1] of candidate (whole) curves
+  std::list<unsigned> crv_prelim_candidates; 
+  std::vector<vsol_polyline_2d_sptr> crv_prelim_candidates_ptrs;
+
+  // clear previous crv_candidates (we're not incrementally updating)
+
+  crv_candidates_.clear();
+  crv_candidates_ptrs_.clear();
+  crv_candidates_id_.clear();
+
+  std::vector<bool> is_candidate(vsols_[v].size(), false);
+
+  unsigned ini_id, end_id;
+  get_increasing_endpoints(&ini_id, &end_id);
+
+  // intersect bounding box of each curve in view[1] with the epipolar beams. If
+  // at least one epipolar line intersects the bounding box, mark the curve as a
+  // preliminary candidate for further inspection.
+  for (unsigned k=0; k < vsols_[v].size(); ++k) {
+    vsol_box_2d_sptr vsol_bbox = vsols_[v][k]->get_bounding_box();
+
+    vgl_box_2d<double> bbox(vsol_bbox->get_min_x(), vsol_bbox->get_max_x(),
+                            vsol_bbox->get_min_y(), vsol_bbox->get_max_y());
+
+    vgl_point_2d<double> pt_meet1, pt_meet2;
+    // if we increment by min_intercepts, we guarantee that no curves greater
+    // than or equal to min_intercepts will be missed.
+    for (unsigned i = 0; i < subcurve_->size(); i += tau_min_epipolar_overlap_) {
+      if (vgl_intersection<double>(bbox,
+            vgl_line_2d<double>(ep(v-1)[i]), pt_meet1, pt_meet2)) {
+        crv_prelim_candidates.push_back(k);
+        crv_prelim_candidates_ptrs.push_back(vsols_[v][k]);
+        break;
+      }
+    }
+  }
+
+  // Any curve fragment that touches at least one epipolar line of the beam is a
+  // candidate. By "touches" we mean having a point in the vicinity of an
+  // epipolar line. Last time I checked, the threshold was 1.4px
+  isets_.compute(crv_prelim_candidates_ptrs, ep(v-1));
   crv_candidates_.reserve(isets_.ncurves());
   crv_candidates_ptrs_.reserve(isets_.ncurves());
   crv_candidates_id_.reserve(isets_.ncurves());
