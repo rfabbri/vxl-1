@@ -23,7 +23,7 @@
 // Outputs:
 // - 3D curve
 // - 3D curve attributes
-class bmcsd_stereo_filter : public bprod_filter {
+class bmcsd_stereo_filter : public bmcsd_stereo_filter_base {
 public:
 
   typedef enum { CAM_ID, EDG_ID, DT_ID, LBL_ID, CVLET_ID } confirmation_input_id;
