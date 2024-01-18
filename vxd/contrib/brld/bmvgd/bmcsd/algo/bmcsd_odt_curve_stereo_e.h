@@ -137,7 +137,7 @@ private:
 
 //: version of dbmcs_match_and_reconstruct_all_curves which fills an attribute
 // for each curve.
-bool dbmcs_match_and_reconstruct_all_curves_attr(
+bool dbmcs_match_and_reconstruct_all_curves_attr_e(
     mw_odt_curve_stereo_e &s, 
     std::vector<dbdif_1st_order_curve_3d> *crv3d_ptr,
     mw_discrete_corresp_e *corresp_ptr,
