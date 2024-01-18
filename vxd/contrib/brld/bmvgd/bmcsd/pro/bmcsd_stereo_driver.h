@@ -45,7 +45,6 @@ protected:
 
 class bmcsd_concurrent_stereo_driver : public bmcsd_concurrent_stereo_driver_base {
 public:
-
   //: Initializes the processing, e.g. setting up a processing graph, computing
   // tangents in the curve fragments, etc.
   virtual bool init();

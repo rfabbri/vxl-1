@@ -25,19 +25,18 @@
 // - 3D curve attributes
 class bmcsd_stereo_filter : public bmcsd_stereo_filter_base {
 public:
-  bprod_signal execute() 
+
+  bmcsd_stereo_filter() 
+    bmcsd_stereo_filter_base(new bmcsd_stereo_odt_filter)
   {
-    get_cameras();
-    get_edgemaps();
-    get_curves_and_tangents();
-    get_dt_label();
-    if (has_cvlet_)
-      get_curvelets();
+  }
+
+  bprod_signal execute() override
+  {
+    bmcsd_stereo_filter_base::execute();
 
     std::vector<bdifd_1st_order_curve_3d> crv3d;
-    std::vector< bmcsd_curve_3d_attributes > attr;
     bmcsd_discrete_corresp corresp;
-
     // TODO: set inlier views.
     if (!bmcsd_match_and_reconstruct_all_curves_attr(s_, &crv3d, &corresp, &attr)) {
       std::cerr << "Error: while matching all views.\n";
