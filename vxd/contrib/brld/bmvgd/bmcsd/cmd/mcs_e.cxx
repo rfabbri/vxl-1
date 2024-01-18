@@ -8,9 +8,9 @@
 #include <buld/buld_arg.h>
 #include <bmcsd/bmcsd_util.h>
 #include <bmcsd/algo/bmcsd_data.h>
-#include <bmcsd/pro/bmcsd_stereo_driver.h>
+#include <bmcsd/pro/bmcsd_stereo_driver_e.h>
 
-#define MW_ASSERT(msg, a, b) if ((a) != (b)) { std::cerr << (msg) << std::endl; exit(1); }
+#define MY_ASSERT(msg, a, b) if ((a) != (b)) { std::cerr << (msg) << std::endl; exit(1); }
 
 bool
 write_edge_support(std::string prefix, const std::vector<dbmcs_curve_3d_attributes_e> &attr)
@@ -142,7 +142,7 @@ main(int argc, char **argv)
   retval = bmcsd_view_set::read_txt(
       a_prefix() + std::string("/mcs_stereo_instances.txt"), 
       &frames_to_match);
-  MW_ASSERT("frames to match from file", retval, true);
+  MY_ASSERT("frames to match from file", retval, true);
   std::cout << "Instances:\n" << frames_to_match << std::endl;
 
   if (a_use_curvelets() && !dpath.has_curvelets()) {
@@ -151,7 +151,7 @@ main(int argc, char **argv)
 
   // Run 2-view stereo with confirmation views
 
-  bmcsd_concurrent_stereo_driver s(dpath, frames_to_match);
+  bmcsd_concurrent_stereo_driver_e s(dpath, frames_to_match);
 
   s.set_dtheta_threshold(a_dtheta_threshold());
   s.set_distance_threshold(a_distance_threshold());
@@ -173,19 +173,19 @@ main(int argc, char **argv)
   s.set_max_concurrent_matchers(a_max_concurrent_matchers());
 
   retval = s.init();
-  MW_ASSERT("Stereo driver init return value", retval, true);
+  MY_ASSERT("Stereo driver init return value", retval, true);
 
   //: Run many pairwise stereo programs, as many as
   // frames_to_match.num_instances();
   retval = s.run();
-  MW_ASSERT("Stereo driver run return value", retval, true);
+  MY_ASSERT("Stereo driver run return value", retval, true);
 
   //: Write 3D curves and attributes to file.
   bmcsd_curve_3d_sketch_e csk;
   s.get_curve_sketch(&csk);
 
   retval = csk.write_dir_format(a_prefix() + std::string("/") + a_out_dir());
-  MW_ASSERT("Error while trying to write file.\n", retval, true);
+  MY_ASSERT("Error while trying to write file.\n", retval, true);
 
   if (a_write_corresp()) {
     for (unsigned i=0; i < s.num_corresp(); ++i) {

@@ -1,6 +1,6 @@
-// This is mw_stereo_filter.h
-#ifndef mw_stereo_filter_h
-#define mw_stereo_filter_h
+// This is bmcsdstereo_filter.h
+#ifndef bmcsdstereo_filter_h
+#define bmcsdstereo_filter_h
 //:
 //\file
 //\brief Dbpro process for curve stereo
@@ -25,15 +25,6 @@
 // - 3D curve attributes
 class bmcsd_stereo_filter : public bmcsd_stereo_filter_base {
 public:
-
-  typedef enum { CAM_ID, EDG_ID, DT_ID, LBL_ID, CVLET_ID } confirmation_input_id;
-  typedef enum { CAM_ID0, FRAG_ID0, TGT_ID0,  
-                 CAM_ID1, FRAG_ID1, TGT_ID1 } keyframes_input_id;
-
-  bmcsd_stereo_filter  () 
-    : has_cvlet_(false)
-  {}
-
   bprod_signal execute() 
   {
     get_cameras();
@@ -73,7 +64,6 @@ public:
         );
 
   bmcsd_odt_curve_stereo s_;
-  bmcsd_stereo_views_sptr v_;
 
 private:
   unsigned sources_per_confirmation_view_;
@@ -213,4 +203,4 @@ private:
   unsigned num_jobs_;
 };
 
-#endif // mw_stereo_filter_h
+#endif // bmcsdstereo_filter_h
