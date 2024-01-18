@@ -16,7 +16,7 @@
 #include <bmcsd/bmcsd_util.h>
 
 
-#define MW_INVALID_CURVE_ID ((unsigned)-1)
+#define MY_INVALID_CURVE_ID ((unsigned)-1)
 
 //: This class implements multiview curve fragment matching and reconstruction
 // from calibrated cameras. This is a working but ad-hoc implementation that
@@ -405,7 +405,6 @@ public:
   void get_candidate_intercepts(std::vector<std::vector<unsigned> > *cand_pt_id_ptr);
 
 protected:
-
   //: Returns index into isets_.L_ of crv_candidates(\p ic). This is protected
   // because it doesn't seem to be useful for users.
   unsigned crv_candidates_id(unsigned ic) const
