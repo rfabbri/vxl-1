@@ -2,10 +2,11 @@
 #include <vsl/vsl_vector_io.h>
 #include <bmcsd/bmcsd_view_set.h>
 
-void bmcsd_curve_3d_attributes::
+void bmcsd_curve_3d_attributes_e::
 b_write(vsl_b_ostream &os) const
 {
   //XXX call base b_write
+  bmcsd_curve_3d_attributes::b_write(os);
   //Anil: Adding modifications to write original curve IDs as well
   vsl_b_write(os, orig_id_v0_);
   vsl_b_write(os, orig_id_v1_);
@@ -15,7 +16,7 @@ b_write(vsl_b_ostream &os) const
 }
 
 
-void bmcsd_curve_3d_attributes::
+void bmcsd_curve_3d_attributes_e::
 b_read(vsl_b_istream &is)
 {
   if (!is) return;
@@ -40,7 +41,7 @@ b_read(vsl_b_istream &is)
 
     default:
       XXX call base b_read
-        std::cerr << "I/O ERROR: bmcsd_curve_2d_attributes::b_read(vsl_b_istream&)\n"
+        std::cerr << "I/O ERROR: bmcsd_curve_2d_attributes_e::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
     is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
@@ -48,7 +49,7 @@ b_read(vsl_b_istream &is)
 }
 
 //: Print an ascii summary to the stream
-void bmcsd_curve_3d_attributes::
+void bmcsd_curve_3d_attributes_e::
 print_summary(std::ostream &os) const
 {
   os << "[" << is_a() << ": " << *v_

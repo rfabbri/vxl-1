@@ -11,8 +11,8 @@ set( bmcsd_sources
    bmcsd_discrete_corresp_3.cxx   bmcsd_discrete_corresp_3.h
    bmcsd_discrete_corresp_n.cxx   bmcsd_discrete_corresp_n.h
    bmcsd_curve_3d_attributes.cxx  bmcsd_curve_3d_attributes.h
+   bmcsd_curve_3d_attributes_e.cxx bmcsd_curve_3d_attributes_e.h 
    bmcsd_view_set.cxx bmcsd_view_set.h bmcsd_stereo_views_sptr.h 
-   bmcsd_curve_3d_attributes.cxx bmcsd_curve_3d_attributes.h 
    bmcsd_curve_3d_sketch.cxx bmcsd_curve_3d_sketch.h 
    bmcsd_curve_3d_sketch_e.cxx bmcsd_curve_3d_sketch_e.h 
 )

@@ -60,7 +60,7 @@ public:
   std::vector<unsigned> used_samples_v1_;
 
 
-  bool operator==(const bmcsd_curve_3d_attributes &o) const {
+  bool operator==(const bmcsd_curve_3d_attributes_e &o) const {
     // XXX
     abort();
   }

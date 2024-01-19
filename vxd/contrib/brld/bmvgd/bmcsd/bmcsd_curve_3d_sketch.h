@@ -19,7 +19,6 @@
 // curve photogrammetry
 class bmcsd_curve_3d_sketch {
 public:
-
   bmcsd_curve_3d_sketch() {}
 
   //: You should be using this always with attributes, otherwise just use the
@@ -39,7 +38,7 @@ public:
       const std::vector< bmcsd_curve_3d_attributes > &attr)
   {
     crv3d_ = crv3d;
-    attr_ = attr;
+    attr_  = attr;
     assert(attr_.size() == crv3d.size());
   }
 

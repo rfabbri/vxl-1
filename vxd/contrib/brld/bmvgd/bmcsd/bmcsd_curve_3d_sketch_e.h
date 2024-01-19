@@ -19,7 +19,6 @@
 // curve photogrammetry
 class bmcsd_curve_3d_sketch_e {
 public:
-
   bmcsd_curve_3d_sketch_e() {}
 
   //: You should be using this always with attributes, otherwise just use the
