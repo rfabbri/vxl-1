@@ -418,7 +418,7 @@ protected:
 
   // Anil: Storing the unreliable samples of each curve
   // Only used in enhanced curve sketch classes with _e suffix
-  std::vector<vcl_vector<vcl_vector<bool> > > vsol_flags_;
+  std::vector<std::vector<std::vector<bool> > > vsol_flags_;
 
 private:
   //: cameras for each view

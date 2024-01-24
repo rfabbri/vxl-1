@@ -56,9 +56,10 @@ public:
   void print_summary(std::ostream &os) const;
 
   std::string is_a() const { return "bmcsd_curve_3d_attributes"; }
-private:
+protected:
   unsigned i0_;
   unsigned i1_;
+  void b_read_core_2(vsl_b_istream &is);
 };
 
 //: Binary save
