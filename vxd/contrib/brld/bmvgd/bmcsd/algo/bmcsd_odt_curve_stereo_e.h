@@ -13,7 +13,7 @@
 #include <sdetd/pro/sdetd_sel_storage_sptr.h>
 #include <bcsid/bcsid_curve_distance.h>
 #include <bmcsd/bmcsd_curve_3d_attributes_e.h>
-#include <bmcsd/algo/bmcsd_dt_curve_stereo.h>
+#include <bmcsd/algo/bmcsd_odt_curve_stereo.h>
 
 
 //: Matches curve fragments using costs based on the distance transform and
