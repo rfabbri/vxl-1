@@ -11,7 +11,6 @@
 #include <vsol/vsol_polyline_2d_sptr.h>
 #include <bbld/bbld_subsequence.h>
 #include <bdifd/bdifd_rig.h>
-
 #include <becld/becld_intersection_sets.h>
 #include <bmcsd/bmcsd_util.h>
 
