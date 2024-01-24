@@ -15,6 +15,18 @@ b_write(vsl_b_ostream &os) const
 }
 
 void bmcsd_curve_3d_attributes::
+b_read_core_2(vsl_b_istream &is)
+{
+  v_ = new bmcsd_stereo_views();
+  vsl_b_read(is, *v_); // urghhhh, nasty
+  vsl_b_read(is, inlier_views_);
+  vsl_b_read(is, total_support_);
+  vsl_b_read(is, i0_);
+  vsl_b_read(is, i1_);
+}
+
+
+void bmcsd_curve_3d_attributes::
 b_read(vsl_b_istream &is)
 {
   if (!is) return;
@@ -30,12 +42,7 @@ b_read(vsl_b_istream &is)
       vsl_b_read(is, inlier_views_);
     break;
     case 2:
-      v_ = new bmcsd_stereo_views();
-      vsl_b_read(is, *v_); // urghhhh, nasty
-      vsl_b_read(is, inlier_views_);
-      vsl_b_read(is, total_support_);
-      vsl_b_read(is, i0_);
-      vsl_b_read(is, i1_);
+      b_read_core_2(is);
     break;
 
     default:
@@ -52,7 +59,6 @@ print_summary(std::ostream &os) const
 {
   os << "[" << is_a() << ": " << *v_
     << " inlier_views: ";
-
   for (unsigned i=0; i < inlier_views_.size(); ++i)
     os << inlier_views_[i] << " ";
   os << " i0: " << i0() << " i1: " << i1() << "total_support: " << total_support_;

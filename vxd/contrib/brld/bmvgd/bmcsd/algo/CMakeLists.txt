@@ -6,6 +6,7 @@ set(bmcsd_algo_sources
   bmcsd_curve_stereo.cxx bmcsd_curve_stereo.h
   bmcsd_dt_curve_stereo.cxx bmcsd_dt_curve_stereo.h
   bmcsd_odt_curve_stereo.cxx bmcsd_odt_curve_stereo.h
+  bmcsd_odt_curve_stereo_e.cxx bmcsd_odt_curve_stereo_e.h
   bmcsd_algo_util.cxx bmcsd_algo_util.h
   bmcsd_discrete_corresp_algo_defs.cxx bmcsd_discrete_corresp_algo.hxx bmcsd_discrete_corresp_algo.h
   bmcsd_data.cxx bmcsd_data.h

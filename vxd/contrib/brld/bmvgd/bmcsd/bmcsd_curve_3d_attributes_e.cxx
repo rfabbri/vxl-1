@@ -26,12 +26,7 @@ b_read(vsl_b_istream &is)
   switch (ver)
   {
     case 3:
-      v_ = new dbmcs_stereo_views();
-      vsl_b_read(is, *v_); // urghhhh, nasty
-      vsl_b_read(is, inlier_views_);
-      vsl_b_read(is, total_support_);
-      vsl_b_read(is, i0_);
-      vsl_b_read(is, i1_);
+      bmcsd_curve_3d_attributes::b_read_core_2(is);
       vsl_b_read(is, orig_id_v0_);
       vsl_b_read(is, orig_id_v1_);
       vsl_b_read(is, int_id_v0_);
@@ -40,11 +35,11 @@ b_read(vsl_b_istream &is)
     break;
 
     default:
-      XXX call base b_read
-        std::cerr << "I/O ERROR: bmcsd_curve_2d_attributes_e::b_read(vsl_b_istream&)\n"
-             << "           Unknown version number "<< ver << '\n';
-    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
-    return;
+      // TODO call base b_read
+      std::cerr << "I/O ERROR: bmcsd_curve_2d_attributes_e::b_read(vsl_b_istream&)\n"
+                << "           Unknown version number "<< ver << '\n';
+      is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
+      return;
   }
 }
 
