@@ -14,18 +14,16 @@ all_edge_support_3d = cell(numIM,1);
 all_flags = cell(numIM,1);
 all_num_im_contours = zeros(numIM,1);
 
-load_curve_sketch_without_associations
-
-load edge-curve-index_yuliang_pavilion-mixed.mat;
-load edge-curve-offset_yuliang_pavilion-mixed.mat;
-
-
-load_edge_and_curve_files
+% load_curve_sketch_without_associations
+% load edge-curve-index_yuliang_pavilion-mixed.mat;
+% load edge-curve-offset_yuliang_pavilion-mixed.mat;
+% load_edge_and_curve_files
 
 % clear all;
 % close all;
 
-save intermediate-pavilion-mixed-half_12.mat;
+%save intermediate-pavilion-mixed-half_12.mat;
+load intermediate-pavilion-mixed-half_12.mat;
 % Intermediate consistes of all curves and 3D curve sketch input
 % So actually we can use intermediate-* data as input for the 3D drawing
 % But this main file would only work for _12
@@ -310,9 +308,7 @@ for fa=1:numViews
 
                     queryAlignment_dense = cell(size(queryAlignment,1),1);
 
-                    
                     filtering_alignmentCurve
-
                     start_clusters
                    
                     clusters = new_clusters;
