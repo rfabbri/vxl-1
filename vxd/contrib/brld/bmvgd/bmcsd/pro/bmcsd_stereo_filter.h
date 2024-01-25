@@ -34,9 +34,12 @@ public:
 
   bprod_signal execute() override
   {
-    bmcsd_stereo_filter_base::execute();
+    bprod_signal sig = bmcsd_stereo_filter_base::execute();
+    if (sig != BBPROD_VALID)
+      return sig;
 
     std::vector<bdifd_1st_order_curve_3d> crv3d;
+    std::vector< bmcsd_curve_3d_attributes > attr;
     bmcsd_discrete_corresp corresp;
     // TODO: set inlier views.
     if (!bmcsd_match_and_reconstruct_all_curves_attr(s_, &crv3d, &corresp, &attr)) {
@@ -62,8 +65,6 @@ public:
         std::vector<bprod_process_sptr> &cvlet_src,
         std::vector<bprod_process_sptr> &frag_tangents
         );
-
-  bmcsd_odt_curve_stereo s_;
 
 private:
   unsigned sources_per_confirmation_view_;
@@ -115,9 +116,7 @@ public:
 
     crv3d.reserve(num_curves);
     attr.reserve(num_curves);
-
     corresp.reserve(num_matchers_);
-
     for (unsigned i=0; i < num_matchers_; ++i) {
       assert(input_type_id(3*i) == typeid(std::vector< bdifd_1st_order_curve_3d >));
       assert(input_type_id(3*i+1) == typeid(std::vector< bmcsd_curve_3d_attributes >));
@@ -129,10 +128,8 @@ public:
         = input<std::vector< bmcsd_curve_3d_attributes> >(3*i + 1);
 
       assert(attr_i.size() == crv3d_i.size());
-
       crv3d.insert(crv3d.end(), crv3d_i.begin(), crv3d_i.end());
       attr.insert(attr.end(), attr_i.begin(), attr_i.end());
-
       corresp.push_back(input< bmcsd_discrete_corresp >(3*i + 2));
     }
 
@@ -156,7 +153,6 @@ public:
   bprod_signal execute()
   {
     corresp_.reserve(num_jobs_);
-
     unsigned inputs_per_job = 3;
     unsigned num_curves=0, num_corr=0, num_attribs=0;
     for (unsigned i=0; i < num_jobs_; ++i) {
@@ -193,7 +189,7 @@ public:
 
   //: Runs the process. This is set to run serially.
   bprod_signal run(unsigned long timestamp,
-                   bprod_debug_observer* const debug = NULL);
+                   bprod_debug_observer* const debug = NULL) override;
 
   std::vector< bdifd_1st_order_curve_3d > crv3d_;
   std::vector< bmcsd_curve_3d_attributes > attr_;
