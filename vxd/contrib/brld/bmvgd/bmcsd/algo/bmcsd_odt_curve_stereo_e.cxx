@@ -14,7 +14,7 @@
 bmcsd_odt_curve_stereo_e::
 bmcsd_odt_curve_stereo_e()
   :
-    dummyFlag(false)
+    dummyFlag_(false)
 {
 }
 
@@ -474,7 +474,7 @@ reconstruct_subcurve_1st_order(
     unsigned end_id_sub, 
     const bdifd_rig &rig,
     bdifd_1st_order_curve_3d *curve_3d
-    ) const
+    )
 {
   static const unsigned second_view = 1;
 
@@ -483,7 +483,7 @@ reconstruct_subcurve_1st_order(
   std::string out_fname = "alignment.txt";
   std::ofstream out_file;
 
-  if(dummyFlag) {
+  if(dummyFlag_) {
       out_file.open(out_fname.c_str());
       unsigned numAlignmentSamples = end_id_sub - ini_id_sub + 1;
       out_file << numAlignmentSamples << std::endl;
@@ -495,14 +495,14 @@ reconstruct_subcurve_1st_order(
     reconstruct_curve_point_1st_order(second_view, ini_id_sub, di0, rig, &pt_3D);
     curve_3d->push_back(pt_3D);
 
-    if(dummyFlag) {
+    if(dummyFlag_) {
         unsigned firstSample = ini_id_sub + di0;
-        out_file << firstSample << " " << dummyID << " " << lineCoef[0] << " " << lineCoef[1] << " " << lineCoef[2] << std::endl;
+        out_file << firstSample << " " << dummyID << " " << lineCoef_[0] << " " << lineCoef_[1] << " " << lineCoef_[2] << std::endl;
     }
 
   }
 
-  if(dummyFlag)
+  if(dummyFlag_)
       out_file.close();
 
 }
@@ -524,7 +524,7 @@ reconstruct_subcurve_1st_order_with_flags(
   std::string out_fname = "alignment.txt";
   std::ofstream out_file;
 
-  if(dummyFlag) {
+  if(dummyFlag_) {
       out_file.open(out_fname.c_str());
       unsigned numAlignmentSamples = end_id_sub - ini_id_sub + 1;
       out_file << numAlignmentSamples << std::endl;
@@ -539,9 +539,9 @@ reconstruct_subcurve_1st_order_with_flags(
     curve_samples_v1_.push_back(curveID_v1);
     curve_3d->push_back(pt_3D);
 
-    if(dummyFlag) {
+    if(dummyFlag_) {
         unsigned firstSample = ini_id_sub + di0;
-        out_file << firstSample << " " << dummyID << " " << lineCoef[0] << " " << lineCoef[1] << " " << lineCoef[2] << std::endl;
+        out_file << firstSample << " " << dummyID << " " << lineCoef_[0] << " " << lineCoef_[1] << " " << lineCoef_[2] << std::endl;
         //std::cout << "SHIFT: " << ini_id_sub << std::endl;
         //std::cout << "END: " << end_id_sub << std::endl;
         //std::cout << "EP CONTAINER SIZE: " << ep(second_view-1).size() << std::endl;
@@ -550,7 +550,7 @@ reconstruct_subcurve_1st_order_with_flags(
 
   }
 
-  if(dummyFlag)
+  if(dummyFlag_)
       out_file.close();
     
 }
@@ -570,7 +570,7 @@ reconstruct_subcurve_1st_order_with_flags(
   std::string out_fname = "alignment.txt";
   std::ofstream out_file;
 
-  if(dummyFlag)
+  if(dummyFlag_)
   {
       out_file.open(out_fname.c_str());
       unsigned numAlignmentSamples = end_id_sub - ini_id_sub + 1;
@@ -585,10 +585,10 @@ reconstruct_subcurve_1st_order_with_flags(
     curveFlags.push_back(curFlag);
     curve_3d->push_back(pt_3D);
 
-    if(dummyFlag)
+    if(dummyFlag_)
     {
         unsigned firstSample = ini_id_sub + di0;
-        out_file << firstSample << " " << dummyID << " " << lineCoef[0] << " " << lineCoef[1] << " " << lineCoef[2] << std::endl;
+        out_file << firstSample << " " << dummyID << " " << lineCoef_[0] << " " << lineCoef_[1] << " " << lineCoef_[2] << std::endl;
         //std::cout << "SHIFT: " << ini_id_sub << std::endl;
         //std::cout << "END: " << end_id_sub << std::endl;
         //std::cout << "EP CONTAINER SIZE: " << ep(second_view-1).size() << std::endl;
@@ -597,7 +597,7 @@ reconstruct_subcurve_1st_order_with_flags(
 
   }
 
-  if(dummyFlag)
+  if(dummyFlag_)
       out_file.close();
     
 }
@@ -619,10 +619,10 @@ reconstruct_curve_point_1st_order(
   // Corresponding points
 
   unsigned nearest_sample_id;
-  lineCoef.clear();
-  lineCoef.push_back(ep(v-1)[di0+ini_id].a());
-  lineCoef.push_back(ep(v-1)[di0+ini_id].b());
-  lineCoef.push_back(ep(v-1)[di0+ini_id].c());
+  lineCoef_.clear();
+  lineCoef_.push_back(ep(v-1)[di0+ini_id].a());
+  lineCoef_.push_back(ep(v-1)[di0+ini_id].b());
+  lineCoef_.push_back(ep(v-1)[di0+ini_id].c());
   {
   vgl_point_2d<double> pt;
   becld_epiline_interceptor::curve_line_intersection_simple(
@@ -660,10 +660,10 @@ reconstruct_curve_point_1st_order_with_flags(
   // Corresponding points
 
   unsigned nearest_sample_id;
-  lineCoef.clear();
-  lineCoef.push_back(ep(v-1)[di0+ini_id].a());
-  lineCoef.push_back(ep(v-1)[di0+ini_id].b());
-  lineCoef.push_back(ep(v-1)[di0+ini_id].c());
+  lineCoef_.clear();
+  lineCoef_.push_back(ep(v-1)[di0+ini_id].a());
+  lineCoef_.push_back(ep(v-1)[di0+ini_id].b());
+  lineCoef_.push_back(ep(v-1)[di0+ini_id].c());
   {
   vgl_point_2d<double> pt;
   becld_epiline_interceptor::curve_line_intersection_simple(
@@ -704,7 +704,7 @@ break_curves_into_episegs_pairwise(
   std::vector<vsol_polyline_2d_sptr> vsols_broken_at_turns;
 
   //Correct this!
-  break_curves_into_episegs(vsols_[v0()], &vsols_broken_at_turns, e, &s_a, 0);
+  break_curves_into_episegs(vsols_[v0()], &vsols_broken_at_turns, e, &s_a);
   //break_curves_into_episegs(vsols_[v0()], &(*broken_vsols)[v0()], e, &ss[v0()], 0);
 
   std::vector<vsol_spatial_object_2d_sptr> curvesIntermediate;
@@ -712,7 +712,7 @@ break_curves_into_episegs_pairwise(
   for (unsigned i=0; i<vsols_broken_at_turns.size(); ++i)
       curvesIntermediate.push_back(dynamic_cast<vsol_spatial_object_2d*>(vsols_broken_at_turns[i].ptr()));
   
-  bsold_save_cem(curvesIntermediate, std::string("intermediate_v0.cemv"));
+  //// bsold_save_cem(curvesIntermediate, std::string("intermediate_v0.cemv"));
 
 
   std::vector<std::vector<double> > tangents_a;
@@ -731,7 +731,7 @@ break_curves_into_episegs_pairwise(
   std::vector<vsol_polyline_2d_sptr> vsols_broken_at_turns;
 
   //Correct this!
-  break_curves_into_episegs(vsols_[v1()], &vsols_broken_at_turns, e_prime, &s_a, 0);
+  break_curves_into_episegs(vsols_[v1()], &vsols_broken_at_turns, e_prime, &s_a);
   //break_curves_into_episegs(vsols_[v1()], &(*broken_vsols)[v1()], e_prime, &ss[v1()], 0);
 
   std::vector<std::vector<double> > tangents_a;
@@ -755,7 +755,7 @@ break_curves_into_episegs_pairwise(
     std::vector<vsol_polyline_2d_sptr> vsols_broken_at_turns;
 
     //Correct this!
-    break_curves_into_episegs(vsols_[v], &vsols_broken_at_turns, e_prime, &s_a, 0);
+    break_curves_into_episegs(vsols_[v], &vsols_broken_at_turns, e_prime, &s_a);
     //break_curves_into_episegs(vsols_[v], &(*broken_vsols)[v], e_prime, &ss[v], 0);
     
     std::vector<std::vector<double> > tangents_a;
@@ -1173,9 +1173,9 @@ reconstruct_from_corresp_attr(
       continue;
     
     if(c==195)
-        s.dummyFlag = true;
+        s.dummyFlag_ = true;
     else
-        s.dummyFlag = false;
+        s.dummyFlag_ = false;
     
     s.set_selected_crv_by_id(s.v0(), c);
     unsigned const ini_id = 0;
