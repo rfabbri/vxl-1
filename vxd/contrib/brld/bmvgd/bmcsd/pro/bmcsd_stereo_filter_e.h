@@ -56,21 +56,7 @@ public:
     return BPROD_VALID;
   }
 
-  void setup_inputs(
-        const bmcsd_stereo_views_sptr &views,
-        std::vector<bprod_process_sptr> &cam_src, 
-        std::vector<bprod_process_sptr> &edg_src, 
-        std::vector<bprod_process_sptr> &edg_dt, 
-        std::vector<bprod_process_sptr> &frag_src,
-        std::vector<bprod_process_sptr> &cvlet_src,
-        std::vector<bprod_process_sptr> &frag_tangents
-        );
-
 private:
-  unsigned sources_per_confirmation_view_;
-  unsigned confirmation_view_input_offset_;
-  bool has_cvlet_;
-
   //: constructs an attribute data structure for each 3D curve.
   void set_remaining_attributes(
       std::vector< bmcsd_curve_3d_attributes > *pattr, 
@@ -79,18 +65,11 @@ private:
       )
   {
     std::vector< bmcsd_curve_3d_attributes > &a = *pattr;
-
     assert(a.size() == crv3d.size());
     for (unsigned i=0; i < a.size(); ++i) {
       a[i].set_views(v_);
     }
   }
-
-  void get_cameras();
-  void get_edgemaps();
-  void get_curves_and_tangents();
-  void get_dt_label();
-  void get_curvelets();
 };
 
 //: Outputs the concatenation of all inputs from many bmcsd_stereo_filter_e

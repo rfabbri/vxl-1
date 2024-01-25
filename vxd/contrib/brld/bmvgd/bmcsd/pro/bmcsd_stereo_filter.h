@@ -27,22 +27,22 @@
 class bmcsd_stereo_filter : public bmcsd_stereo_filter_base {
 public:
 
-  bmcsd_stereo_filter() 
-    bmcsd_stereo_filter_base(new bmcsd_stereo_odt_filter)
+  bmcsd_stereo_filter() :
+    bmcsd_stereo_filter_base(new bmcsd_odt_curve_stereo)
   {
   }
 
   bprod_signal execute() override
   {
     bprod_signal sig = bmcsd_stereo_filter_base::execute();
-    if (sig != BBPROD_VALID)
+    if (sig != BPROD_VALID)
       return sig;
 
     std::vector<bdifd_1st_order_curve_3d> crv3d;
     std::vector< bmcsd_curve_3d_attributes > attr;
     bmcsd_discrete_corresp corresp;
     // TODO: set inlier views.
-    if (!bmcsd_match_and_reconstruct_all_curves_attr(s_, &crv3d, &corresp, &attr)) {
+    if (!bmcsd_match_and_reconstruct_all_curves_attr(*s_, &crv3d, &corresp, &attr)) {
       std::cerr << "Error: while matching all views.\n";
       return BPROD_INVALID;
     }
@@ -56,21 +56,7 @@ public:
     return BPROD_VALID;
   }
 
-  void setup_inputs(
-        const bmcsd_stereo_views_sptr &views,
-        std::vector<bprod_process_sptr> &cam_src, 
-        std::vector<bprod_process_sptr> &edg_src, 
-        std::vector<bprod_process_sptr> &edg_dt, 
-        std::vector<bprod_process_sptr> &frag_src,
-        std::vector<bprod_process_sptr> &cvlet_src,
-        std::vector<bprod_process_sptr> &frag_tangents
-        );
-
 private:
-  unsigned sources_per_confirmation_view_;
-  unsigned confirmation_view_input_offset_;
-  bool has_cvlet_;
-
   //: constructs an attribute data structure for each 3D curve.
   void set_remaining_attributes(
       std::vector< bmcsd_curve_3d_attributes > *pattr, 
@@ -79,18 +65,11 @@ private:
       )
   {
     std::vector< bmcsd_curve_3d_attributes > &a = *pattr;
-
     assert(a.size() == crv3d.size());
     for (unsigned i=0; i < a.size(); ++i) {
       a[i].set_views(v_);
     }
   }
-
-  void get_cameras();
-  void get_edgemaps();
-  void get_curves_and_tangents();
-  void get_dt_label();
-  void get_curvelets();
 };
 
 //: Outputs the concatenation of all inputs from many bmcsd_stereo_filter
@@ -150,7 +129,7 @@ public:
   bmcsd_stereo_aggregator(unsigned num_jobs)
     : num_jobs_(num_jobs) { }
 
-  bprod_signal execute()
+  bprod_signal execute() override
   {
     corresp_.reserve(num_jobs_);
     unsigned inputs_per_job = 3;
@@ -168,7 +147,6 @@ public:
     crv3d_.reserve(num_curves);
     attr_.reserve(num_curves);
     corresp_.reserve(num_corr);
-
     for (unsigned i=0; i < num_jobs_; ++i) {
       const std::vector< bdifd_1st_order_curve_3d > &crv3d_i 
         = input<std::vector< bdifd_1st_order_curve_3d > >(inputs_per_job*i);
