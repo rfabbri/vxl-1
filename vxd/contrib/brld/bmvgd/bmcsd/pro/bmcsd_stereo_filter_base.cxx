@@ -19,7 +19,7 @@ setup_inputs(
   assert(cam_src.size() == edg_src.size());
   assert(cam_src.size() == edg_dt.size());
   assert(cam_src.size() == frag_src.size());
-  assert(cam_src.size() == frag_tangents->size());
+  assert(cam_src.size() == frag_tangents.size());
 
   // Connect inputs from the two views to be matched:
   connect_input(CAM_ID0, cam_src[v_->stereo0()], 0);
@@ -111,8 +111,8 @@ get_dt_label()
 {
   typedef vil_image_view<vxl_uint_32> dt_t;
   typedef vil_image_view<unsigned> label_t;
-  std::vector< dt_t > dts(s_.nviews());
-  std::vector< label_t > labels(s_.nviews());
+  std::vector< dt_t > dts(s_->nviews());
+  std::vector< label_t > labels(s_->nviews());
 
   // dts[0] == null;
   // labels [0] == null;
@@ -123,14 +123,14 @@ get_dt_label()
     dts[i+2] = input< dt_t >(offset + DT_ID);
     labels[i+2] = input< label_t >(offset + LBL_ID);
   }
-  s_.set_all_dt_label(dts, labels);
+  s_->set_all_dt_label(dts, labels);
 }
 
 
 void bmcsd_stereo_filter_base::
 get_curves_and_tangents()
 {
-  std::vector<std::vector< vsol_polyline_2d_sptr > > curves (s_.nviews()); 
+  std::vector<std::vector< vsol_polyline_2d_sptr > > curves (s_->nviews()); 
 
   assert(input_type_id(FRAG_ID0) == typeid(std::vector< vsol_polyline_2d_sptr >));
   assert(input_type_id(FRAG_ID1) == typeid(std::vector< vsol_polyline_2d_sptr >));
@@ -156,8 +156,8 @@ get_curves_and_tangents()
   tangents[1] = input< view_tangents >(TGT_ID1);
 
   std::vector<bbld_subsequence_set> sseq;
-  s_.set_curves(curves);
-  s_.set_tangents(tangents);
-  s_.break_into_episegs_and_replace_curve(&sseq);
+  s_->set_curves(curves);
+  s_->set_tangents(tangents);
+  s_->break_into_episegs_and_replace_curve(&sseq);
 }
 
