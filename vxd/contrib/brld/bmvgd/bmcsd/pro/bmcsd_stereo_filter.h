@@ -16,6 +16,7 @@
 #include <bmcsd/pro/bmcsd_load_edg_source.h>
 #include <bmcsd/pro/bmcsd_load_vsol_polyline_source.h>
 #include <bmcsd/pro/bmcsd_fragment_tangents_filter.h>
+#include <bmcsd/pro/bmcsd_stereo_filter_base.h>
 
 //: This process takes matches 2 views using a number of confirmation views.
 // Inputs:
