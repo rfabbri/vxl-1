@@ -29,7 +29,8 @@ public:
   //: Constructor takes an epipole
   becld_episeg_from_curve_converter(becld_epipole_sptr);
   
-  //: Convert a digital curve to episegments
+  //: Convert a digital curve to episegments.
+  // There is a modified version by Anil, but is just debug info
   std::vector<becld_episeg_sptr> convert_curve(vsol_digital_curve_2d_sptr);
 
   //: Minimum angle that an element of each episeg does with the epipolar lines.

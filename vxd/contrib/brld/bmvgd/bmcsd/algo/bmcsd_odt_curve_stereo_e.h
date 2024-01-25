@@ -59,6 +59,16 @@ public:
                                          std::vector<std::vector<unsigned> > &inlierViewsPerCandidate, std::set<int> curve_ids,
 					 std::vector<std::vector<unsigned> > &edge_support_count_per_candidate);
 
+
+  //: Anil: This version is the same as the normal odt_curve_stereo, but will also increment matchCount_
+  // 
+  // Reconstructs given subcurve specified by index ini_id and end_id into
+  // selected_crv_id(v0()), by assuming correspondence to candidate curve with index \p ic.
+  // This version reconstructs the tangent information as well.
+  // 
+  void reconstruct_candidate_1st_order(unsigned ini_id, unsigned end_id, unsigned ic, 
+      const bdifd_rig &rig, bdifd_1st_order_curve_3d *crv_ptr);
+
   //: Anil: Another version of the function that returns uncertainty flags for samples, turn markFlag on to mark used samples using usedSamples_ member
   void reconstruct_candidate_1st_order_with_flags(unsigned ini_id, unsigned end_id, unsigned ic, unsigned curve_id,
 						  const bdifd_rig &rig, bdifd_1st_order_curve_3d *crv_ptr, std::vector<bool> &flags, unsigned &recon_shift);
@@ -66,6 +76,21 @@ public:
   //: Anil: A version of the flagged function that does reconstructions using confirmation views
   void reconstruct_candidate_1st_order_with_flags_temp(unsigned ini_id, unsigned end_id, unsigned ic, unsigned curve_id,
 						  const bdifd_rig &rig, bdifd_1st_order_curve_3d *crv_ptr, std::vector<bool> &flags, unsigned v);
+
+  //: Anil: This version is the same as the one in regular odt_curve_stereo, but
+  // writes out info if dummyflag_ is true
+  //
+  //
+  // Reconstructs subcurve given by curve selected_crv_id(v0()) and endpoints with
+  // index ini_id_sub, end_id_sub, using view[v0()] and the corresponding
+  // selected_crv_id(v1()) in view[v1()]. This version reconstructs the tangent
+  // information as well.
+  void reconstruct_subcurve_1st_order(
+      unsigned ini_id_sub, 
+      unsigned end_id_sub, 
+      const bdifd_rig &rig,
+      bdifd_1st_order_curve_3d *curve_3d
+      );
 
   void reconstruct_subcurve_1st_order_with_flags(
       unsigned ini_id_sub,
@@ -94,9 +119,39 @@ public:
       unsigned &curve_v1
       );
 
-  bool dummyFlag;
+  //: Anil: this version is the same as the one in regular odt_curve_stereo, but also
+  // writes to he lineCoef_ member. It is thus non-const
+  //
+  // Reconstructs a 3D point-tangent, given the 2D image point-tangent \c p_0
+  // in the first view and the index \p v of the second view to use. The point in
+  // the second view is found by intersecting the epipolar line of p_0 with the
+  // selected curve of that view.
+  //
+  // \param[in] di0 is the index of the point p_0 in the selected sub-curve of view 0
+  // \param[in] ini_id is how far the initial point of the subcurve is inside the
+  // containing curve fragment container.
+  //
+  void reconstruct_curve_point_1st_order(
+      unsigned v,
+      unsigned ini_id,
+      unsigned di0, 
+      const bdifd_rig &rig,
+      bdifd_1st_order_point_3d *pt_3D
+      );
+
+
+  //: This version uses angle from set_min_epiangle to determine
+  // keep only the episegs having all point-tangents within an angle of
+  // the epipolar line. Such angle is set in set_min_epiangle().
+  virtual void break_curves_into_episegs_pairwise(
+      std::vector<std::vector< vsol_polyline_2d_sptr > > *broken_vsols,
+      std::vector<bbld_subsequence_set> *ss_ptr
+      );
+
+protected:
+  bool dummyFlag_;
   unsigned dummyID;
-  std::vector<double> lineCoef;
+  std::vector<double> lineCoef_;
 
   // Anil: For each view, we store the ID curve of that each edgel 
   //Size should be total number of confirmation views used in the stereo instance
