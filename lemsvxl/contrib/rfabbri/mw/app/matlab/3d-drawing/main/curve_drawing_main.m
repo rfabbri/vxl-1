@@ -14,10 +14,10 @@ all_edge_support_3d = cell(numIM,1);
 all_flags = cell(numIM,1);
 all_num_im_contours = zeros(numIM,1);
 
-% load_curve_sketch_without_associations
-% load edge-curve-index_yuliang_pavilion-mixed.mat;
-% load edge-curve-offset_yuliang_pavilion-mixed.mat;
-% load_edge_and_curve_files
+load_curve_sketch_without_associations
+load edge-curve-index_yuliang_pavilion-mixed.mat;
+load edge-curve-offset_yuliang_pavilion-mixed.mat;
+load_edge_and_curve_files
 
 % clear all;
 % close all;
@@ -308,7 +308,9 @@ for fa=1:numViews
 
                     queryAlignment_dense = cell(size(queryAlignment,1),1);
 
+                    
                     filtering_alignmentCurve
+
                     start_clusters
                    
                     clusters = new_clusters;
@@ -2449,8 +2451,6 @@ for fa=1:numViews
 %                 %counter = counter + 1;
 %             end
 %         end
-
-        all_clusters = [all_clusters; cell(1,1)];
         all_clusters{size(all_clusters,1),1} = clusters;
         complete_curve_graph = [complete_curve_graph; curve_graph];
         complete_lock_map = [complete_lock_map; lock_map];
