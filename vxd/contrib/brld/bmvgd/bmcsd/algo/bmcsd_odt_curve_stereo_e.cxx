@@ -141,9 +141,10 @@ match_using_orientation_dt_extras(
           // Anil: Replacing the edge support counting code with my own May 21st, 2014
           //  d_vote = dbcsi_curve_distance::num_inliers_dt_oriented(
           //      reproj_edgels, tau_distance_squared(), tau_dtheta_, dt(v), label(v), *em_[v]);
-                d_vote = bcsid_curve_distance::inlier_edgels_dt_oriented(reproj_edgels, tau_distance_squared(), tau_dtheta_, dt(v), 
-                         label(v), *em_[v], &cur_inliers, edge_support_count_per_candidate[ic], 
-                         orig_ids, &edge_index_chain);          
+                d_vote = bcsid_curve_distance::inlier_edgels_dt_oriented(
+                    reproj_edgels, tau_distance_squared(), tau_dtheta_, dt(v), 
+                    label(v), *em_[v], &cur_inliers, edge_support_count_per_candidate[ic], 
+                    orig_ids, &edge_index_chain);          
         } else {
           d_vote = bcsid_curve_distance::num_inlier_curvelets_dt_oriented(reproj_edgels, tau_distance_squared(), tau_dtheta_, dt(v), label(v), sels_[v]->CM(),
                           tau_min_num_inlier_edgels_per_curvelet_);
@@ -624,7 +625,7 @@ reconstruct_curve_point_1st_order(
   lineCoef.push_back(ep(v-1)[di0+ini_id].c());
   {
   vgl_point_2d<double> pt;
-  bmcsd_epi_interceptor::curve_line_intersection_simple(
+  becld_epiline_interceptor::curve_line_intersection_simple(
       *selected_crv(v), ep(v-1)[di0+ini_id], &pt, &nearest_sample_id);
   }
 
@@ -665,7 +666,7 @@ reconstruct_curve_point_1st_order_with_flags(
   lineCoef.push_back(ep(v-1)[di0+ini_id].c());
   {
   vgl_point_2d<double> pt;
-  bmcsd_epi_interceptor::curve_line_intersection_simple(
+  becld_epiline_interceptor::curve_line_intersection_simple(
       *selected_crv(v), ep(v-1)[di0+ini_id], &pt, &nearest_sample_id);
   }
 
@@ -711,8 +712,7 @@ break_curves_into_episegs_pairwise(
   for (unsigned i=0; i<vsols_broken_at_turns.size(); ++i)
       curvesIntermediate.push_back(dynamic_cast<vsol_spatial_object_2d*>(vsols_broken_at_turns[i].ptr()));
   
-  dbsol_save_cem(curvesIntermediate, std::string("intermediate_v0.cemv"));
-
+  bsold_save_cem(curvesIntermediate, std::string("intermediate_v0.cemv"));
 
 
   std::vector<std::vector<double> > tangents_a;
@@ -785,8 +785,8 @@ break_curves_into_episegs_angle(
   // ----------------------------------------------------------------------
   // Break curve
 
-  dbecl_epipole_sptr epipole = new dbecl_epipole(e.x()/e.w(), e.y()/e.w());
-  dbecl_episeg_from_curve_converter factory(epipole);
+  becld_epipole_sptr epipole = new becld_epipole(e.x()/e.w(), e.y()/e.w());
+  becld_episeg_from_curve_converter factory(epipole);
 
   uncertaintyFlags.resize(vsols.size());
 
@@ -797,7 +797,7 @@ break_curves_into_episegs_angle(
 
   // A) For each vsol, do:
   
-  std::vector<dbecl_episeg_sptr> all_episegs;
+  std::vector<becld_episeg_sptr> all_episegs;
   all_episegs.reserve(2*vsols.size());
   ss.reserve(2*vsols.size());
   for (unsigned i=0; i < vsols.size(); ++i) {
@@ -813,7 +813,7 @@ break_curves_into_episegs_angle(
     vsol_digital_curve_2d_sptr dc = new vsol_digital_curve_2d(samples);
     // A2 - apply episeg
     bbld_subsequence_set ss_partition;
-    std::vector<dbecl_episeg_sptr> eps = factory.convert_curve_using_tangents(dc, tgts[i], &ss_partition, print, i);
+    std::vector<becld_episeg_sptr> eps = factory.convert_curve_using_tangents(dc, tgts[i], &ss_partition, print, i);
 
     assert(ss_partition.num_subsequences() == eps.size());
     assert(!(vsols[i]->size() && eps.empty()));
@@ -826,7 +826,7 @@ break_curves_into_episegs_angle(
         tau_epiangle = min_epiangle;
 
     //dbecl_delta_angle_predicate is_angle_acceptable(dc, tgts[i], epipole, min_epiangle);
-    dbecl_delta_angle_predicate is_angle_acceptable(dc, tgts[i], epipole, tau_epiangle);
+    becld_delta_angle_predicate is_angle_acceptable(dc, tgts[i], epipole, tau_epiangle);
 
     // Keep only the episegs that are transversal to epilines.
     for(unsigned k=0; k < eps.size(); ++k ) {
@@ -838,7 +838,7 @@ break_curves_into_episegs_angle(
 
     // Anil: Construct another predicate using min_epiangle to mark segments we have high confidence in
     //This is redundant if onlyMark is not true
-    dbecl_delta_angle_predicate is_angle_certain(dc, tgts[i], epipole, min_epiangle);
+    becld_delta_angle_predicate is_angle_certain(dc, tgts[i], epipole, min_epiangle);
 
     if(onlyMark)
     {
