@@ -58,7 +58,6 @@ public:
 
   bmcsd_stereo_views_sptr v_;
   bmcsd_odt_curve_stereo *s_;
-  std::vector< bdifd_1st_order_curve_3d > crv3d_;
 
 private:
   unsigned sources_per_confirmation_view_;
