@@ -31,12 +31,12 @@ main(int argc, char **argv)
 
   bmcsd_curve_3d_sketch_e *csk = new bmcsd_curve_3d_sketch_e;
   std::string csk_fname = prefix + "/" + a_csk();
-  vcl_string out_fname = csk_fname + "attributes.txt";
-  vcl_ofstream out_file(out_fname.c_str());
+  std::string out_fname = csk_fname + "attributes.txt";
+  std::ofstream out_file(out_fname.c_str());
   bool print_to_file = true;
 
-  vcl_string flag_fname = csk_fname + "flags.txt";
-  vcl_ofstream flag_file(flag_fname.c_str());
+  std::string flag_fname = csk_fname + "flags.txt";
+  std::ofstream flag_file(flag_fname.c_str());
 
   bool retval  = csk->read_dir_format(csk_fname);
   MW_ASSERT(std::string("Error reading 3D curve sketch: ") + csk_fname, retval, true);
@@ -76,9 +76,9 @@ main(int argc, char **argv)
               out_file << csk->attributes()[i].v_->stereo0() << " " <<
                   csk->attributes()[i].v_->stereo1() << " ";
 
-              //vcl_cout << " c: ";
+              //std::cout << " c: ";
               //for (unsigned k=0; k < csk->attributes()[i].v_->num_confirmation_views(); ++k)
-              //  vcl_cout << csk->attributes()[i].v_->confirmation_view(k) << " ";
+              //  std::cout << csk->attributes()[i].v_->confirmation_view(k) << " ";
           }
           if (a_showinliers()) {
               out_file << " i: ";
@@ -89,7 +89,7 @@ main(int argc, char **argv)
       }
       out_file.close();
 
-      flag_file << csk->num_curves() << vcl_endl;
+      flag_file << csk->num_curves() << std::endl;
       for (unsigned i=0; i < csk->num_curves(); ++i)
       {
         std::vector<bool> flags = csk->attributes()[i].certaintyFlags_;
@@ -97,7 +97,7 @@ main(int argc, char **argv)
           for (unsigned j=0; j < flags.size(); ++j)
               flag_file << flags[j] << " ";
 
-          flag_file << vcl_endl;
+          flag_file << std::endl;
       }
       flag_file.close();
 
@@ -105,7 +105,7 @@ main(int argc, char **argv)
   else
   {
     assert(csk->num_curves() == csk->attributes().size());
-    std::cout << "Number of curves: " << csk->num_curves() << vcl_endl;
+    std::cout << "Number of curves: " << csk->num_curves() << std::endl;
     for (unsigned i=0; i < csk->num_curves(); ++i) {
       std::cout << csk->attributes()[i].total_support_;
       if (a_showlengths())

@@ -163,7 +163,7 @@ public:
   static void clip_to_img_bounds(
       const vil_image_view<vxl_uint_32> &img,
       bdifd_1st_order_curve_2d *curve,
-      vcl_vector<unsigned> &orig_indices);
+      std::vector<unsigned> &orig_indices);
 
   //: \return true if all points of the curve are within bounds.
   static bool
@@ -217,8 +217,8 @@ public:
       bbld_subsequence_set *ss);
 
   static void prune_curves_by_length_with_flags(
-      double min_length, vcl_vector< vsol_polyline_2d_sptr > *pcurves,
-      bbld_subsequence_set *ss, std::vector<vcl_vector<bool> > &flags);
+      double min_length, std::vector< vsol_polyline_2d_sptr > *pcurves,
+      bbld_subsequence_set *ss, std::vector<std::vector<bool> > &flags);
 
   //: parses a std::string of ther form "listname val1 val2 val3..." into a std::string
   // with the listname, and a list of numbers of type T.
