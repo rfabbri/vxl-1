@@ -72,6 +72,8 @@ bool mywritev(std::string fname, const std::vector<vgl_point_3d<double> > &crv_3
 //: Writes 3D curves to many files whose prefix and extension are given.
 // The output files will be named like $prefix-3dcurve-$crv_id-{points|tangents}$ext
 bool mywritev(std::string prefix, std::string ext, const std::vector<bdifd_1st_order_curve_3d> &crv_3d);
+//: Anil: Write edge support info to a separate text file for each 3D curve
+bool write_edge_support(vcl_string prefix, const vcl_vector<dbmcs_curve_3d_attributes> &attr);
 
 bool read_cam(std::string img_name1, std::string img_name2, 
       vpgl_perspective_camera <double> *P1out,
@@ -159,6 +161,12 @@ public:
       const vil_image_view<vxl_uint_32> &img,
       bdifd_1st_order_curve_2d *curve); 
 
+  //: Anil: Same as the function above, but returns the original indices of the seed curve
+  static void clip_to_img_bounds(
+      const vil_image_view<vxl_uint_32> &img,
+      dbdif_1st_order_curve_2d *curve,
+      vcl_vector<unsigned> &orig_indices);
+
   //: \return true if all points of the curve are within bounds.
   static bool
   in_img_bounds( const std::vector<vsol_point_2d_sptr> &curve, 
@@ -209,6 +217,10 @@ public:
   static void prune_curves_by_length(
       double min_length, std::vector< vsol_polyline_2d_sptr > *pcurves,
       bbld_subsequence_set *ss);
+
+  static void prune_curves_by_length_with_flags(
+      double min_length, vcl_vector< vsol_polyline_2d_sptr > *pcurves,
+      dbbl_subsequence_set *ss, vcl_vector<vcl_vector<bool> > &flags);
 
   //: parses a std::string of ther form "listname val1 val2 val3..." into a std::string
   // with the listname, and a list of numbers of type T.

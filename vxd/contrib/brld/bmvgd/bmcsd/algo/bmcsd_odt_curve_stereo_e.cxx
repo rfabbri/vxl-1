@@ -141,7 +141,7 @@ match_using_orientation_dt_extras(
           // Anil: Replacing the edge support counting code with my own May 21st, 2014
           //  d_vote = dbcsi_curve_distance::num_inliers_dt_oriented(
           //      reproj_edgels, tau_distance_squared(), tau_dtheta_, dt(v), label(v), *em_[v]);
-                d_vote = dbcsi_curve_distance::inlier_edgels_dt_oriented(reproj_edgels, tau_distance_squared(), tau_dtheta_, dt(v), 
+                d_vote = bcsid_curve_distance::inlier_edgels_dt_oriented(reproj_edgels, tau_distance_squared(), tau_dtheta_, dt(v), 
                          label(v), *em_[v], &cur_inliers, edge_support_count_per_candidate[ic], 
                          orig_ids, &edge_index_chain);          
         } else {
@@ -863,7 +863,7 @@ break_curves_into_episegs_angle(
 }
 
 bool 
-dbmcs_match_all_curves(
+bmcsd_match_all_curves(
   bmcsd_odt_curve_stereo_e &s, 
   bmcsd_discrete_corresp_e *corresp_ptr,
   bool track_supporting_edges)
@@ -935,7 +935,7 @@ dbmcs_match_all_curves(
 }
 
 bool 
-dbmcs_match_all_curves_using_mates(
+bmcsd_match_all_curves_using_mates(
   bmcsd_odt_curve_stereo_e &s, 
   bmcsd_discrete_corresp_e *corresp_ptr,
   unsigned seed_id,
@@ -1075,16 +1075,16 @@ dbmcs_match_all_curves_using_mates(
 //supporting edgels
 /*
 bool 
-dbmcs_match_and_reconstruct_all_curves_attr(
+bmcsd_match_and_reconstruct_all_curves_attr(
     bmcsd_odt_curve_stereo_e &s, 
     std::vector<bdifd_1st_order_curve_3d> *crv3d_ptr,
     bmcsd_discrete_corresp_e *corresp_ptr,
-    std::vector< dbmcs_curve_3d_attributes_e > *attr_ptr
+    std::vector< bmcsd_curve_3d_attributes_e > *attr_ptr
     )
 {
   // TODO: this is were we should pass attr so that we can gent the inlier
   // views.
-  dbmcs_match_all_curves(s, corresp_ptr);
+  bmcsd_match_all_curves(s, corresp_ptr);
 
   corresp_ptr->keep_only_unambiguous_max(
       s.min_first_to_second_best_ratio(), 
@@ -1098,17 +1098,17 @@ dbmcs_match_and_reconstruct_all_curves_attr(
 }*/
 
 bool 
-dbmcs_match_and_reconstruct_all_curves_attr(
+bmcsd_match_and_reconstruct_all_curves_attr(
     bmcsd_odt_curve_stereo_e &s, 
     std::vector<bdifd_1st_order_curve_3d> *crv3d_ptr,
     bmcsd_discrete_corresp_e *corresp_ptr,
-    std::vector< dbmcs_curve_3d_attributes_e > *attr_ptr,
+    std::vector< bmcsd_curve_3d_attributes_e > *attr_ptr,
     bool track_supporting_edges
     )
 {
   // TODO: this is were we should pass attr so that we can gent the inlier
   // views.
-  dbmcs_match_all_curves(s, corresp_ptr, track_supporting_edges);
+  bmcsd_match_all_curves(s, corresp_ptr, track_supporting_edges);
 
   corresp_ptr->keep_only_unambiguous_max(
       s.min_first_to_second_best_ratio(), 
@@ -1122,11 +1122,11 @@ dbmcs_match_and_reconstruct_all_curves_attr(
 }
 
 bool 
-dbmcs_match_and_reconstruct_all_curves_attr_using_mates(
+bmcsd_match_and_reconstruct_all_curves_attr_using_mates(
     bmcsd_odt_curve_stereo_e &s, 
     std::vector<bdifd_1st_order_curve_3d> *crv3d_ptr,
     bmcsd_discrete_corresp_e *corresp_ptr,
-    std::vector< dbmcs_curve_3d_attributes_e > *attr_ptr,
+    std::vector< bmcsd_curve_3d_attributes_e > *attr_ptr,
     std::vector<std::set<int> > mate_curves_v1,
     bool isFirstRun,
     bool track_supporting_edges
@@ -1134,7 +1134,7 @@ dbmcs_match_and_reconstruct_all_curves_attr_using_mates(
 {
   unsigned seed_id = 757;
   vul_timer matching;
-  dbmcs_match_all_curves_using_mates(s, corresp_ptr, seed_id, mate_curves_v1, isFirstRun, track_supporting_edges);
+  bmcsd_match_all_curves_using_mates(s, corresp_ptr, seed_id, mate_curves_v1, isFirstRun, track_supporting_edges);
   std::cout << "#3b MATCHING: " << matching.real() << std::endl;
 
   vul_timer unambiguating;
@@ -1154,14 +1154,14 @@ bool
 reconstruct_from_corresp_attr(
     bmcsd_odt_curve_stereo_e &s, 
     const bmcsd_discrete_corresp_e &corresp,
-    std::vector<bdifd_1st_order_curve_3d> *crv3d_ptr,    std::vector< dbmcs_curve_3d_attributes_e > *attr_ptr,
+    std::vector<bdifd_1st_order_curve_3d> *crv3d_ptr,    std::vector< bmcsd_curve_3d_attributes_e > *attr_ptr,
     unsigned seed_id
     )
 {
   std::cout << "Reconstructing curves\n";
 
   std::vector<bdifd_1st_order_curve_3d> &crv3d = *crv3d_ptr;
-  std::vector< dbmcs_curve_3d_attributes_e > &attr = *attr_ptr;
+  std::vector< bmcsd_curve_3d_attributes_e > &attr = *attr_ptr;
   unsigned const ncurves = s.num_curves(s.v0());
   assert (ncurves == corresp.size());
   crv3d.reserve(ncurves);
@@ -1201,7 +1201,7 @@ reconstruct_from_corresp_attr(
     attr.back().set_i0_i1(c, corresp[c].front().id());
     attr.back().total_support_ = static_cast<unsigned>(corresp[c].front().cost());
 
-    // Anil: Propagating the edgel support data from bmcsd_discrete_corresp_e to dbmcs_curve_3d_attributes_e
+    // Anil: Propagating the edgel support data from bmcsd_discrete_corresp_e to bmcsd_curve_3d_attributes_e
     attr.back().supportingEdgelsPerConfView_ = corresp[c].front().supportingStructures_;
     // Anil: Computing mate curves using the supporting edgel information
     s.mate_curves_.clear();
@@ -1234,13 +1234,13 @@ reconstruct_from_corresp_attr(
     attr.back().mate_curves_ = s.mate_curves_;
     attr.back().mate_curve_weights_ = mate_curve_weights;
 
-    // Anil: Propagating the inlier view data from bmcsd_discrete_corresp_e to dbmcs_curve_3d_attributes_e
+    // Anil: Propagating the inlier view data from bmcsd_discrete_corresp_e to bmcsd_curve_3d_attributes_e
     attr.back().inlier_views_ = corresp[c].front().inliers_;
 
     // Anil: Propagating the edge support data for each reconstructed curve sample
     attr.back().edge_index_chain_ = corresp[c].front().index_chain_;
 
-    // Anil: Propagating the edge support count vector from bmcsd_discrete_corresp_e to dbmcs_curve_3d_attributes_e
+    // Anil: Propagating the edge support count vector from bmcsd_discrete_corresp_e to bmcsd_curve_3d_attributes_e
     //Also propagating the offset to convert hypothesis indices to image curve indices using subseqence set
     //std::cout << "SHIFT: " << sseq[s.v0()][c].ini() << "+" << ini_shift << std::endl;
     attr.back().imageCurveOffset_ = sseq[s.v0()][c].ini() + ini_shift;
@@ -1252,12 +1252,12 @@ reconstruct_from_corresp_attr(
     attr.back().origCurveSize_v1_ = s.get_original_curve_size(s.v1(),sseq[s.v1()][corresp[c].front().id()].orig_id());
 
     // Anil: Propagating the original ID of the unbroken image curve from bmcsd_odt_curve_stereo_e to 
-    //      dbmcs_curve_3d_attributes_e using bbld_subsequence_set
+    //      bmcsd_curve_3d_attributes_e using bbld_subsequence_set
     attr.back().orig_id_v0_ = sseq[s.v0()][c].orig_id();
     attr.back().orig_id_v1_ = sseq[s.v1()][corresp[c].front().id()].orig_id();
 
     // Anil: Propagating the ID of the broken image curve (before pruning) from bmcsd_odt_curve_stereo_e to 
-    //      dbmcs_curve_3d_attributes_e using bbld_subsequence_set
+    //      bmcsd_curve_3d_attributes_e using bbld_subsequence_set
     attr.back().int_id_v0_ = sseq[s.v0()][c].int_id();
     attr.back().int_id_v1_ = sseq[s.v1()][corresp[c].front().id()].int_id();
 
@@ -1278,13 +1278,13 @@ reconstruct_from_corresp_attr_using_mates(
     bmcsd_odt_curve_stereo_e &s, 
     const bmcsd_discrete_corresp_e &corresp,
     std::vector<bdifd_1st_order_curve_3d> *crv3d_ptr,
-    std::vector< dbmcs_curve_3d_attributes_e > *attr_ptr
+    std::vector< bmcsd_curve_3d_attributes_e > *attr_ptr
     )
 {
   std::cout << "Reconstructing curves\n";
 
   std::vector<bdifd_1st_order_curve_3d> &crv3d = *crv3d_ptr;
-  std::vector< dbmcs_curve_3d_attributes_e > &attr = *attr_ptr;
+  std::vector< bmcsd_curve_3d_attributes_e > &attr = *attr_ptr;
   unsigned const ncurves = s.num_curves(s.v0());
   assert (ncurves == corresp.size());
   crv3d.reserve(ncurves);
@@ -1320,20 +1320,20 @@ reconstruct_from_corresp_attr_using_mates(
     attr.back().set_i0_i1(c, m->id());
     attr.back().total_support_ = static_cast<unsigned>(m->cost());
 
-    // Anil: Propagating the edgel support data from bmcsd_discrete_corresp_e to dbmcs_curve_3d_attributes_e
+    // Anil: Propagating the edgel support data from bmcsd_discrete_corresp_e to bmcsd_curve_3d_attributes_e
     attr.back().supportingEdgelsPerConfView_ = m->supportingStructures_;
 
-    // Anil: Propagating the inlier view data from bmcsd_discrete_corresp_e to dbmcs_curve_3d_attributes_e
+    // Anil: Propagating the inlier view data from bmcsd_discrete_corresp_e to bmcsd_curve_3d_attributes_e
     attr.back().inlier_views_ = m->inliers_;
 
     // Anil: Propagating the original ID of the unbroken image curve from bmcsd_odt_curve_stereo_e to 
-    //      dbmcs_curve_3d_attributes_e using bbld_subsequence_set
+    //      bmcsd_curve_3d_attributes_e using bbld_subsequence_set
     std::vector<bbld_subsequence_set> sseq = s.get_sseq();
     attr.back().orig_id_v0_ = sseq[s.v0()][c].orig_id();
     attr.back().orig_id_v1_ = sseq[s.v1()][corresp[c].front().id()].orig_id();
 
     // Anil: Propagating the ID of the broken image curve (before pruning) from bmcsd_odt_curve_stereo_e to 
-    //      dbmcs_curve_3d_attributes_e using bbld_subsequence_set
+    //      bmcsd_curve_3d_attributes_e using bbld_subsequence_set
     attr.back().int_id_v0_ = sseq[s.v0()][c].int_id();
     attr.back().int_id_v1_ = sseq[s.v1()][corresp[c].front().id()].int_id();
 

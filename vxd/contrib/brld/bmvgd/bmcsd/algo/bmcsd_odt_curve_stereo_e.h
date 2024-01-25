@@ -13,6 +13,7 @@
 #include <sdetd/pro/sdetd_sel_storage_sptr.h>
 #include <bcsid/bcsid_curve_distance.h>
 #include <bmcsd/bmcsd_curve_3d_attributes_e.h>
+#include <bmcsd/bmcsd_discrete_corresp_e.h>
 #include <bmcsd/algo/bmcsd_odt_curve_stereo.h>
 
 
@@ -135,22 +136,22 @@ private:
   unsigned num_image_curves_v0_;
 };
 
-//: version of dbmcs_match_and_reconstruct_all_curves which fills an attribute
+//: version of bmcsd_match_and_reconstruct_all_curves which fills an attribute
 // for each curve.
-bool dbmcs_match_and_reconstruct_all_curves_attr_e(
+bool bmcsd_match_and_reconstruct_all_curves_attr_e(
     bmcsd_odt_curve_stereo_e &s, 
     std::vector<bdifd_1st_order_curve_3d> *crv3d_ptr,
     bmcsd_discrete_corresp_e *corresp_ptr,
-    std::vector< dbmcs_curve_3d_attributes_e > *attr_ptr,
+    std::vector< bmcsd_curve_3d_attributes_e > *attr_ptr,
     bool track_supporting_edges=false
     );
 
-//: version of dbmcs_match_and_reconstruct_all_curves that makes use of mate curves
-bool dbmcs_match_and_reconstruct_all_curves_attr_using_mates(
+//: version of bmcsd_match_and_reconstruct_all_curves that makes use of mate curves
+bool bmcsd_match_and_reconstruct_all_curves_attr_using_mates(
     bmcsd_odt_curve_stereo_e &s, 
     std::vector<bdifd_1st_order_curve_3d> *crv3d_ptr,
     bmcsd_discrete_corresp *corresp_ptr,
-    std::vector< dbmcs_curve_3d_attributes_e > *attr_ptr,
+    std::vector< bmcsd_curve_3d_attributes_e > *attr_ptr,
     std::vector<std::set<int> > mate_curves_v1,
     bool isFirstRun,
     bool track_supporting_edges=false
@@ -160,14 +161,14 @@ bool dbmcs_match_and_reconstruct_all_curves_attr_using_mates(
 // \param[in] s : must be all set and ready to match.
 // \param[out] corresp_ptr : discrete correspondence between the first two
 // views. Only the correspondences passing all thresholds are output.
-bool dbmcs_match_all_curves(
+bool bmcsd_match_all_curves(
   bmcsd_odt_curve_stereo_e &s, 
   bmcsd_discrete_corresp_e *corresp_ptr,
   bool track_supporting_edges=false);
 
 // Anil: mcd version of the matching function that iterates the matches using mate curves
 // Anil: can do the initial seed curve matching, as well as the elongation iterations
-bool dbmcs_match_all_curves_using_mates(
+bool bmcsd_match_all_curves_using_mates(
   bmcsd_odt_curve_stereo_e &s, 
   bmcsd_discrete_corresp_e *corresp_ptr,
   unsigned seed_id,
@@ -181,7 +182,7 @@ reconstruct_from_corresp_attr(
     bmcsd_odt_curve_stereo_e &s, 
     const bmcsd_discrete_corresp_e &corresp,
     std::vector<bdifd_1st_order_curve_3d> *crv3d_ptr,
-    std::vector< dbmcs_curve_3d_attributes_e > *attr_ptr,
+    std::vector< bmcsd_curve_3d_attributes_e > *attr_ptr,
     unsigned seed_id = 0
     );
 
@@ -190,7 +191,7 @@ reconstruct_from_corresp_attr_using_mates(
     bmcsd_odt_curve_stereo_e &s, 
     const bmcsd_discrete_corresp_e &corresp,
     std::vector<bdifd_1st_order_curve_3d> *crv3d_ptr,
-    std::vector< dbmcs_curve_3d_attributes_e > *attr_ptr
+    std::vector< bmcsd_curve_3d_attributes_e > *attr_ptr
     );
 
 #endif // bmcsd_odt_curve_stereo_e_h
