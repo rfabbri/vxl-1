@@ -41,6 +41,9 @@ public:
   void set_num_image_curves_v0(const unsigned &num_image_curves_v0);
   unsigned get_num_image_curves_v0();
 
+  // Anil: Curve IDs that are already used in a previous run
+  const std::vector<std::vector<unsigned> > &get_used_curves() const { return usedCurves_; }
+
   // Anil: get/set subsequence set stored in this class
   void set_sseq(const std::vector<bbld_subsequence_set> &sseq);
   std::vector<bbld_subsequence_set> get_sseq();
@@ -147,6 +150,24 @@ public:
       std::vector<std::vector< vsol_polyline_2d_sptr > > *broken_vsols,
       std::vector<bbld_subsequence_set> *ss_ptr
       );
+
+  //: Stand-alone episeg breaker using tangent angle information.
+  // \see break_curves_into_episegs_pairwise
+  static void break_curves_into_episegs_angle(
+    const std::vector< vsol_polyline_2d_sptr >  &vsols,
+    const std::vector<std::vector<double> > &tgts,
+    double min_epiangle,
+    std::vector<vsol_polyline_2d_sptr> *vsols2,
+    const vgl_homg_point_2d<double> &e,
+    bbld_subsequence_set *ss_ptr, bool onlyMark,
+    std::vector<std::vector<bool> > &uncertaintyFlags);
+
+  friend bool 
+  reconstruct_from_corresp_attr(
+      bmcsd_odt_curve_stereo_e &s, 
+      const bmcsd_discrete_corresp_e &corresp,
+      std::vector<bdifd_1st_order_curve_3d> *crv3d_ptr,    std::vector< bmcsd_curve_3d_attributes_e > *attr_ptr,
+      unsigned seed_id);
 
 protected:
   bool dummyFlag_;
