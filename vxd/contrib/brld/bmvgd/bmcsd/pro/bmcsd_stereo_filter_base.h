@@ -18,17 +18,8 @@
 #include <bmcsd/pro/bmcsd_fragment_tangents_filter.h>
 
 //: This process takes matches 2 views using a number of confirmation views.
-// Inputs:
-//
-// Outputs:
-// - 3D curve
-// - 3D curve attributes
 class bmcsd_stereo_filter_base : public bprod_filter {
-public:
-  typedef enum { CAM_ID, EDG_ID, DT_ID, LBL_ID, CVLET_ID } confirmation_input_id;
-  typedef enum { CAM_ID0, FRAG_ID0, TGT_ID0,  
-                 CAM_ID1, FRAG_ID1, TGT_ID1 } keyframes_input_id;
-
+protected: // This is is only intended as a base class
   //  bmcsd_stereo_filter_base  () 
   //    : has_cvlet_(false)
   //  {}
@@ -37,6 +28,11 @@ public:
     s_(s),
     has_cvlet_(false)
   {}
+
+public:
+  typedef enum { CAM_ID, EDG_ID, DT_ID, LBL_ID, CVLET_ID } confirmation_input_id;
+  typedef enum { CAM_ID0, FRAG_ID0, TGT_ID0,  
+                 CAM_ID1, FRAG_ID1, TGT_ID1 } keyframes_input_id;
 
   // default, must be called explicitly in derived classes
   bprod_signal execute() override
@@ -71,9 +67,6 @@ public:
 
   bmcsd_stereo_views_sptr v_;
   bmcsd_odt_curve_stereo *s_;
-
-protected
-
 
 private:
   unsigned sources_per_confirmation_view_;

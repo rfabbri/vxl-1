@@ -8,6 +8,7 @@
 //\date 08/12/2009 02:19:28 PM PDT
 //
 
+#include <bprod/bprod_process.h>
 #include <bmcsd/bmcsd_view_set.h>
 #include <bmcsd/algo/bmcsd_data.h>
 
@@ -44,7 +45,7 @@ public:
     assert(!f_.empty());
   }
 
-  virtual ~bmcsd_stereo_driver() {};
+  virtual ~bmcsd_stereo_driver_base() {};
 
   //: Might be bogus - this assumes all instances have the same number of
   // confirmation views. Not true.
@@ -139,7 +140,7 @@ protected:
 
 class bmcsd_concurrent_stereo_driver_base : public bmcsd_stereo_driver_base {
 public:
-  bmcsd_concurrent_stereo_driver(
+  bmcsd_concurrent_stereo_driver_base(
       const bmcsd_curve_stereo_data_path &dpath, 
       const bmcsd_stereo_instance_views &frames_to_match)
     :

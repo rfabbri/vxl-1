@@ -11,6 +11,7 @@
 #include <bmcsd/bmcsd_curve_3d_attributes.h>
 #include <bmcsd/bmcsd_curve_3d_sketch.h>
 #include <bmcsd/algo/bmcsd_odt_curve_stereo.h>
+#include <bmcsd/pro/bmcsd_stereo_driver_base.h>
 
 //: Performs multiview stereo on a video sequence, by running many instances of
 // two-view stereo in subsets of the frames.
