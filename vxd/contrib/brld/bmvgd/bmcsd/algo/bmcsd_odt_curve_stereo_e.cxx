@@ -1,4 +1,5 @@
 #include "bmcsd_odt_curve_stereo_e.h"
+#include <vul_timer.h>
 #include <bdifd/bdifd_rig.h>
 #include <becld/becld_epipole.h>
 #include <becld/becld_episeg.h>
@@ -92,7 +93,7 @@ match_using_orientation_dt_extras(
 
   for (unsigned ic=0; ic < num_candidates(); ++ic) {
     unsigned origID_u = sseq[this->v1()][crv_candidates(ic)].orig_id();
-    if(std::find(usedCurves_[this->v1()].begin(), usedCurves_[this->v1()].end(), origID_u) == usedCurves_[this->v1()].end()) {
+    if(std::find(get_used_curves()[this->v1()].begin(), get_used_curves()[this->v1()].end(), origID_u) == get_used_curves()[this->v1()].end()) {
 
       // Anil: Adding a threshold for minimum number of inlier views Apr 18th, 2014
       // Anil: Also adding vector of inlier views per candidate, and inlier edgels per confirmation view for each candidate
@@ -222,7 +223,7 @@ match_using_orientation_dt_extras(std::vector<unsigned long> *votes_ptr, std::ve
     unsigned origID_u = sseq[this->v1()][crv_candidates(ic)].orig_id();
     int origID = static_cast<int>(origID_u);
     if((curve_ids.find(origID) != curve_ids.end()) && 
-       (std::find(usedCurves_[this->v1()].begin(), usedCurves_[this->v1()].end(), origID_u) == usedCurves_[this->v1()].end())) {
+       (std::find(get_used_curves()[this->v1()].begin(), get_used_curves()[this->v1()].end(), origID_u) == get_used_curves()[this->v1()].end())) {
       // Anil: Adding a threshold for minimum number of inlier views Apr 18th, 2014
       // Anil: Also adding vector of inlier views per candidate, and inlier edgels per confirmation view for each candidate
       unsigned num_inlier_views = 0; 
@@ -721,8 +722,9 @@ break_curves_into_episegs_pairwise(
 
   vsol_flags_[v0()].resize(vsols_broken_at_turns.size());
 
-  break_curves_into_episegs_angle(vsols_broken_at_turns, tangents_a,
-                                  tau_min_epiangle_, &(*broken_vsols)[v0()], e, &ss[v0()], 0, 1, vsol_flags_[v0()]);
+  break_curves_into_episegs_angle(
+      vsols_broken_at_turns, tangents_a,
+      tau_min_epiangle_, &(*broken_vsols)[v0()], e, &ss[v0()], 1, vsol_flags_[v0()]);
   compose_subsequences(s_a, &ss[v0()]);
   }
   
@@ -741,7 +743,7 @@ break_curves_into_episegs_pairwise(
   vsol_flags_[v1()].resize(vsols_broken_at_turns.size());
 
   break_curves_into_episegs_angle(vsols_broken_at_turns, tangents_a,
-                                  tau_min_epiangle_, &(*broken_vsols)[v1()], e_prime, &ss[v1()], 0, 1, vsol_flags_[v1()]);
+                                  tau_min_epiangle_, &(*broken_vsols)[v1()], e_prime, &ss[v1()], 1, vsol_flags_[v1()]);
   compose_subsequences(s_a, &ss[v1()]);
   }
 
@@ -764,7 +766,7 @@ break_curves_into_episegs_pairwise(
     vsol_flags_[v].resize(vsols_broken_at_turns.size());
 
     break_curves_into_episegs_angle(vsols_broken_at_turns, tangents_a,
-                                    tau_min_epiangle_, &(*broken_vsols)[v], e_prime, &ss[v], 0, 1, vsol_flags_[v]);
+                                    tau_min_epiangle_, &(*broken_vsols)[v], e_prime, &ss[v], 1, vsol_flags_[v]);
     compose_subsequences(s_a, &ss[v]);
   }
 }
@@ -777,7 +779,7 @@ break_curves_into_episegs_angle(
   std::vector<vsol_polyline_2d_sptr> *vsols2,
   const vgl_homg_point_2d<double> &e,
   bbld_subsequence_set *ss_ptr,
-  bool print, bool onlyMark,
+  bool onlyMark,
   std::vector<std::vector<bool> > &uncertaintyFlags
   )
 {
@@ -813,7 +815,7 @@ break_curves_into_episegs_angle(
     vsol_digital_curve_2d_sptr dc = new vsol_digital_curve_2d(samples);
     // A2 - apply episeg
     bbld_subsequence_set ss_partition;
-    std::vector<becld_episeg_sptr> eps = factory.convert_curve_using_tangents(dc, tgts[i], &ss_partition, print, i);
+    std::vector<becld_episeg_sptr> eps = factory.convert_curve_using_tangents(dc, tgts[i], &ss_partition, i);
 
     assert(ss_partition.num_subsequences() == eps.size());
     assert(!(vsols[i]->size() && eps.empty()));
@@ -912,7 +914,7 @@ bmcsd_match_all_curves(
         }
     }
     else {
-        if (!s.match_using_orientation_dt_extras(&votes)) {
+        if (!s.bmcsd_odt_curve_stereo::match_using_orientation_dt_extras(&votes)) {
             std::cerr << "Error: problem during matching.\n";
             return false;
         }
@@ -924,7 +926,7 @@ bmcsd_match_all_curves(
     assert(votes.size() == s.num_candidates());
     for (unsigned i=0; i < s.num_candidates(); ++i) {
         if (votes[i] > 0)
-            corresp[c].push_back(bmcsd_attributed_object(s.crv_candidates(i), inlierEdgelsPerCandidate[i], inlierViews[i], false, votes[i]));
+            corresp[c].push_back(bmcsd_attributed_object_e(s.crv_candidates(i), inlierEdgelsPerCandidate[i], inlierViews[i], false, votes[i]));
     }
 
   }
@@ -968,7 +970,7 @@ bmcsd_match_all_curves_using_mates(
   {
     for (unsigned c=0; c < ncurves; ++c) {
       unsigned origID = sseq[s.v0()][c].orig_id();
-      if(std::find(s.usedCurves_[s.v0()].begin(), s.usedCurves_[s.v0()].end(), origID) == s.usedCurves_[s.v0()].end()) {
+      if(std::find(s.get_used_curves()[s.v0()].begin(), s.get_used_curves()[s.v0()].end(), origID) == s.get_used_curves()[s.v0()].end()) {
       //if(sseq[s.v0()][c].orig_id()==seed_id) {
 	if (c % 10 == 0)
 	  std::cout << "Matching curve[" << c << "-" << c+10 << "]\n";
@@ -998,7 +1000,7 @@ bmcsd_match_all_curves_using_mates(
 	  }
 	}
 	else {
-	  if (!s.match_using_orientation_dt_extras(&votes)) {
+	  if (!s.bmcsd_odt_curve_stereo::match_using_orientation_dt_extras(&votes)) {
 	    std::cerr << "Error: problem during matching.\n";
 	    return false;
 	  }
@@ -1007,7 +1009,7 @@ bmcsd_match_all_curves_using_mates(
 	assert(votes.size() == s.num_candidates());
 	for (unsigned i=0; i < s.num_candidates(); ++i) {
 	  if (votes[i] > 0)
-	    corresp[c].push_back(bmcsd_attributed_object(s.crv_candidates(i), s.v1(), inlierEdgelsPerCandidate[i], inlierViews[i], 
+	    corresp[c].push_back(bmcsd_attributed_object_e(s.crv_candidates(i), s.v1(), inlierEdgelsPerCandidate[i], inlierViews[i], 
 						      edge_support_count_per_candidate[i], false, votes[i], edge_index_chain_per_candidate[i]));
 	}
       }
@@ -1017,7 +1019,7 @@ bmcsd_match_all_curves_using_mates(
   {
     for (unsigned c=0; c < ncurves; ++c) {
       unsigned origID = sseq[s.v0()][c].orig_id();
-      if(std::find(s.usedCurves_[s.v0()].begin(), s.usedCurves_[s.v0()].end(), origID) == s.usedCurves_[s.v0()].end()) {
+      if(std::find(s.get_used_curves()[s.v0()].begin(), s.get_used_curves()[s.v0()].end(), origID) == s.get_used_curves()[s.v0()].end()) {
       //if(sseq[s.v0()][c].orig_id()==seed_id) {
 	if (c % 10 == 0)
 	  std::cout << "Matching curve[" << c << "-" << c+10 << "]\n";
@@ -1046,7 +1048,7 @@ bmcsd_match_all_curves_using_mates(
 	  }
 	}
 	else {
-	  if (!s.match_using_orientation_dt_extras(&votes)) {
+	  if (!s.bmcsd_odt_curve_stereo::match_using_orientation_dt_extras(&votes)) {
 	    std::cerr << "Error: problem during matching.\n";
 	    return false;
 	  }
@@ -1060,7 +1062,7 @@ bmcsd_match_all_curves_using_mates(
 
 	for (unsigned i=0; i < s.num_candidates(); ++i) {
 	  if (votes[i] > 0)
-	    corresp[c].push_back(bmcsd_attributed_object(s.crv_candidates(i), s.v1(), inlierEdgelsPerCandidate[i], inlierViews[i], edge_support_count_per_candidate[i], false, votes[i]));
+	    corresp[c].push_back(bmcsd_attributed_object_e(s.crv_candidates(i), s.v1(), inlierEdgelsPerCandidate[i], inlierViews[i], edge_support_count_per_candidate[i], false, votes[i]));
 	}
 
       }
@@ -1172,10 +1174,10 @@ reconstruct_from_corresp_attr(
     if (corresp[c].empty())
       continue;
     
-    if(c==195)
-        s.dummyFlag_ = true;
-    else
-        s.dummyFlag_ = false;
+    // if(c==195)
+    //     s.dummyFlag_ = true;
+    // else
+    //     s.dummyFlag_ = false;
     
     s.set_selected_crv_by_id(s.v0(), c);
     unsigned const ini_id = 0;
@@ -1293,7 +1295,7 @@ reconstruct_from_corresp_attr_using_mates(
   bdifd_rig rig(s.cams(s.v0()).Pr_, s.cams(s.v1()).Pr_);
   unsigned c=0;
 
-  for (std::list<bmcsd_attributed_object>::const_iterator m=corresp[c].begin(); m != corresp[c].end(); ++m) {  
+  for (std::list<bmcsd_attributed_object_e>::const_iterator m=corresp[c].begin(); m != corresp[c].end(); ++m) {  
 
     unsigned curView = m->container_id_;
 
