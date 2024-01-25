@@ -51,6 +51,52 @@ public:
   // assume c is such that a point (x,y) has dt(x,y) and label(x,y). All curve
   // samples are assumed to lie inside the image.
   //
+  // Anil: This version is the same as the above version, except
+  // instead of image pixel indices, edgel IDs are returned for inlier edgels.
+  //
+  // \param[in] dt_threshold: squared distance threshold
+  static unsigned inlier_edgels_dt_oriented(
+      const bcsid_edgel_seq &c, double d_threshold, double dtheta_threshold,
+      const vil_image_view<vxl_uint_32> &dt,
+      const vil_image_view<vxl_uint_32> &label,
+      const sdet_edgemap &em,
+      std::set<int> *inliers
+    );
+
+  //: Convenience function that does not return the inlier set.
+  static unsigned num_inlier_edgels_dt_oriented(
+      const bcsid_edgel_seq &c, double d_threshold, double dtheta_threshold,
+      const vil_image_view<vxl_uint_32> &dt,
+      const vil_image_view<vxl_uint_32> &label,
+      const sdet_edgemap &em
+    );
+
+  //: \return the number of edgels per sample within a distance threshold
+  // from the input curve, that also pass an orientation distance threshold.  We
+  // assume c is such that a point (x,y) has dt(x,y) and label(x,y). All curve
+  // samples are assumed to lie inside the image.
+  //
+  // This version is the same as the above version, except
+  // edge support counts per sample, edge support matrices and 
+  // original IDs before clipping reprojections to image frame are also returned.
+  //
+  // \param[in] dt_threshold: squared distance threshold
+  static unsigned inlier_edgels_dt_oriented(
+      const bcsid_edgel_seq &c, double d_threshold, double dtheta_threshold,
+      const vil_image_view<vxl_uint_32> &dt,
+      const vil_image_view<vxl_uint_32> &label,
+      const sdet_edgemap &em,
+      std::set<int> *inliers,
+      std::vector<unsigned> &edge_support_count,
+      std::vector<unsigned> orig_ids,
+      std::vector<int> *edge_index_chain_ptr=NULL
+    );
+
+  //: \return the number of edgels per sample within a distance threshold
+  // from the input curve, that also pass an orientation distance threshold.  We
+  // assume c is such that a point (x,y) has dt(x,y) and label(x,y). All curve
+  // samples are assumed to lie inside the image.
+  //
   // This version accumulates counts for each curve sample if there is a closest
   // edgel passing the thresholds. If so, this edge is counted once. For a
   // different curve sample the same edgel might be counted twice here, because

@@ -191,6 +191,121 @@ inliers_dt_oriented(
 }
 
 unsigned bcsid_curve_distance::
+inlier_edgels_dt_oriented(
+    const bcsid_edgel_seq &c, double d_threshold, double dtheta_threshold,
+    const vil_image_view<vxl_uint_32> &dt,
+    const vil_image_view<vxl_uint_32> &label,
+    const sdet_edgemap &em,
+    std::set<int> *inliers
+  )
+{
+#ifndef NDEBUG
+  if (dtheta_threshold > vnl_math::pi/2)
+    std::cerr << "Warning: a threshold of > vnl_math::pi/2 means no threshold.\n";
+#endif
+  for (bcsid_edgel_seq_const_iter ep = c.begin(); ep != c.end(); ++ep) {
+    unsigned p_i = static_cast<unsigned>(ep->pt.x()+0.5);
+    unsigned p_j = static_cast<unsigned>(ep->pt.y()+0.5);
+
+    if (dt(p_i, p_j) < d_threshold) {
+      vxl_uint_32 l = label(p_i, p_j);
+      const std::vector<sdet_edgel*> &ev = em.edge_cells.begin()[l];
+
+      for (unsigned i=0; i < ev.size(); ++i) {
+        double dtheta = bgld_undirected_angle_distance(ev[i]->tangent, ep->tangent);
+        /*
+#ifndef NDEBUG
+        std::cout 
+          << "Curve point: " << ep->pt  
+          << "<tgt " << ep->tangent*180./vnl_math::pi << ">"
+          << " edgel point: " << ev[i]->pt
+          << "<tgt " << ev[i]->tangent*180./vnl_math::pi << ">";
+
+        std::cout << " dtheta(deg): " << dtheta*180./vnl_math::pi << std::endl;
+#endif
+*/
+        if (dtheta < dtheta_threshold) {
+          inliers->insert(ev[i]->id);
+          break;
+        }
+      }
+    }
+  }
+  
+  return inliers->size();
+}
+
+unsigned bcsid_curve_distance::
+inlier_edgels_dt_oriented(
+    const bcsid_edgel_seq &c, double d_threshold, double dtheta_threshold,
+    const vil_image_view<vxl_uint_32> &dt,
+    const vil_image_view<vxl_uint_32> &label,
+    const sdet_edgemap &em,
+    std::set<int> *inliers,
+    std::vector<unsigned> &edge_support_count,
+    std::vector<unsigned> orig_ids,
+    std::vector<int> *edge_index_chain_ptr
+  )
+{
+#ifndef NDEBUG
+  if (dtheta_threshold > vnl_math::pi/2)
+    std::cerr << "Warning: a threshold of > vnl_math::pi/2 means no threshold.\n";
+#endif
+  
+  bool ignore_index_chain = false;
+  if(edge_index_chain_ptr==NULL){
+    std::vector<int> *dummy_pointer;
+    edge_index_chain_ptr = dummy_pointer;
+    ignore_index_chain = true;
+  }
+  std::vector<int> &edge_index_chain = *edge_index_chain_ptr;
+  //if(!ignore_index_chain)
+  //  edge_index_chain.resize(c.size());
+
+  unsigned edgel_index = 0;
+
+  for (bcsid_edgel_seq_const_iter ep = c.begin(); ep != c.end(); ++ep) {
+    unsigned p_i = static_cast<unsigned>(ep->pt.x()+0.5);
+    unsigned p_j = static_cast<unsigned>(ep->pt.y()+0.5);
+
+    if (dt(p_i, p_j) < d_threshold) {
+      vxl_uint_32 l = label(p_i, p_j);
+      const std::vector<sdet_edgel*> &ev = em.edge_cells.begin()[l];
+
+      for (unsigned i=0; i < ev.size(); ++i) {
+        double dtheta = bgld_undirected_angle_distance(ev[i]->tangent, ep->tangent);
+        /*
+#ifndef NDEBUG
+        std::cout 
+          << "Curve point: " << ep->pt  
+          << "<tgt " << ep->tangent*180./vnl_math::pi << ">"
+          << " edgel point: " << ev[i]->pt
+          << "<tgt " << ev[i]->tangent*180./vnl_math::pi << ">";
+
+        std::cout << " dtheta(deg): " << dtheta*180./vnl_math::pi << std::endl;
+#endif
+*/
+        if (dtheta < dtheta_threshold) {
+          inliers->insert(ev[i]->id);
+	  unsigned supportIndex = orig_ids[edgel_index];
+	  edge_support_count[supportIndex]++;
+	  if(!ignore_index_chain){
+	    edge_index_chain[supportIndex] = ev[i]->id;
+	    //if(ev[i]->id > 1000000)
+	    //  std::cout << ev[i]->id << std::endl;
+	  }
+          break;
+        }
+      }
+    }
+    edgel_index++;
+  }
+  
+  return inliers->size();
+}
+
+
+unsigned bcsid_curve_distance::
 num_inliers_dt_oriented(
     const bcsid_edgel_seq &c, double d_threshold, double dtheta_threshold,
     const vil_image_view<vxl_uint_32> &dt,
@@ -200,6 +315,19 @@ num_inliers_dt_oriented(
   std::set<unsigned> inliers;
 
   return inliers_dt_oriented(c, d_threshold, dtheta_threshold, dt, label, em, 
+      &inliers);
+}
+
+unsigned bcsid_curve_distance::
+num_inlier_edgels_dt_oriented(
+    const bcsid_edgel_seq &c, double d_threshold, double dtheta_threshold,
+    const vil_image_view<vxl_uint_32> &dt,
+    const vil_image_view<vxl_uint_32> &label,
+    const sdet_edgemap &em)
+{
+  std::set<int> inliers;
+
+  return inlier_edgels_dt_oriented(c, d_threshold, dtheta_threshold, dt, label, em, 
       &inliers);
 }
 
