@@ -252,7 +252,7 @@ match_using_orientation_dt_extras(std::vector<unsigned long> *votes_ptr, std::ve
         //bmcsd_util::clip_to_img_bounds(dt(v), &reprojected_curve);
 
         // translate reproj. curve into edgel sequence
-        dbcsi_edgel_seq reproj_edgels;
+        bcsid_edgel_seq reproj_edgels;
         bmcsd_algo_util::bdifd_to_sdet(reprojected_curve, &reproj_edgels);
 
         assert (reproj_edgels.size() == reprojected_curve.size());
@@ -267,10 +267,10 @@ match_using_orientation_dt_extras(std::vector<unsigned long> *votes_ptr, std::ve
           // Anil: Replacing the edge support counting code with my own May 21st, 2014
           //  d_vote = dbcsi_curve_distance::num_inliers_dt_oriented(
           //      reproj_edgels, tau_distance_squared(), tau_dtheta_, dt(v), label(v), *em_[v]);
-                d_vote = dbcsi_curve_distance::inlier_edgels_dt_oriented(
+                d_vote = bcsid_curve_distance::inlier_edgels_dt_oriented(
            reproj_edgels, tau_distance_squared(), tau_dtheta_, dt(v), label(v), *em_[v], &cur_inliers, edge_support_count_per_candidate[ic], orig_ids);          
         } else {
-          d_vote = dbcsi_curve_distance::num_inlier_curvelets_dt_oriented(
+          d_vote = bcsid_curve_distance::num_inlier_curvelets_dt_oriented(
            reproj_edgels, tau_distance_squared(), tau_dtheta_, dt(v), label(v), sels_[v]->CM(),
            tau_min_num_inlier_edgels_per_curvelet_);
         }
@@ -358,7 +358,7 @@ match_mate_curves_using_orientation_dt_extras(unsigned long *votes_ptr, unsigned
 
     // translate reproj. curve into edgel sequence
     bcsid_edgel_seq reproj_edgels;
-    bmcsd_algo_util::bdifd_to_sbdet(reprojected_curve, &reproj_edgels);
+    bmcsd_algo_util::bdifd_to_sdet(reprojected_curve, &reproj_edgels);
 
     assert (reproj_edgels.size() == reprojected_curve.size());
 
