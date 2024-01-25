@@ -1108,10 +1108,10 @@ clip_to_img_bounds(
   *curve_ptr = points_clip;
 }
 
-void mw_util::
+void bmcsd_util::
 clip_to_img_bounds(
     const vil_image_view<vxl_uint_32> &img,
-    dbdif_1st_order_curve_2d *curve_ptr,
+    bdifd_1st_order_curve_2d *curve_ptr,
     vcl_vector<unsigned> &orig_indices)
 {
   const bdifd_1st_order_curve_2d &curve = *curve_ptr;
@@ -1319,11 +1319,11 @@ prune_curves_by_length(
   ss->trim_memory();
 }
 
-void mw_util::
+void bmcsd_util::
 prune_curves_by_length_with_flags(
     double min_length, 
     std::vector< vsol_polyline_2d_sptr > *pcurves,
-    dbbl_subsequence_set *ss, std::vector<std::vector<bool> > &flags
+    bbld_subsequence_set *ss, std::vector<std::vector<bool> > &flags
     )
 {
   std::vector< vsol_polyline_2d_sptr > &old_curves = *pcurves;
