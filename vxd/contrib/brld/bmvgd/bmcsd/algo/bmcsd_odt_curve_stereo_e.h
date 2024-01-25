@@ -41,8 +41,8 @@ public:
   unsigned get_num_image_curves_v0();
 
   // Anil: get/set subsequence set stored in this class
-  void set_sseq(const std::vector<dbbl_subsequence_set> &sseq);
-  std::vector<dbbl_subsequence_set> get_sseq();
+  void set_sseq(const std::vector<bbld_subsequence_set> &sseq);
+  std::vector<bbld_subsequence_set> get_sseq();
 
   // Anil: A version of the matching function to be used with mate curves
   bool match_mate_curves_using_orientation_dt_extras(unsigned long *votes_ptr, unsigned v, unsigned ic);
@@ -60,25 +60,25 @@ public:
 
   //: Anil: Another version of the function that returns uncertainty flags for samples, turn markFlag on to mark used samples using usedSamples_ member
   void reconstruct_candidate_1st_order_with_flags(unsigned ini_id, unsigned end_id, unsigned ic, unsigned curve_id,
-						  const dbdif_rig &rig, dbdif_1st_order_curve_3d *crv_ptr, std::vector<bool> &flags, unsigned &recon_shift);
+						  const bdifd_rig &rig, bdifd_1st_order_curve_3d *crv_ptr, std::vector<bool> &flags, unsigned &recon_shift);
 
   //: Anil: A version of the flagged function that does reconstructions using confirmation views
   void reconstruct_candidate_1st_order_with_flags_temp(unsigned ini_id, unsigned end_id, unsigned ic, unsigned curve_id,
-						  const dbdif_rig &rig, dbdif_1st_order_curve_3d *crv_ptr, std::vector<bool> &flags, unsigned v);
+						  const bdifd_rig &rig, bdifd_1st_order_curve_3d *crv_ptr, std::vector<bool> &flags, unsigned v);
 
   void reconstruct_subcurve_1st_order_with_flags(
       unsigned ini_id_sub,
       unsigned end_id_sub,
-      const dbdif_rig &rig,
-      dbdif_1st_order_curve_3d *curve_3d,
+      const bdifd_rig &rig,
+      bdifd_1st_order_curve_3d *curve_3d,
       std::vector<bool> &curveFlags
       );
 
   void reconstruct_subcurve_1st_order_with_flags(
       unsigned ini_id_sub,
       unsigned end_id_sub,
-      const dbdif_rig &rig,
-      dbdif_1st_order_curve_3d *curve_3d,
+      const bdifd_rig &rig,
+      bdifd_1st_order_curve_3d *curve_3d,
       std::vector<bool> &curveFlags,
       unsigned v
       );
@@ -87,8 +87,8 @@ public:
       unsigned v,
       unsigned ini_id,
       unsigned di0,
-      const dbdif_rig &rig,
-      dbdif_1st_order_point_3d *pt_3D,
+      const bdifd_rig &rig,
+      bdifd_1st_order_point_3d *pt_3D,
       bool &isConfident,
       unsigned &curve_v1
       );
@@ -126,7 +126,7 @@ public:
 private:
   // Anil: Adding the subsequence set as a member here so we can do
   //      epipolar tangency stitching after reconstruction
-  std::vector<dbbl_subsequence_set> sseq_;
+  std::vector<bbld_subsequence_set> sseq_;
 
   // Anil: Adding the samples sizes of the original curves
   std::vector<std::vector<unsigned> > original_curve_sizes_;
@@ -138,18 +138,18 @@ private:
 //: version of dbmcs_match_and_reconstruct_all_curves which fills an attribute
 // for each curve.
 bool dbmcs_match_and_reconstruct_all_curves_attr_e(
-    mw_odt_curve_stereo_e &s, 
-    std::vector<dbdif_1st_order_curve_3d> *crv3d_ptr,
-    mw_discrete_corresp_e *corresp_ptr,
+    bmcsd_odt_curve_stereo_e &s, 
+    std::vector<bdifd_1st_order_curve_3d> *crv3d_ptr,
+    bmcsd_discrete_corresp_e *corresp_ptr,
     std::vector< dbmcs_curve_3d_attributes_e > *attr_ptr,
     bool track_supporting_edges=false
     );
 
 //: version of dbmcs_match_and_reconstruct_all_curves that makes use of mate curves
 bool dbmcs_match_and_reconstruct_all_curves_attr_using_mates(
-    mw_odt_curve_stereo_e &s, 
-    std::vector<dbdif_1st_order_curve_3d> *crv3d_ptr,
-    mw_discrete_corresp *corresp_ptr,
+    bmcsd_odt_curve_stereo_e &s, 
+    std::vector<bdifd_1st_order_curve_3d> *crv3d_ptr,
+    bmcsd_discrete_corresp *corresp_ptr,
     std::vector< dbmcs_curve_3d_attributes_e > *attr_ptr,
     std::vector<std::set<int> > mate_curves_v1,
     bool isFirstRun,
@@ -161,15 +161,15 @@ bool dbmcs_match_and_reconstruct_all_curves_attr_using_mates(
 // \param[out] corresp_ptr : discrete correspondence between the first two
 // views. Only the correspondences passing all thresholds are output.
 bool dbmcs_match_all_curves(
-  mw_odt_curve_stereo_e &s, 
-  mw_discrete_corresp_e *corresp_ptr,
+  bmcsd_odt_curve_stereo_e &s, 
+  bmcsd_discrete_corresp_e *corresp_ptr,
   bool track_supporting_edges=false);
 
 // Anil: mcd version of the matching function that iterates the matches using mate curves
 // Anil: can do the initial seed curve matching, as well as the elongation iterations
 bool dbmcs_match_all_curves_using_mates(
-  mw_odt_curve_stereo_e &s, 
-  mw_discrete_corresp_e *corresp_ptr,
+  bmcsd_odt_curve_stereo_e &s, 
+  bmcsd_discrete_corresp_e *corresp_ptr,
   unsigned seed_id,
   std::vector<std::set<int> > curve_ids,
   bool isFirstRun,
@@ -178,18 +178,18 @@ bool dbmcs_match_all_curves_using_mates(
 //: variant of reconstruct_from_corresp which also outputs attributes.
 bool 
 reconstruct_from_corresp_attr(
-    mw_odt_curve_stereo_e &s, 
-    const mw_discrete_corresp_e &corresp,
-    std::vector<dbdif_1st_order_curve_3d> *crv3d_ptr,
+    bmcsd_odt_curve_stereo_e &s, 
+    const bmcsd_discrete_corresp_e &corresp,
+    std::vector<bdifd_1st_order_curve_3d> *crv3d_ptr,
     std::vector< dbmcs_curve_3d_attributes_e > *attr_ptr,
     unsigned seed_id = 0
     );
 
 bool 
 reconstruct_from_corresp_attr_using_mates(
-    mw_odt_curve_stereo_e &s, 
-    const mw_discrete_corresp_e &corresp,
-    std::vector<dbdif_1st_order_curve_3d> *crv3d_ptr,
+    bmcsd_odt_curve_stereo_e &s, 
+    const bmcsd_discrete_corresp_e &corresp,
+    std::vector<bdifd_1st_order_curve_3d> *crv3d_ptr,
     std::vector< dbmcs_curve_3d_attributes_e > *attr_ptr
     );
 

@@ -18,37 +18,37 @@ bmcsd_odt_curve_stereo_e()
 {
 }
 
-void mw_odt_curve_stereo_e::
+void bmcsd_odt_curve_stereo_e::
 set_original_curve_sizes(const std::vector<std::vector<unsigned> > &original_curve_sizes)
 {
   original_curve_sizes_ = original_curve_sizes;
 }
 
-unsigned mw_odt_curve_stereo_e::
+unsigned bmcsd_odt_curve_stereo_e::
 get_original_curve_size(unsigned v, unsigned c)
 {
   return original_curve_sizes_[v][c];
 }
 
-void mw_odt_curve_stereo_e::
+void bmcsd_odt_curve_stereo_e::
 set_num_image_curves_v0(const unsigned &num_image_curves_v0)
 {
   num_image_curves_v0_ = num_image_curves_v0;
 }
   
-void mw_odt_curve_stereo_e::
-set_sseq(const std::vector<dbbl_subsequence_set> &sseq)
+void bmcsd_odt_curve_stereo_e::
+set_sseq(const std::vector<bbld_subsequence_set> &sseq)
 {
   sseq_ = sseq;
 }
 
-std::vector<dbbl_subsequence_set> mw_odt_curve_stereo_e::
+std::vector<bbld_subsequence_set> bmcsd_odt_curve_stereo_e::
 get_sseq()
 {
   return sseq_;
 }
 
-bool mw_odt_curve_stereo_e::
+bool bmcsd_odt_curve_stereo_e::
 match_using_orientation_dt_extras(
     std::vector<unsigned long> *votes_ptr, 
     std::vector<std::vector<std::set<int> > > &inlierEdgelsPerCandidate,
@@ -83,12 +83,12 @@ match_using_orientation_dt_extras(
 
   get_increasing_endpoints(&ini_id, &end_id);
 
-  dbdif_rig rig(cams(v0()).Pr_, cams(v1()).Pr_);
+  bdifd_rig rig(cams(v0()).Pr_, cams(v1()).Pr_);
 
   // For each candidate curve
   reprojection_crv_.resize(num_candidates());
 
-  std::vector<dbbl_subsequence_set> sseq = this->get_sseq();
+  std::vector<bbld_subsequence_set> sseq = this->get_sseq();
 
   for (unsigned ic=0; ic < num_candidates(); ++ic) {
     unsigned origID_u = sseq[this->v1()][crv_candidates(ic)].orig_id();
@@ -101,12 +101,12 @@ match_using_orientation_dt_extras(
       std::vector<unsigned> curInlierViews;
       std::vector<std::vector<int> > edge_index_chain_per_conf_view(nviews()-2);
 
-      dbdif_1st_order_curve_3d curve_3d;
+      bdifd_1st_order_curve_3d curve_3d;
       reconstruct_candidate_1st_order(ini_id, end_id, ic, rig, &curve_3d);
       edge_support_count_per_candidate[ic].resize(curve_3d.size());
       std::fill(edge_support_count_per_candidate[ic].begin(),edge_support_count_per_candidate[ic].end(),0);
 
-#ifdef MW_VERBOSE_DEBUG
+#ifdef BMCSD_VERBOSE_DEBUG
       std::cout << "Votes for curve[" << ic << "] ===========" << std::endl;
 #endif
       reprojection_crv_[ic].resize(nviews());
@@ -115,18 +115,18 @@ match_using_orientation_dt_extras(
           continue;
 
         // Compute reprojected_curve into view v
-        dbdif_1st_order_curve_2d reprojected_curve;
+        bdifd_1st_order_curve_2d reprojected_curve;
         project_curve_1st_order(v, curve_3d, &reprojected_curve);
         assert (reprojected_curve.size() == curve_3d.size());
 
         // Anil: Clip to image bounds, but keep track of the original curve sample IDs
         std::vector<unsigned> orig_ids;
-        mw_util::clip_to_img_bounds(dt(v), &reprojected_curve, orig_ids);
-        //mw_util::clip_to_img_bounds(dt(v), &reprojected_curve);
+        bmcsd_util::clip_to_img_bounds(dt(v), &reprojected_curve, orig_ids);
+        //bmcsd_util::clip_to_img_bounds(dt(v), &reprojected_curve);
 
         // translate reproj. curve into edgel sequence
         dbcsi_edgel_seq reproj_edgels;
-        mw_algo_util::dbdif_to_dbdet(reprojected_curve, &reproj_edgels);
+        bmcsd_algo_util::bdifd_to_sbdet(reprojected_curve, &reproj_edgels);
 
         assert (reproj_edgels.size() == reprojected_curve.size());
 
@@ -161,7 +161,7 @@ match_using_orientation_dt_extras(
             num_inlier_views++;
           }
 
-#ifdef MW_VERBOSE_DEBUG
+#ifdef BMCSD_VERBOSE_DEBUG
         std::cout << "\t\tinliers on view[" << v << "] = " << d_vote << std::endl;
 #endif
       }
@@ -180,7 +180,7 @@ match_using_orientation_dt_extras(
       if(num_inlier_views<6)
 	      votes[ic] = 0;
 
-#ifdef MW_VERBOSE_DEBUG
+#ifdef BMCSD_VERBOSE_DEBUG
       std::cout << "\t\tcurve[" << ic << "] has " << votes[ic] << " total inliers\n";
       std::cout << "\t\tend ===========" << std::endl;
 #endif
@@ -189,7 +189,7 @@ match_using_orientation_dt_extras(
   return true;
 }
 
-bool mw_odt_curve_stereo_e::
+bool bmcsd_odt_curve_stereo_e::
 match_using_orientation_dt_extras(std::vector<unsigned long> *votes_ptr, std::vector<std::vector<std::set<int> > > &inlierEdgelsPerCandidate,
                                   std::vector<std::vector<unsigned> > &inlierViews, std::set<int> curve_ids, 
 				  std::vector<std::vector<unsigned> > &edge_support_count_per_candidate)
@@ -211,11 +211,11 @@ match_using_orientation_dt_extras(std::vector<unsigned long> *votes_ptr, std::ve
 
   get_increasing_endpoints(&ini_id, &end_id);
 
-  dbdif_rig rig(cams(v0()).Pr_, cams(v1()).Pr_);
+  bdifd_rig rig(cams(v0()).Pr_, cams(v1()).Pr_);
 
   // For each candidate curve
   reprojection_crv_.resize(num_candidates());
-  std::vector<dbbl_subsequence_set> sseq = this->get_sseq();
+  std::vector<bbld_subsequence_set> sseq = this->get_sseq();
 
   for (unsigned ic=0; ic < num_candidates(); ++ic) {
     unsigned origID_u = sseq[this->v1()][crv_candidates(ic)].orig_id();
@@ -228,12 +228,12 @@ match_using_orientation_dt_extras(std::vector<unsigned long> *votes_ptr, std::ve
       std::vector<std::set<int> > inlierEdgelsPerConfView;
       std::vector<unsigned> curInlierViews;
 
-      dbdif_1st_order_curve_3d curve_3d;
+      bdifd_1st_order_curve_3d curve_3d;
       reconstruct_candidate_1st_order(ini_id, end_id, ic, rig, &curve_3d);
       edge_support_count_per_candidate[ic].resize(curve_3d.size());
       std::fill(edge_support_count_per_candidate[ic].begin(),edge_support_count_per_candidate[ic].end(),0);
 
-#ifdef MW_VERBOSE_DEBUG
+#ifdef BMCSD_VERBOSE_DEBUG
       std::cout << "Votes for curve[" << ic << "] ===========" << std::endl;
 #endif
       reprojection_crv_[ic].resize(nviews());
@@ -242,18 +242,18 @@ match_using_orientation_dt_extras(std::vector<unsigned long> *votes_ptr, std::ve
           continue;
 
         // Compute reprojected_curve into view v
-        dbdif_1st_order_curve_2d reprojected_curve;
+        bdifd_1st_order_curve_2d reprojected_curve;
         project_curve_1st_order(v, curve_3d, &reprojected_curve);
         assert (reprojected_curve.size() == curve_3d.size());
 
         // Anil: Clip to image bounds, but keep track of the original curve sample IDs
         std::vector<unsigned> orig_ids;
-        mw_util::clip_to_img_bounds(dt(v), &reprojected_curve, orig_ids);
-        //mw_util::clip_to_img_bounds(dt(v), &reprojected_curve);
+        bmcsd_util::clip_to_img_bounds(dt(v), &reprojected_curve, orig_ids);
+        //bmcsd_util::clip_to_img_bounds(dt(v), &reprojected_curve);
 
         // translate reproj. curve into edgel sequence
         dbcsi_edgel_seq reproj_edgels;
-        mw_algo_util::dbdif_to_dbdet(reprojected_curve, &reproj_edgels);
+        bmcsd_algo_util::bdifd_to_sbdet(reprojected_curve, &reproj_edgels);
 
         assert (reproj_edgels.size() == reprojected_curve.size());
 
@@ -285,7 +285,7 @@ match_using_orientation_dt_extras(std::vector<unsigned long> *votes_ptr, std::ve
             num_inlier_views++;
           }
 
-#ifdef MW_VERBOSE_DEBUG
+#ifdef BMCSD_VERBOSE_DEBUG
         std::cout << "\t\tinliers on view[" << v << "] = " << d_vote << std::endl;
 #endif
       }
@@ -302,7 +302,7 @@ match_using_orientation_dt_extras(std::vector<unsigned long> *votes_ptr, std::ve
       if(num_inlier_views<6)
 	      votes[ic] = 0;
 
-#ifdef MW_VERBOSE_DEBUG      
+#ifdef BMCSD_VERBOSE_DEBUG      
       std::cout << "\t\tcurve[" << ic << "] has " << votes[ic] << " total inliers\n";
       std::cout << "\t\tend ===========" << std::endl;
 #endif
@@ -312,7 +312,7 @@ match_using_orientation_dt_extras(std::vector<unsigned long> *votes_ptr, std::ve
   return true;
 }
 
-bool mw_odt_curve_stereo_e::
+bool bmcsd_odt_curve_stereo_e::
 match_mate_curves_using_orientation_dt_extras(unsigned long *votes_ptr, unsigned v, unsigned ic)
 {
 #ifndef NDEBUG
@@ -333,15 +333,15 @@ match_mate_curves_using_orientation_dt_extras(unsigned long *votes_ptr, unsigned
 
   get_increasing_endpoints(&ini_id, &end_id);
 
-  dbdif_rig rig(cams(v0()).Pr_, cams(v).Pr_);
+  bdifd_rig rig(cams(v0()).Pr_, cams(v).Pr_);
 
   // Anil: For the input candidate curve
   reprojection_crv_.resize(1);
 
-  dbdif_1st_order_curve_3d curve_3d;
+  bdifd_1st_order_curve_3d curve_3d;
   reconstruct_candidate_1st_order(ini_id, end_id, ic, rig, &curve_3d);
 
-#ifdef MW_VERBOSE_DEBUG
+#ifdef BMCSD_VERBOSE_DEBUG
   std::cout << "Votes for curve[" << ic << "] ===========" << std::endl;
 #endif
   reprojection_crv_[0].resize(nviews());
@@ -350,15 +350,15 @@ match_mate_curves_using_orientation_dt_extras(unsigned long *votes_ptr, unsigned
       continue;
 
     // Compute reprojected_curve into view vv
-    dbdif_1st_order_curve_2d reprojected_curve;
+    bdifd_1st_order_curve_2d reprojected_curve;
     project_curve_1st_order(vv, curve_3d, &reprojected_curve);
     assert (reprojected_curve.size() == curve_3d.size());
 
-    mw_util::clip_to_img_bounds(dt(vv), &reprojected_curve);
+    bmcsd_util::clip_to_img_bounds(dt(vv), &reprojected_curve);
 
     // translate reproj. curve into edgel sequence
     dbcsi_edgel_seq reproj_edgels;
-    mw_algo_util::dbdif_to_dbdet(reprojected_curve, &reproj_edgels);
+    bmcsd_algo_util::bdifd_to_sbdet(reprojected_curve, &reproj_edgels);
 
     assert (reproj_edgels.size() == reprojected_curve.size());
 
@@ -376,7 +376,7 @@ match_mate_curves_using_orientation_dt_extras(unsigned long *votes_ptr, unsigned
 
     votes += (d_vote < tau_min_inliers_per_view_)? 0 : d_vote;
 
-#ifdef MW_VERBOSE_DEBUG
+#ifdef BMCSD_VERBOSE_DEBUG
     std::cout << "\t\tinliers on view[" << vv << "] = " << d_vote << std::endl;
 #endif
   }
@@ -384,7 +384,7 @@ match_mate_curves_using_orientation_dt_extras(unsigned long *votes_ptr, unsigned
   if (votes < tau_min_total_inliers_)
     votes = 0;
 
-#ifdef MW_VERBOSE_DEBUG
+#ifdef BMCSD_VERBOSE_DEBUG
   std::cout << "\t\tcurve[" << ic << "] has " << votes[ic] << " total inliers\n";
   std::cout << "\t\tend ===========" << std::endl;
 #endif
@@ -410,11 +410,11 @@ reconstruct_candidate_1st_order(unsigned ini_id, unsigned end_id, unsigned ic,
   assert(curve_3d.size() == end_id_sub - ini_id_sub  + 1);
 }
 
-void mw_odt_curve_stereo_e::
+void bmcsd_odt_curve_stereo_e::
 reconstruct_candidate_1st_order_with_flags(unsigned ini_id, unsigned end_id, unsigned ic, unsigned curve_id,
-                                           const dbdif_rig &rig, dbdif_1st_order_curve_3d *crv_ptr, std::vector<bool> &flags, unsigned &recon_shift)
+                                           const bdifd_rig &rig, bdifd_1st_order_curve_3d *crv_ptr, std::vector<bool> &flags, unsigned &recon_shift)
 {
-  dbdif_1st_order_curve_3d &curve_3d = *crv_ptr;
+  bdifd_1st_order_curve_3d &curve_3d = *crv_ptr;
   unsigned ini_id_sub, end_id_sub;
   get_matching_subcurve(ic, ini_id, end_id, &ini_id_sub, &end_id_sub);
 
@@ -440,11 +440,11 @@ reconstruct_candidate_1st_order_with_flags(unsigned ini_id, unsigned end_id, uns
   recon_shift = ini_id_sub;
 }
 
-void mw_odt_curve_stereo_e::
+void bmcsd_odt_curve_stereo_e::
 reconstruct_candidate_1st_order_with_flags_temp(unsigned ini_id, unsigned end_id, unsigned ic, unsigned curve_id,
-                                           const dbdif_rig &rig, dbdif_1st_order_curve_3d *crv_ptr, std::vector<bool> &flags, unsigned v)
+                                           const bdifd_rig &rig, bdifd_1st_order_curve_3d *crv_ptr, std::vector<bool> &flags, unsigned v)
 {
-  dbdif_1st_order_curve_3d &curve_3d = *crv_ptr;
+  bdifd_1st_order_curve_3d &curve_3d = *crv_ptr;
   unsigned ini_id_sub, end_id_sub;
   get_matching_subcurve(ic, ini_id, end_id, &ini_id_sub, &end_id_sub);
 
@@ -506,12 +506,12 @@ reconstruct_subcurve_1st_order(
 
 }
 
-void mw_odt_curve_stereo_e::
+void bmcsd_odt_curve_stereo_e::
 reconstruct_subcurve_1st_order_with_flags(
     unsigned ini_id_sub,
     unsigned end_id_sub,
-    const dbdif_rig &rig,
-    dbdif_1st_order_curve_3d *curve_3d,
+    const bdifd_rig &rig,
+    bdifd_1st_order_curve_3d *curve_3d,
     std::vector<bool> &curveFlags
     )
 {
@@ -530,7 +530,7 @@ reconstruct_subcurve_1st_order_with_flags(
   }
 
   for (unsigned di0=0; di0 + ini_id_sub <= end_id_sub; ++di0) {
-    dbdif_1st_order_point_3d pt_3D;
+    bdifd_1st_order_point_3d pt_3D;
     bool curFlag;
     unsigned curveID_v1;
     reconstruct_curve_point_1st_order_with_flags(second_view, ini_id_sub, di0, rig, &pt_3D, curFlag, curveID_v1);
@@ -554,12 +554,12 @@ reconstruct_subcurve_1st_order_with_flags(
     
 }
 
-void mw_odt_curve_stereo_e::
+void bmcsd_odt_curve_stereo_e::
 reconstruct_subcurve_1st_order_with_flags(
     unsigned ini_id_sub,
     unsigned end_id_sub,
-    const dbdif_rig &rig,
-    dbdif_1st_order_curve_3d *curve_3d,
+    const bdifd_rig &rig,
+    bdifd_1st_order_curve_3d *curve_3d,
     std::vector<bool> &curveFlags,
     unsigned v
     )
@@ -577,7 +577,7 @@ reconstruct_subcurve_1st_order_with_flags(
   }
 
   for (unsigned di0=0; di0 + ini_id_sub <= end_id_sub; ++di0) {
-    dbdif_1st_order_point_3d pt_3D;
+    bdifd_1st_order_point_3d pt_3D;
     bool curFlag;
     unsigned curveID_v1;
     reconstruct_curve_point_1st_order_with_flags(v, ini_id_sub, di0, rig, &pt_3D, curFlag, curveID_v1);
@@ -601,18 +601,18 @@ reconstruct_subcurve_1st_order_with_flags(
     
 }
 
-void mw_odt_curve_stereo_e::
+void bmcsd_odt_curve_stereo_e::
 reconstruct_curve_point_1st_order(
     unsigned v,
     unsigned ini_id,
     unsigned di0, 
-    const dbdif_rig &rig,
-    dbdif_1st_order_point_3d *pt_3D
+    const bdifd_rig &rig,
+    bdifd_1st_order_point_3d *pt_3D
     )
 {
   static const unsigned id_v0 = 0;
 
-  dbdif_1st_order_point_2d p0_w
+  bdifd_1st_order_point_2d p0_w
     = pt_tgts_[id_v0][selected_crv_id(id_v0)][ini_id + di0];
 
   // Corresponding points
@@ -624,13 +624,13 @@ reconstruct_curve_point_1st_order(
   lineCoef.push_back(ep(v-1)[di0+ini_id].c());
   {
   vgl_point_2d<double> pt;
-  mw_epi_interceptor::curve_line_intersection_simple(
+  bmcsd_epi_interceptor::curve_line_intersection_simple(
       *selected_crv(v), ep(v-1)[di0+ini_id], &pt, &nearest_sample_id);
   }
 
   dummyID = nearest_sample_id;
 
-  dbdif_1st_order_point_2d 
+  bdifd_1st_order_point_2d 
     p1_w = pt_tgts_[v][selected_crv_id(v)][nearest_sample_id];
 
   if (!p0_w.valid || !p1_w.valid)
@@ -640,20 +640,20 @@ reconstruct_curve_point_1st_order(
   rig.reconstruct_1st_order(p0_w, p1_w, pt_3D);
 }
 
-void mw_odt_curve_stereo_e::
+void bmcsd_odt_curve_stereo_e::
 reconstruct_curve_point_1st_order_with_flags(
     unsigned v,
     unsigned ini_id,
     unsigned di0,
-    const dbdif_rig &rig,
-    dbdif_1st_order_point_3d *pt_3D,
+    const bdifd_rig &rig,
+    bdifd_1st_order_point_3d *pt_3D,
     bool &isConfident,
     unsigned &sample_v1
     )
 {
   static const unsigned id_v0 = 0;
 
-  dbdif_1st_order_point_2d p0_w
+  bdifd_1st_order_point_2d p0_w
     = pt_tgts_[id_v0][selected_crv_id(id_v0)][ini_id + di0];
 
   // Corresponding points
@@ -665,14 +665,14 @@ reconstruct_curve_point_1st_order_with_flags(
   lineCoef.push_back(ep(v-1)[di0+ini_id].c());
   {
   vgl_point_2d<double> pt;
-  mw_epi_interceptor::curve_line_intersection_simple(
+  bmcsd_epi_interceptor::curve_line_intersection_simple(
       *selected_crv(v), ep(v-1)[di0+ini_id], &pt, &nearest_sample_id);
   }
 
   dummyID = nearest_sample_id;
   isConfident = vsol_flags_[v][selected_crv_id(v)][nearest_sample_id];
 
-  dbdif_1st_order_point_2d 
+  bdifd_1st_order_point_2d 
     p1_w = pt_tgts_[v][selected_crv_id(v)][nearest_sample_id];
 
   if (!p0_w.valid || !p1_w.valid)
@@ -683,23 +683,23 @@ reconstruct_curve_point_1st_order_with_flags(
   sample_v1 = nearest_sample_id;
 }
 
-void mw_odt_curve_stereo_e::
+void bmcsd_odt_curve_stereo_e::
 break_curves_into_episegs_pairwise(
     std::vector<std::vector< vsol_polyline_2d_sptr > > *broken_vsols,
-    std::vector<dbbl_subsequence_set> *ss_ptr
+    std::vector<bbld_subsequence_set> *ss_ptr
     )
 {
   std::cout << "Called ODT episeg breaker with tau_min_epiangle = " 
     << tau_min_epiangle_*180.0/vnl_math::pi << " degrees" << std::endl;
   assert(has_curve_tangents());
-  std::vector<dbbl_subsequence_set> &ss = *ss_ptr;
+  std::vector<bbld_subsequence_set> &ss = *ss_ptr;
   broken_vsols->resize(nviews());
   ss.resize(nviews());
   vgl_homg_point_2d<double> e, e_prime;
   fm_[v0()][v1()].get_epipoles(e, e_prime);
 
   {
-  dbbl_subsequence_set s_a;
+  bbld_subsequence_set s_a;
   std::vector<vsol_polyline_2d_sptr> vsols_broken_at_turns;
 
   //Correct this!
@@ -727,7 +727,7 @@ break_curves_into_episegs_pairwise(
   }
   
   {
-  dbbl_subsequence_set s_a;
+  bbld_subsequence_set s_a;
   std::vector<vsol_polyline_2d_sptr> vsols_broken_at_turns;
 
   //Correct this!
@@ -751,7 +751,7 @@ break_curves_into_episegs_pairwise(
       continue;
     fm_[v0()][v].get_epipoles(e, e_prime);
 
-    dbbl_subsequence_set s_a;
+    bbld_subsequence_set s_a;
     std::vector<vsol_polyline_2d_sptr> vsols_broken_at_turns;
 
     //Correct this!
@@ -769,19 +769,19 @@ break_curves_into_episegs_pairwise(
   }
 }
 
-void mw_odt_curve_stereo_e::
+void bmcsd_odt_curve_stereo_e::
 break_curves_into_episegs_angle(
   const std::vector< vsol_polyline_2d_sptr >  &vsols,
   const std::vector<std::vector<double> > &tgts,
   double min_epiangle,
   std::vector<vsol_polyline_2d_sptr> *vsols2,
   const vgl_homg_point_2d<double> &e,
-  dbbl_subsequence_set *ss_ptr,
+  bbld_subsequence_set *ss_ptr,
   bool print, bool onlyMark,
   std::vector<std::vector<bool> > &uncertaintyFlags
   )
 {
-  dbbl_subsequence_set &ss = *ss_ptr;
+  bbld_subsequence_set &ss = *ss_ptr;
   // ----------------------------------------------------------------------
   // Break curve
 
@@ -812,7 +812,7 @@ break_curves_into_episegs_angle(
 
     vsol_digital_curve_2d_sptr dc = new vsol_digital_curve_2d(samples);
     // A2 - apply episeg
-    dbbl_subsequence_set ss_partition;
+    bbld_subsequence_set ss_partition;
     std::vector<dbecl_episeg_sptr> eps = factory.convert_curve_using_tangents(dc, tgts[i], &ss_partition, print, i);
 
     assert(ss_partition.num_subsequences() == eps.size());
@@ -864,13 +864,13 @@ break_curves_into_episegs_angle(
 
 bool 
 dbmcs_match_all_curves(
-  mw_odt_curve_stereo_e &s, 
-  mw_discrete_corresp_e *corresp_ptr,
+  bmcsd_odt_curve_stereo_e &s, 
+  bmcsd_discrete_corresp_e *corresp_ptr,
   bool track_supporting_edges)
 {
-  mw_discrete_corresp_e &corresp = *corresp_ptr;
+  bmcsd_discrete_corresp_e &corresp = *corresp_ptr;
   corresp.set_size(s.num_curves(s.v0()), s.num_curves(s.v1()));
-  corresp.set_checksum(mw_discrete_corresp_algo::compute_checksum(s));
+  corresp.set_checksum(bmcsd_discrete_corresp_algo::compute_checksum(s));
 
   unsigned const ncurves = s.num_curves(s.v0());
 
@@ -924,7 +924,7 @@ dbmcs_match_all_curves(
     assert(votes.size() == s.num_candidates());
     for (unsigned i=0; i < s.num_candidates(); ++i) {
         if (votes[i] > 0)
-            corresp[c].push_back(mw_attributed_object(s.crv_candidates(i), inlierEdgelsPerCandidate[i], inlierViews[i], false, votes[i]));
+            corresp[c].push_back(bmcsd_attributed_object(s.crv_candidates(i), inlierEdgelsPerCandidate[i], inlierViews[i], false, votes[i]));
     }
 
   }
@@ -936,16 +936,16 @@ dbmcs_match_all_curves(
 
 bool 
 dbmcs_match_all_curves_using_mates(
-  mw_odt_curve_stereo_e &s, 
-  mw_discrete_corresp_e *corresp_ptr,
+  bmcsd_odt_curve_stereo_e &s, 
+  bmcsd_discrete_corresp_e *corresp_ptr,
   unsigned seed_id,
   std::vector<std::set<int> > curve_ids,
   bool isFirstRun,
   bool track_supporting_edges)
 {
-  mw_discrete_corresp_e &corresp = *corresp_ptr;
+  bmcsd_discrete_corresp_e &corresp = *corresp_ptr;
   corresp.set_size(s.num_curves(s.v0()), s.num_curves(s.v1()));
-  corresp.set_checksum(mw_discrete_corresp_algo::compute_checksum(s));
+  corresp.set_checksum(bmcsd_discrete_corresp_algo::compute_checksum(s));
 
   unsigned const ncurves = s.num_curves(s.v0());
 
@@ -963,7 +963,7 @@ dbmcs_match_all_curves_using_mates(
 
   //s.edge_curve_index_.resize(s.nviews()-2);
   
-  std::vector<dbbl_subsequence_set> sseq = s.get_sseq();
+  std::vector<bbld_subsequence_set> sseq = s.get_sseq();
   if(isFirstRun)
   {
     for (unsigned c=0; c < ncurves; ++c) {
@@ -1007,7 +1007,7 @@ dbmcs_match_all_curves_using_mates(
 	assert(votes.size() == s.num_candidates());
 	for (unsigned i=0; i < s.num_candidates(); ++i) {
 	  if (votes[i] > 0)
-	    corresp[c].push_back(mw_attributed_object(s.crv_candidates(i), s.v1(), inlierEdgelsPerCandidate[i], inlierViews[i], 
+	    corresp[c].push_back(bmcsd_attributed_object(s.crv_candidates(i), s.v1(), inlierEdgelsPerCandidate[i], inlierViews[i], 
 						      edge_support_count_per_candidate[i], false, votes[i], edge_index_chain_per_candidate[i]));
 	}
       }
@@ -1060,7 +1060,7 @@ dbmcs_match_all_curves_using_mates(
 
 	for (unsigned i=0; i < s.num_candidates(); ++i) {
 	  if (votes[i] > 0)
-	    corresp[c].push_back(mw_attributed_object(s.crv_candidates(i), s.v1(), inlierEdgelsPerCandidate[i], inlierViews[i], edge_support_count_per_candidate[i], false, votes[i]));
+	    corresp[c].push_back(bmcsd_attributed_object(s.crv_candidates(i), s.v1(), inlierEdgelsPerCandidate[i], inlierViews[i], edge_support_count_per_candidate[i], false, votes[i]));
 	}
 
       }
@@ -1076,9 +1076,9 @@ dbmcs_match_all_curves_using_mates(
 /*
 bool 
 dbmcs_match_and_reconstruct_all_curves_attr(
-    mw_odt_curve_stereo_e &s, 
-    std::vector<dbdif_1st_order_curve_3d> *crv3d_ptr,
-    mw_discrete_corresp_e *corresp_ptr,
+    bmcsd_odt_curve_stereo_e &s, 
+    std::vector<bdifd_1st_order_curve_3d> *crv3d_ptr,
+    bmcsd_discrete_corresp_e *corresp_ptr,
     std::vector< dbmcs_curve_3d_attributes_e > *attr_ptr
     )
 {
@@ -1099,9 +1099,9 @@ dbmcs_match_and_reconstruct_all_curves_attr(
 
 bool 
 dbmcs_match_and_reconstruct_all_curves_attr(
-    mw_odt_curve_stereo_e &s, 
-    std::vector<dbdif_1st_order_curve_3d> *crv3d_ptr,
-    mw_discrete_corresp_e *corresp_ptr,
+    bmcsd_odt_curve_stereo_e &s, 
+    std::vector<bdifd_1st_order_curve_3d> *crv3d_ptr,
+    bmcsd_discrete_corresp_e *corresp_ptr,
     std::vector< dbmcs_curve_3d_attributes_e > *attr_ptr,
     bool track_supporting_edges
     )
@@ -1123,9 +1123,9 @@ dbmcs_match_and_reconstruct_all_curves_attr(
 
 bool 
 dbmcs_match_and_reconstruct_all_curves_attr_using_mates(
-    mw_odt_curve_stereo_e &s, 
-    std::vector<dbdif_1st_order_curve_3d> *crv3d_ptr,
-    mw_discrete_corresp_e *corresp_ptr,
+    bmcsd_odt_curve_stereo_e &s, 
+    std::vector<bdifd_1st_order_curve_3d> *crv3d_ptr,
+    bmcsd_discrete_corresp_e *corresp_ptr,
     std::vector< dbmcs_curve_3d_attributes_e > *attr_ptr,
     std::vector<std::set<int> > mate_curves_v1,
     bool isFirstRun,
@@ -1152,22 +1152,22 @@ dbmcs_match_and_reconstruct_all_curves_attr_using_mates(
 
 bool 
 reconstruct_from_corresp_attr(
-    mw_odt_curve_stereo_e &s, 
-    const mw_discrete_corresp_e &corresp,
-    std::vector<dbdif_1st_order_curve_3d> *crv3d_ptr,    std::vector< dbmcs_curve_3d_attributes_e > *attr_ptr,
+    bmcsd_odt_curve_stereo_e &s, 
+    const bmcsd_discrete_corresp_e &corresp,
+    std::vector<bdifd_1st_order_curve_3d> *crv3d_ptr,    std::vector< dbmcs_curve_3d_attributes_e > *attr_ptr,
     unsigned seed_id
     )
 {
   std::cout << "Reconstructing curves\n";
 
-  std::vector<dbdif_1st_order_curve_3d> &crv3d = *crv3d_ptr;
+  std::vector<bdifd_1st_order_curve_3d> &crv3d = *crv3d_ptr;
   std::vector< dbmcs_curve_3d_attributes_e > &attr = *attr_ptr;
   unsigned const ncurves = s.num_curves(s.v0());
   assert (ncurves == corresp.size());
   crv3d.reserve(ncurves);
   attr.reserve(ncurves);
 
-  dbdif_rig rig(s.cams(s.v0()).Pr_, s.cams(s.v1()).Pr_);
+  bdifd_rig rig(s.cams(s.v0()).Pr_, s.cams(s.v1()).Pr_);
   for (unsigned c=0; c < ncurves; ++c) {
     if (corresp[c].empty())
       continue;
@@ -1192,7 +1192,7 @@ reconstruct_from_corresp_attr(
     std::vector<bool> certaintyFlags;
     unsigned ini_shift;
 
-    std::vector<dbbl_subsequence_set> sseq = s.get_sseq();
+    std::vector<bbld_subsequence_set> sseq = s.get_sseq();
 
     s.reconstruct_candidate_1st_order_with_flags(ini_id, end_id, ic, c, rig, &crv3d.back(), certaintyFlags, ini_shift);
     //s.reconstruct_candidate_1st_order(ini_id, end_id, ic, rig, &crv3d.back());
@@ -1201,7 +1201,7 @@ reconstruct_from_corresp_attr(
     attr.back().set_i0_i1(c, corresp[c].front().id());
     attr.back().total_support_ = static_cast<unsigned>(corresp[c].front().cost());
 
-    // Anil: Propagating the edgel support data from mw_discrete_corresp_e to dbmcs_curve_3d_attributes_e
+    // Anil: Propagating the edgel support data from bmcsd_discrete_corresp_e to dbmcs_curve_3d_attributes_e
     attr.back().supportingEdgelsPerConfView_ = corresp[c].front().supportingStructures_;
     // Anil: Computing mate curves using the supporting edgel information
     s.mate_curves_.clear();
@@ -1234,13 +1234,13 @@ reconstruct_from_corresp_attr(
     attr.back().mate_curves_ = s.mate_curves_;
     attr.back().mate_curve_weights_ = mate_curve_weights;
 
-    // Anil: Propagating the inlier view data from mw_discrete_corresp_e to dbmcs_curve_3d_attributes_e
+    // Anil: Propagating the inlier view data from bmcsd_discrete_corresp_e to dbmcs_curve_3d_attributes_e
     attr.back().inlier_views_ = corresp[c].front().inliers_;
 
     // Anil: Propagating the edge support data for each reconstructed curve sample
     attr.back().edge_index_chain_ = corresp[c].front().index_chain_;
 
-    // Anil: Propagating the edge support count vector from mw_discrete_corresp_e to dbmcs_curve_3d_attributes_e
+    // Anil: Propagating the edge support count vector from bmcsd_discrete_corresp_e to dbmcs_curve_3d_attributes_e
     //Also propagating the offset to convert hypothesis indices to image curve indices using subseqence set
     //std::cout << "SHIFT: " << sseq[s.v0()][c].ini() << "+" << ini_shift << std::endl;
     attr.back().imageCurveOffset_ = sseq[s.v0()][c].ini() + ini_shift;
@@ -1251,13 +1251,13 @@ reconstruct_from_corresp_attr(
     attr.back().origCurveSize_ = s.get_original_curve_size(s.v0(),sseq[s.v0()][c].orig_id());
     attr.back().origCurveSize_v1_ = s.get_original_curve_size(s.v1(),sseq[s.v1()][corresp[c].front().id()].orig_id());
 
-    // Anil: Propagating the original ID of the unbroken image curve from mw_odt_curve_stereo_e to 
-    //      dbmcs_curve_3d_attributes_e using dbbl_subsequence_set
+    // Anil: Propagating the original ID of the unbroken image curve from bmcsd_odt_curve_stereo_e to 
+    //      dbmcs_curve_3d_attributes_e using bbld_subsequence_set
     attr.back().orig_id_v0_ = sseq[s.v0()][c].orig_id();
     attr.back().orig_id_v1_ = sseq[s.v1()][corresp[c].front().id()].orig_id();
 
-    // Anil: Propagating the ID of the broken image curve (before pruning) from mw_odt_curve_stereo_e to 
-    //      dbmcs_curve_3d_attributes_e using dbbl_subsequence_set
+    // Anil: Propagating the ID of the broken image curve (before pruning) from bmcsd_odt_curve_stereo_e to 
+    //      dbmcs_curve_3d_attributes_e using bbld_subsequence_set
     attr.back().int_id_v0_ = sseq[s.v0()][c].int_id();
     attr.back().int_id_v1_ = sseq[s.v1()][corresp[c].front().id()].int_id();
 
@@ -1275,25 +1275,25 @@ reconstruct_from_corresp_attr(
 
 bool 
 reconstruct_from_corresp_attr_using_mates(
-    mw_odt_curve_stereo_e &s, 
-    const mw_discrete_corresp_e &corresp,
-    std::vector<dbdif_1st_order_curve_3d> *crv3d_ptr,
+    bmcsd_odt_curve_stereo_e &s, 
+    const bmcsd_discrete_corresp_e &corresp,
+    std::vector<bdifd_1st_order_curve_3d> *crv3d_ptr,
     std::vector< dbmcs_curve_3d_attributes_e > *attr_ptr
     )
 {
   std::cout << "Reconstructing curves\n";
 
-  std::vector<dbdif_1st_order_curve_3d> &crv3d = *crv3d_ptr;
+  std::vector<bdifd_1st_order_curve_3d> &crv3d = *crv3d_ptr;
   std::vector< dbmcs_curve_3d_attributes_e > &attr = *attr_ptr;
   unsigned const ncurves = s.num_curves(s.v0());
   assert (ncurves == corresp.size());
   crv3d.reserve(ncurves);
   attr.reserve(ncurves);
 
-  dbdif_rig rig(s.cams(s.v0()).Pr_, s.cams(s.v1()).Pr_);
+  bdifd_rig rig(s.cams(s.v0()).Pr_, s.cams(s.v1()).Pr_);
   unsigned c=0;
 
-  for (std::list<mw_attributed_object>::const_iterator m=corresp[c].begin(); m != corresp[c].end(); ++m) {  
+  for (std::list<bmcsd_attributed_object>::const_iterator m=corresp[c].begin(); m != corresp[c].end(); ++m) {  
 
     unsigned curView = m->container_id_;
 
@@ -1320,20 +1320,20 @@ reconstruct_from_corresp_attr_using_mates(
     attr.back().set_i0_i1(c, m->id());
     attr.back().total_support_ = static_cast<unsigned>(m->cost());
 
-    // Anil: Propagating the edgel support data from mw_discrete_corresp_e to dbmcs_curve_3d_attributes_e
+    // Anil: Propagating the edgel support data from bmcsd_discrete_corresp_e to dbmcs_curve_3d_attributes_e
     attr.back().supportingEdgelsPerConfView_ = m->supportingStructures_;
 
-    // Anil: Propagating the inlier view data from mw_discrete_corresp_e to dbmcs_curve_3d_attributes_e
+    // Anil: Propagating the inlier view data from bmcsd_discrete_corresp_e to dbmcs_curve_3d_attributes_e
     attr.back().inlier_views_ = m->inliers_;
 
-    // Anil: Propagating the original ID of the unbroken image curve from mw_odt_curve_stereo_e to 
-    //      dbmcs_curve_3d_attributes_e using dbbl_subsequence_set
-    std::vector<dbbl_subsequence_set> sseq = s.get_sseq();
+    // Anil: Propagating the original ID of the unbroken image curve from bmcsd_odt_curve_stereo_e to 
+    //      dbmcs_curve_3d_attributes_e using bbld_subsequence_set
+    std::vector<bbld_subsequence_set> sseq = s.get_sseq();
     attr.back().orig_id_v0_ = sseq[s.v0()][c].orig_id();
     attr.back().orig_id_v1_ = sseq[s.v1()][corresp[c].front().id()].orig_id();
 
-    // Anil: Propagating the ID of the broken image curve (before pruning) from mw_odt_curve_stereo_e to 
-    //      dbmcs_curve_3d_attributes_e using dbbl_subsequence_set
+    // Anil: Propagating the ID of the broken image curve (before pruning) from bmcsd_odt_curve_stereo_e to 
+    //      dbmcs_curve_3d_attributes_e using bbld_subsequence_set
     attr.back().int_id_v0_ = sseq[s.v0()][c].int_id();
     attr.back().int_id_v1_ = sseq[s.v1()][corresp[c].front().id()].int_id();
 
