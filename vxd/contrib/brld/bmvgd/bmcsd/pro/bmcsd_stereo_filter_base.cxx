@@ -36,7 +36,6 @@ setup_inputs(
   sources_per_confirmation_view_ = 4;
   if (has_cvlet_)
     sources_per_confirmation_view_++;
-
   confirmation_view_input_offset_ = 6;
 
   // Connect inputs from all the other views
@@ -74,7 +73,6 @@ get_cameras()
 
     cams[i+2].set_p(input<vpgl_perspective_camera<double> >(offset + CAM_ID));
   }
-
   s_->set_cams(cams);
 }
 
@@ -160,4 +158,3 @@ get_curves_and_tangents()
   s_->set_tangents(tangents);
   s_->break_into_episegs_and_replace_curve(&sseq);
 }
-
