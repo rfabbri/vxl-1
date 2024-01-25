@@ -125,8 +125,8 @@ match_using_orientation_dt_extras(
         //bmcsd_util::clip_to_img_bounds(dt(v), &reprojected_curve);
 
         // translate reproj. curve into edgel sequence
-        dbcsi_edgel_seq reproj_edgels;
-        bmcsd_algo_util::bdifd_to_sbdet(reprojected_curve, &reproj_edgels);
+        bcsid_edgel_seq reproj_edgels;
+        bmcsd_algo_util::bdifd_to_sdet(reprojected_curve, &reproj_edgels);
 
         assert (reproj_edgels.size() == reprojected_curve.size());
 
@@ -145,7 +145,7 @@ match_using_orientation_dt_extras(
                          label(v), *em_[v], &cur_inliers, edge_support_count_per_candidate[ic], 
                          orig_ids, &edge_index_chain);          
         } else {
-          d_vote = dbcsi_curve_distance::num_inlier_curvelets_dt_oriented(reproj_edgels, tau_distance_squared(), tau_dtheta_, dt(v), label(v), sels_[v]->CM(),
+          d_vote = bcsid_curve_distance::num_inlier_curvelets_dt_oriented(reproj_edgels, tau_distance_squared(), tau_dtheta_, dt(v), label(v), sels_[v]->CM(),
                           tau_min_num_inlier_edgels_per_curvelet_);
         }
 
@@ -253,7 +253,7 @@ match_using_orientation_dt_extras(std::vector<unsigned long> *votes_ptr, std::ve
 
         // translate reproj. curve into edgel sequence
         dbcsi_edgel_seq reproj_edgels;
-        bmcsd_algo_util::bdifd_to_sbdet(reprojected_curve, &reproj_edgels);
+        bmcsd_algo_util::bdifd_to_sdet(reprojected_curve, &reproj_edgels);
 
         assert (reproj_edgels.size() == reprojected_curve.size());
 
@@ -357,7 +357,7 @@ match_mate_curves_using_orientation_dt_extras(unsigned long *votes_ptr, unsigned
     bmcsd_util::clip_to_img_bounds(dt(vv), &reprojected_curve);
 
     // translate reproj. curve into edgel sequence
-    dbcsi_edgel_seq reproj_edgels;
+    bcsid_edgel_seq reproj_edgels;
     bmcsd_algo_util::bdifd_to_sbdet(reprojected_curve, &reproj_edgels);
 
     assert (reproj_edgels.size() == reprojected_curve.size());
@@ -368,9 +368,9 @@ match_mate_curves_using_orientation_dt_extras(unsigned long *votes_ptr, unsigned
     // Compute match cost
     unsigned d_vote;
     if (sels_.empty()) {
-      d_vote = dbcsi_curve_distance::num_inliers_dt_oriented(reproj_edgels, tau_distance_squared(), tau_dtheta_, dt(vv), label(vv), *em_[vv]);
+      d_vote = bcsid_curve_distance::num_inliers_dt_oriented(reproj_edgels, tau_distance_squared(), tau_dtheta_, dt(vv), label(vv), *em_[vv]);
     } else {
-      d_vote = dbcsi_curve_distance::num_inlier_curvelets_dt_oriented(reproj_edgels, tau_distance_squared(), tau_dtheta_, dt(vv), label(vv), sels_[vv]->CM(),
+      d_vote = bcsid_curve_distance::num_inlier_curvelets_dt_oriented(reproj_edgels, tau_distance_squared(), tau_dtheta_, dt(vv), label(vv), sels_[vv]->CM(),
 								      tau_min_num_inlier_edgels_per_curvelet_);
     }
 
