@@ -1,4 +1,5 @@
 % to be called in _main.m
+% [variaveis definidas abaixo] = f(variaveis ja definidas)
 
 for v=1:numIM
 
