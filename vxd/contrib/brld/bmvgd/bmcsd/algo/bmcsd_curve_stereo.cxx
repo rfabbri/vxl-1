@@ -677,7 +677,7 @@ compute_epipolar_beam_candidates()
   // \todo perhaps trim vectors here using the swap trick
 }
 
-void mw_curve_stereo::
+void bmcsd_curve_stereo::
 compute_epipolar_beam_candidates_on_conf_views(unsigned v)
 {
   //: index into s->vsols_[1] of candidate (whole) curves

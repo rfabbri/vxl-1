@@ -1108,6 +1108,30 @@ clip_to_img_bounds(
   *curve_ptr = points_clip;
 }
 
+void mw_util::
+clip_to_img_bounds(
+    const vil_image_view<vxl_uint_32> &img,
+    dbdif_1st_order_curve_2d *curve_ptr,
+    vcl_vector<unsigned> &orig_indices)
+{
+  const bdifd_1st_order_curve_2d &curve = *curve_ptr;
+
+  bdifd_1st_order_curve_2d points_clip;
+
+  points_clip.reserve(curve.size()); 
+
+  for (unsigned i=0; i < curve.size(); ++i) {
+   if ( img.in_range(
+         (unsigned)(curve[i].gama[0]+0.5), 
+         (unsigned)(curve[i].gama[1]+0.5 ) ) )
+   {
+     points_clip.push_back(curve[i]);
+     orig_indices.push_back(i);
+   }
+  }
+  *curve_ptr = points_clip;
+}
+
 bool bmcsd_util::
 in_img_bounds(const bdifd_1st_order_curve_2d &curve, 
     const vil_image_view<vxl_uint_32> &img)
@@ -1291,6 +1315,37 @@ prune_curves_by_length(
     }
   }
   *pcurves = new_curves;
+  std::vector< vsol_polyline_2d_sptr >(*pcurves).swap(*pcurves);
+  ss->trim_memory();
+}
+
+void mw_util::
+prune_curves_by_length_with_flags(
+    double min_length, 
+    std::vector< vsol_polyline_2d_sptr > *pcurves,
+    dbbl_subsequence_set *ss, std::vector<std::vector<bool> > &flags
+    )
+{
+  std::vector< vsol_polyline_2d_sptr > &old_curves = *pcurves;
+  std::vector< vsol_polyline_2d_sptr > new_curves;
+
+  std::vector<std::vector<bool> > new_flags;
+
+  new_curves.reserve(old_curves.size());
+  ss->reserve(old_curves.size());
+  for (unsigned i=0; i < old_curves.size(); ++i) {
+    if (old_curves[i]->length() > min_length) {
+      new_curves.push_back(old_curves[i]);
+      new_flags.push_back(flags[i]);
+
+      bbld_subsequence s(0, old_curves[i]->size());
+      s.set_orig_id(i);
+      ss->push_back(s);
+    }
+  }
+  *pcurves = new_curves;
+  flags.clear();
+  flags = new_flags;
   std::vector< vsol_polyline_2d_sptr >(*pcurves).swap(*pcurves);
   ss->trim_memory();
 }

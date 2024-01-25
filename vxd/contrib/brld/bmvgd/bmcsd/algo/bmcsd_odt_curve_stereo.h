@@ -216,7 +216,6 @@ public:
 protected:
   bool has_edgemaps() { return !em_.empty(); }
 
-private:
   //: edgemap for each view.
   std::vector<sdet_edgemap_sptr> em_;
 
