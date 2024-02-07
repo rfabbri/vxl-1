@@ -36,7 +36,7 @@ run(unsigned long timestamp)
 
   if (retval == BPROD_INVALID)
     return false;
-  bmcsd_stereo_aggregator *o = dynamic_cast<bmcsd_stereo_aggregator *> (output_job_.ptr());
+  bmcsd_stereo_aggregator_e *o = dynamic_cast<bmcsd_stereo_aggregator_e *> (output_job_.ptr());
   crv3d_ = &o->crv3d_;
   attr_  = &o->attr_;
   corresp_  = &o->corresp_;
