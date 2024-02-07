@@ -102,9 +102,6 @@ public:
   // tangents in the curve fragments, etc.
   virtual bool init() = 0;
 
-  //: Runs all instances of the 2-view matching and reconstruction
-  virtual bool run(unsigned long timestamp=1) = 0;
-
   unsigned nviews() const { return nviews_; }
 
 protected:
