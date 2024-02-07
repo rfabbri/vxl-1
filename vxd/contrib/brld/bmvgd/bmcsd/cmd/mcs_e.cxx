@@ -7,8 +7,10 @@
 #include <vul/vul_arg.h>
 #include <buld/buld_arg.h>
 #include <bmcsd/bmcsd_util.h>
+#include <bmcsd/bmcsd_discrete_corresp_e.h>
 #include <bmcsd/algo/bmcsd_data.h>
 #include <bmcsd/pro/bmcsd_stereo_driver_e.h>
+
 
 #define MY_ASSERT(msg, a, b) if ((a) != (b)) { std::cerr << (msg) << std::endl; exit(1); }
 
