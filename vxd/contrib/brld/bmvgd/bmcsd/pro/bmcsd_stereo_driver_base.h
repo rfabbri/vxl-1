@@ -164,10 +164,7 @@ public:
   // This must be called every time new parameters are set.
   void update_stereo_params();
 
-private:
-  //: finish initialization common code to derived classes
-  void init_end();
-
+protected:
   unsigned max_concurrent_matchers_;
 
   //: pool of processors.
@@ -180,6 +177,9 @@ private:
   std::vector<bprod_process_sptr> curve_stereo_;
   std::vector<bprod_process_sptr> curve_stereo_jobs_;
   bprod_process_sptr output_job_;
+
+  //: finish initialization common code to derived classes
+  void init_end();
 };
 
 #endif // bmcsd_stereo_driver_base_h
