@@ -11,13 +11,13 @@ set(bmcsd_pro_sources
 
   # bprod --------------------------------------------------------------------
   bmcsd_stereo_filter.cxx bmcsd_load_camera_source.h bmcsd_load_cemv_source.h bmcsd_load_curvelet_source.h bmcsd_load_edg_source.h bmcsd_load_vsol_polyline_source.h bmcsd_fragment_tangents_filter.h bmcsd_stereo_filter.h
-  bmcsd_stereo_driver_e.cxx bmcsd_stereo_driver_e.h
-
+  bmcsd_stereo_filter_e.cxx bmcsd_stereo_filter_e.h
   bmcsd_stereo_filter_base.cxx bmcsd_stereo_filter_base.h 
+
+  bmcsd_stereo_driver_e.cxx bmcsd_stereo_driver_e.h
   bmcsd_stereo_driver_base.cxx bmcsd_stereo_driver_base.h
   bmcsd_stereo_filter.cxx bmcsd_stereo_filter.h
   bmcsd_stereo_driver.cxx bmcsd_stereo_driver.h
-  bmcsd_stereo_filter_e.cxx bmcsd_stereo_filter_e.h
   bmcsd_stereo_driver_e.cxx bmcsd_stereo_driver_e.h
 )
 
