@@ -160,7 +160,7 @@ get_curves_and_tangents()
 }
 
 
-bprod_signal bmcsd_stereo_aggregatora_base::
+bprod_signal bmcsd_stereo_aggregator_base::
 run(unsigned long timestamp,
     bprod_debug_observer* const debug)
 {
