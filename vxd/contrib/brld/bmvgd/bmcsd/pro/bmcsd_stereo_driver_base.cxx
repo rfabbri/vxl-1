@@ -113,19 +113,19 @@ update_stereo_params()
     bmcsd_stereo_filter_base *p = dynamic_cast<bmcsd_stereo_filter_base *>(curve_stereo_[i].ptr());
     assert(p);
 
-    p->s_.set_tau_distance_squared(tau_distance_*tau_distance_);
-    p->s_.set_dtheta_threshold(tau_dtheta_*vnl_math::pi/180.0);
-    p->s_.set_min_inliers_per_view(tau_min_inliers_per_view_);
+    p->s_->set_tau_distance_squared(tau_distance_*tau_distance_);
+    p->s_->set_dtheta_threshold(tau_dtheta_*vnl_math::pi/180.0);
+    p->s_->set_min_inliers_per_view(tau_min_inliers_per_view_);
     if (prune_by_length_)
-      p->s_.set_min_length_per_curve_frag(tau_min_length_per_curve_frag_);
+      p->s_->set_min_length_per_curve_frag(tau_min_length_per_curve_frag_);
     else
-      p->s_.set_min_samples_per_curve_frag(tau_min_samples_per_curve_frag_);
-    p->s_.set_min_total_inliers(tau_min_total_inliers_);
-    p->s_.set_min_first_to_second_best_ratio(tau_min_first_to_second_best_ratio_);
-    p->s_.set_lonely_threshold(tau_lonely_);
-    p->s_.set_min_epiangle(tau_min_epiangle_*vnl_math::pi/180.0);
-    p->s_.set_min_epipolar_overlap(tau_min_epipolar_overlap_);
-    p->s_.set_min_num_inlier_edgels_per_curvelet(tau_min_num_inlier_edgels_per_curvelet_);
+      p->s_->set_min_samples_per_curve_frag(tau_min_samples_per_curve_frag_);
+    p->s_->set_min_total_inliers(tau_min_total_inliers_);
+    p->s_->set_min_first_to_second_best_ratio(tau_min_first_to_second_best_ratio_);
+    p->s_->set_lonely_threshold(tau_lonely_);
+    p->s_->set_min_epiangle(tau_min_epiangle_*vnl_math::pi/180.0);
+    p->s_->set_min_epipolar_overlap(tau_min_epipolar_overlap_);
+    p->s_->set_min_num_inlier_edgels_per_curvelet(tau_min_num_inlier_edgels_per_curvelet_);
   }
 }
 

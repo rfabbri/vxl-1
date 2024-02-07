@@ -125,11 +125,9 @@ private:
 };
 
 //: Stores the concatenation of all inputs from many bmcsd_stereo_jobs
-class bmcsd_stereo_aggregator_e : public bprod_sink {
+class bmcsd_stereo_aggregator_e : public bmcsd_stereo_aggregator_base {
 public:
-
-  bmcsd_stereo_aggregator_e(unsigned num_jobs)
-    : num_jobs_(num_jobs) { }
+  using bmcsd_stereo_aggregator_base::bmcsd_stereo_aggregator_base;
 
   bprod_signal execute()
   {
@@ -167,16 +165,8 @@ public:
     return BPROD_VALID;
   }
 
-  //: Runs the process. This is set to run serially.
-  bprod_signal run(unsigned long timestamp,
-                   bprod_debug_observer* const debug = NULL);
-
-  std::vector< bdifd_1st_order_curve_3d > crv3d_;
   std::vector< bmcsd_curve_3d_attributes_e > attr_;
   std::vector< bmcsd_discrete_corresp_e > corresp_;
-
-private:
-  unsigned num_jobs_;
 };
 
 #endif // bmcsdstereo_filter_e_h

@@ -73,4 +73,21 @@ private:
   void get_curvelets();
 };
 
+//: Stores the concatenation of all inputs from many bmcsd_stereo_jobs
+class bmcsd_stereo_aggregator_base : public bprod_sink {
+public:
+  unsigned num_jobs_;
+
+  explicit bmcsd_stereo_aggregator_base(unsigned num_jobs)
+    : num_jobs_(num_jobs) { }
+
+
+  //: Runs the process. This is set to run serially.
+  bprod_signal run(unsigned long timestamp,
+                   bprod_debug_observer* const debug = NULL);
+
+  std::vector< bdifd_1st_order_curve_3d > crv3d_;
+};
+
+
 #endif // bmcsdstereo_filter_base_h
