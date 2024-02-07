@@ -46,7 +46,6 @@ protected:
 
 class bmcsd_concurrent_stereo_driver : public bmcsd_concurrent_stereo_driver_base, public bmcsd_stereo_driver {
 public:
-
   bmcsd_concurrent_stereo_driver(
       const bmcsd_curve_stereo_data_path &dpath, 
       const bmcsd_stereo_instance_views &frames_to_match)

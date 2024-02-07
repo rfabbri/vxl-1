@@ -44,8 +44,17 @@ protected:
   std::vector<bmcsd_discrete_corresp_e> *corresp_;
 };
 
-class bmcsd_concurrent_stereo_driver_e : public bmcsd_concurrent_stereo_driver_base, bmcsd_stereo_driver_e {
+class bmcsd_concurrent_stereo_driver_e : public bmcsd_concurrent_stereo_driver_base, public bmcsd_stereo_driver_e {
 public:
+  bmcsd_concurrent_stereo_driver_e(
+      const bmcsd_curve_stereo_data_path &dpath, 
+      const bmcsd_stereo_instance_views &frames_to_match)
+    : // why repeated contructors: https://stackoverflow.com/a/9908015/1489510
+      bmcsd_stereo_driver_base(dpath, frames_to_match), 
+      bmcsd_concurrent_stereo_driver_base(dpath, frames_to_match)
+  {
+  }
+
   //: Initializes the processing, e.g. setting up a processing graph, computing
   // tangents in the curve fragments, etc.
   virtual bool init();

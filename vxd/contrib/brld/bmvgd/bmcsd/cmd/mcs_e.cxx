@@ -15,7 +15,7 @@
 #define MY_ASSERT(msg, a, b) if ((a) != (b)) { std::cerr << (msg) << std::endl; exit(1); }
 
 bool
-write_edge_support(std::string prefix, const std::vector<dbmcs_curve_3d_attributes_e> &attr)
+write_edge_support(std::string prefix, const std::vector<bmcsd_curve_3d_attributes_e> &attr)
 {
     std::string myprefix = prefix + std::string("/crvs/rec-3dcurve-");
 
@@ -38,7 +38,7 @@ write_edge_support(std::string prefix, const std::vector<dbmcs_curve_3d_attribut
         std::vector<std::set<int> > supportingEdgels = attr[c].supportingEdgelsPerConfView_;
         unsigned numConfViews = supportingEdgels.size();
             
-        dbmcs_stereo_views_sptr stereoViews = attr[c].v_;
+        bmcsd_stereo_views_sptr stereoViews = attr[c].v_;
         assert(stereoViews->num_confirmation_views()==numConfViews);
 
         unsigned numSupportingViews = 0;
@@ -68,6 +68,7 @@ write_edge_support(std::string prefix, const std::vector<dbmcs_curve_3d_attribut
 
         attr_file.close();
     }
+  return true;
 }
 
 int
