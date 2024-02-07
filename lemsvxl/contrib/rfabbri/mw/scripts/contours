@@ -12,7 +12,7 @@
 
 echo XXX computing contours: $@
 vorlexecname=dborl_compute_contours
-vorldirname=$HOME/bin/$vorlexecname
+vorldirname=$LEMSVPE/lemsvxl-bin/bin/$vorlexecname
 xmlorig="$HOME/bin/$vorlexecname-input.xml"
 program=contours
 

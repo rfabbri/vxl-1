@@ -15,17 +15,15 @@ all_flags = cell(numIM,1);
 all_num_im_contours = zeros(numIM,1);
 
 load_curve_sketch_without_associations
-
 load edge-curve-index_yuliang_pavilion-mixed.mat;
 load edge-curve-offset_yuliang_pavilion-mixed.mat;
-
-
 load_edge_and_curve_files
 
 % clear all;
 % close all;
 
-save intermediate-pavilion-mixed-half_12.mat;
+%save intermediate-pavilion-mixed-half_12.mat;
+load intermediate-pavilion-mixed-half_12.mat;
 % Intermediate consistes of all curves and 3D curve sketch input
 % So actually we can use intermediate-* data as input for the 3D drawing
 % But this main file would only work for _12
@@ -2453,8 +2451,6 @@ for fa=1:numViews
 %                 %counter = counter + 1;
 %             end
 %         end
-
-        all_clusters = [all_clusters; cell(1,1)];
         all_clusters{size(all_clusters,1),1} = clusters;
         complete_curve_graph = [complete_curve_graph; curve_graph];
         complete_lock_map = [complete_lock_map; lock_map];

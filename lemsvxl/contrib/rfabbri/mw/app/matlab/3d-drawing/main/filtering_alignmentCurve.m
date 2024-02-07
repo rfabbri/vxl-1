@@ -1,5 +1,5 @@
-just filter the alignment curve to only keep the links that
-have enough support.
+%just filter the alignment curve to only keep the links that
+%have enough support.
 
  %Here we filter correspondences to throw out unreliable
                     %ones
