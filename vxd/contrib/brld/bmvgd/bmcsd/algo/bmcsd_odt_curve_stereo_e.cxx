@@ -1100,7 +1100,7 @@ bmcsd_match_and_reconstruct_all_curves_attr(
 }*/
 
 bool 
-bmcsd_match_and_reconstruct_all_curves_attr(
+bmcsd_match_and_reconstruct_all_curves_attr_e(
     bmcsd_odt_curve_stereo_e &s, 
     std::vector<bdifd_1st_order_curve_3d> *crv3d_ptr,
     bmcsd_discrete_corresp_e *corresp_ptr,
