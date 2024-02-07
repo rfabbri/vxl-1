@@ -155,7 +155,7 @@ public:
   virtual bool init();
 
   //: Runs all instances of the 2-view matching and reconstruction
-  virtual bool run(unsigned long timestamp=1);
+  virtual bool run(unsigned long timestamp=1) = 0;
 
   //: Updates the basic stereo processors with newly set parameters.
   // This must be called every time new parameters are set.
