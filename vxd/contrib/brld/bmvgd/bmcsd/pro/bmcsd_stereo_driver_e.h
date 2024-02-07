@@ -15,7 +15,7 @@
 
 //: Performs multiview stereo on a video sequence, by running many instances of
 // two-view stereo in subsets of the frames.
-class bmcsd_stereo_driver_e : public bmcsd_stereo_driver_base {
+class bmcsd_stereo_driver_e : virtual public bmcsd_stereo_driver_base {
 public: 
   //: The resulting 3D reconstruction after run();
   void get_curve_sketch(bmcsd_curve_3d_sketch_e *csk) const
@@ -44,7 +44,7 @@ protected:
   std::vector<bmcsd_discrete_corresp_e> *corresp_;
 };
 
-class bmcsd_concurrent_stereo_driver_e : public bmcsd_concurrent_stereo_driver_base {
+class bmcsd_concurrent_stereo_driver_e : public bmcsd_concurrent_stereo_driver_base, bmcsd_stereo_driver_e {
 public:
   //: Initializes the processing, e.g. setting up a processing graph, computing
   // tangents in the curve fragments, etc.

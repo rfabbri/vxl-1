@@ -138,7 +138,7 @@ protected:
   bool initialized_;
 };
 
-class bmcsd_concurrent_stereo_driver_base : public bmcsd_stereo_driver_base {
+class bmcsd_concurrent_stereo_driver_base : virtual public bmcsd_stereo_driver_base {
 public:
   bmcsd_concurrent_stereo_driver_base(
       const bmcsd_curve_stereo_data_path &dpath, 
@@ -180,6 +180,7 @@ protected:
 
   //: finish initialization common code to derived classes
   void init_end();
+
 };
 
 #endif // bmcsd_stereo_driver_base_h
