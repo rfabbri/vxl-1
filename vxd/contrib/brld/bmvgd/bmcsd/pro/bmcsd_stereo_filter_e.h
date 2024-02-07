@@ -8,14 +8,15 @@
 //\date 09/01/2009 08:31:17 AM PDT
 //
 #include <bprod/bprod_process.h>
-#include <bmcsd/bmcsd_discrete_corresp.h>
-#include <bmcsd/bmcsd_curve_3d_attributes.h>
+#include <bmcsd/bmcsd_discrete_corresp_e.h>
+#include <bmcsd/bmcsd_curve_3d_attributes_e.h>
 #include <bmcsd/bmcsd_stereo_views_sptr.h>
-#include <bmcsd/algo/bmcsd_odt_curve_stereo.h>
+#include <bmcsd/algo/bmcsd_odt_curve_stereo_e.h>
 #include <bmcsd/pro/bmcsd_load_camera_source.h>
 #include <bmcsd/pro/bmcsd_load_edg_source.h>
 #include <bmcsd/pro/bmcsd_load_vsol_polyline_source.h>
 #include <bmcsd/pro/bmcsd_fragment_tangents_filter.h>
+#include <bmcsd/pro/bmcsd_stereo_filter_base.h>
 
 //: This process takes matches 2 views using a number of confirmation views.
 // Inputs:
@@ -26,8 +27,8 @@
 class bmcsd_stereo_filter_e : public bmcsd_stereo_filter_base {
 public:
 
-  bmcsd_stereo_filter() 
-    s_(new bmcsd_stereo_odt_filter_e)
+  bmcsd_stereo_filter_e() :
+    bmcsd_stereo_filter_base(new bmcsd_odt_curve_stereo_e)
   {
   }
 
@@ -35,14 +36,15 @@ public:
   bprod_signal execute() override
   {
     bprod_signal sig = bmcsd_stereo_filter_base::execute();
-    if (sig != BBPROD_VALID)
+    if (sig != BPROD_VALID)
       return sig;
 
     std::vector<bdifd_1st_order_curve_3d> crv3d;
     std::vector< bmcsd_curve_3d_attributes_e > attr;
-    bmcsd_discrete_corresp corresp_e;
+    bmcsd_discrete_corresp_e corresp;
     // TODO: set inlier views.
-    if (!bmcsd_match_and_reconstruct_all_curves_attr_e(s_, &crv3d, &corresp, &attr)) {
+    if (!bmcsd_match_and_reconstruct_all_curves_attr_e(
+          *static_cast<bmcsd_odt_curve_stereo_e *>(s_), &crv3d, &corresp, &attr)) {
       std::cerr << "Error: while matching all views.\n";
       return BPROD_INVALID;
     }
@@ -59,12 +61,12 @@ public:
 private:
   //: constructs an attribute data structure for each 3D curve.
   void set_remaining_attributes(
-      std::vector< bmcsd_curve_3d_attributes > *pattr, 
+      std::vector< bmcsd_curve_3d_attributes_e > *pattr, 
       const std::vector<bdifd_1st_order_curve_3d> &crv3d,
-      const bmcsd_discrete_corresp &/*corresp*/
+      const bmcsd_discrete_corresp_e &/*corresp*/
       )
   {
-    std::vector< bmcsd_curve_3d_attributes > &a = *pattr;
+    std::vector< bmcsd_curve_3d_attributes_e > &a = *pattr;
     assert(a.size() == crv3d.size());
     for (unsigned i=0; i < a.size(); ++i) {
       a[i].set_views(v_);

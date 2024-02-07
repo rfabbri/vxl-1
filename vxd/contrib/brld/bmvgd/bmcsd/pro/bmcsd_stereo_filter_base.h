@@ -56,6 +56,8 @@ public:
         std::vector<bprod_process_sptr> &frag_tangents
         );
 
+  ~bmcsd_stereo_filter_base() { delete s_; }
+
   bmcsd_stereo_views_sptr v_;
   bmcsd_odt_curve_stereo *s_;
 
