@@ -17,6 +17,11 @@
 // two-view stereo in subsets of the frames.
 class bmcsd_stereo_driver  : virtual public bmcsd_stereo_driver_base {
 public: 
+  bmcsd_stereo_driver(
+      const bmcsd_curve_stereo_data_path &dpath, 
+      const bmcsd_stereo_instance_views &frames_to_match)
+    : bmcsd_stereo_driver_base(dpath, frames_to_match)
+  {}
   //: The resulting 3D reconstruction after run();
   void get_curve_sketch(bmcsd_curve_3d_sketch *csk) const
     { csk->set(*crv3d_, *attr_); }
@@ -51,7 +56,8 @@ public:
       const bmcsd_stereo_instance_views &frames_to_match)
     : // why repeated contructors: https://stackoverflow.com/a/9908015/1489510
       bmcsd_stereo_driver_base(dpath, frames_to_match), 
-      bmcsd_concurrent_stereo_driver_base(dpath, frames_to_match)
+      bmcsd_concurrent_stereo_driver_base(dpath, frames_to_match),
+      bmcsd_stereo_driver(dpath, frames_to_match)
   {
   }
 
