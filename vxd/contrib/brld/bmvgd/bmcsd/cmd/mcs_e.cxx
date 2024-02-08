@@ -5,6 +5,7 @@
 //\author Anil Usumezbas (extensions)
 //
 #include <vul/vul_arg.h>
+#include <iomanip>
 #include <buld/buld_arg.h>
 #include <bmcsd/bmcsd_util.h>
 #include <bmcsd/bmcsd_discrete_corresp_e.h>
