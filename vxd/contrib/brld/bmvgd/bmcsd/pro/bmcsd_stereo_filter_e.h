@@ -32,19 +32,108 @@ public:
   {
   }
 
+  // Anil:
+  void load_inputs(const dbmcs_stereo_views_sptr &views,
+		   std::vector<dbdif_camera> &cams,
+		   std::vector<dbdet_edgemap_sptr> &em,
+		   std::vector<std::vector< vsol_polyline_2d_sptr > > &curves,
+		   std::vector<std::vector<std::vector<double> > > &tangents,
+		   std::vector<vil_image_view<vxl_uint_32> > &dts,
+		   std::vector<vil_image_view<unsigned> > &labels
+		   )
+  {
+    v_ = views;
+    s_.set_nviews(2 + v_->num_confirmation_views());
+
+    s_.set_cams(cams);
+    s_.set_all_edgemaps(em);
+    s_.set_all_dt_label(dts, labels);
+
+    //Anil: Record the original sizes of each image curve in each view
+    //Also initialize the vector that stored flags for used curve samples
+    std::vector<std::vector<unsigned> > original_sizes(s_.nviews());
+
+    for(unsigned v=0; v<s_.nviews(); ++v){    
+      original_sizes[v].resize(curves[v].size());
+      for(unsigned c=0; c<curves[v].size(); ++c)
+        original_sizes[v][c] = curves[v][c]->size();
+    }
+
+    std::vector<std::vector<std::vector<bool> > > usedSamples;
+    usedSamples.resize(2);
+
+    usedSamples[0].resize(curves[0].size());
+    usedSamples[1].resize(curves[1].size());
+
+    for(unsigned c=0; c<curves[0].size(); ++c){
+      usedSamples[0][c].resize(curves[0][c]->size());
+      std::fill(usedSamples[0][c].begin(), usedSamples[0][c].end(), false);
+    }  
+    
+    for(unsigned c=0; c<curves[1].size(); ++c){
+      usedSamples[1][c].resize(curves[1][c]->size());
+      std::fill(usedSamples[1][c].begin(), usedSamples[1][c].end(), false);
+    }  
+
+    //s_.usedSamples_ = usedSamples;
+
+    //std::vector<dbbl_subsequence_set> sseq;
+    s_.set_curves(curves);
+    s_.set_tangents(tangents);
+    s_.set_original_curve_sizes(original_sizes);
+    s_.set_num_image_curves_v0(curves[0].size());
+    //s_.break_into_episegs_and_replace_curve(&sseq);
+    s_.usedSamples_ = usedSamples;
+    //s_.usedCurves_ = this->usedCurves_;
+
+    /*std::vector<vsol_spatial_object_2d_sptr> brokenCurves_v0, brokenCurves_v1;
+
+    for(unsigned i=0; i<s_.num_curves(0); ++i)
+        brokenCurves_v0.push_back(dynamic_cast<vsol_spatial_object_2d*>(s_.curves(0,i).ptr()));
+    dbsol_save_cem(brokenCurves_v0,std::string("after_breakup_v0.cemv"));
+
+    for(unsigned i=0; i<s_.num_curves(1); ++i)
+        brokenCurves_v1.push_back(dynamic_cast<vsol_spatial_object_2d*>(s_.curves(1,i).ptr()));
+        dbsol_save_cem(brokenCurves_v1,std::string("after_breakup_v1.cemv"));  */
+
+    //s_.set_sseq(sseq);
+  }
+    
+
+
 
   bprod_signal execute() override
   {
+    /* Anil modified this part to be called by load_inputs directly in the
+     * stereo driver
     bprod_signal sig = bmcsd_stereo_filter_base::execute();
     if (sig != BPROD_VALID)
       return sig;
+    */
+
+    //--------------------------------------------------------------------------
+
+    get_edge_to_curve_index();
+
+    vul_timer breaking;
+    std::vector<dbbl_subsequence_set> sseq;
+    s_.break_into_episegs_and_replace_curve(&sseq);
+    s_.set_sseq(sseq);
+    s_.usedCurves_ = usedCurves_;
+    s_.matchCount_ = 0;
+    s_.reconCount_ = 0;
+
+    //--------------------------------------------------------------------------
 
     std::vector<bdifd_1st_order_curve_3d> crv3d;
     std::vector< bmcsd_curve_3d_attributes_e > attr;
     bmcsd_discrete_corresp_e corresp;
+
+    std::cout << "#3a BREAKING: " << breaking.real() << std::endl;
+
     // TODO: set inlier views.
-    if (!bmcsd_match_and_reconstruct_all_curves_attr_e(
-          *static_cast<bmcsd_odt_curve_stereo_e *>(s_), &crv3d, &corresp, &attr)) {
+    if (!bmcsd_match_and_reconstruct_all_curves_attr_using_mates(
+          *static_cast<bmcsd_odt_curve_stereo_e *>(s_), &crv3d, &corresp, &attr, mate_curves_v1_, isFirstRun_, true)) {
       std::cerr << "Error: while matching all views.\n";
       return BPROD_INVALID;
     }
@@ -52,11 +141,38 @@ public:
     //: Fill-in remaining of attributes
     set_remaining_attributes(&attr, crv3d, corresp);
 
+    //
+    //    std::ofstream test_file;
+    //    std::string test_fname = "num_operations.txt";
+    //    test_file.open(test_fname.c_str(), std::ofstream::app);
+    //    test_file << v_->stereo0() << " " << v_->stereo1() << " " << s_.matchCount_ << " " << s_.reconCount_ << std::endl;
+    //    test_file.close();
+      
+
     output(0, crv3d);
     output(1, attr);
     output(2, corresp);
     return BPROD_VALID;
   }
+
+  //Anil: Alternative run function that does not work with inputs
+  //This is to be used when inputs are given from the mcs executable
+  dbpro_signal run(unsigned long timestamp,
+                   dbpro_debug_observer* const debug = NULL);
+
+  //Anil: Flag indicating whether this is an iteration run for elongation
+  //True means it's the first pass, false means it's an iteration run
+  bool isFirstRun_;
+  //Anil: If this is an iteration run for elongation, mate curve IDs in v1()
+  //for each image curve
+  std::vector<std::set<int> > mate_curves_v1_;
+  //Anil: Curve IDs that are already used in a previous run
+  std::vector<std::vector<unsigned> > usedCurves_;
+  //Anil: Count for the number of curve sample matching operations
+  unsigned matchCount_;
+  //Anil: Count for the number of curve sample reconstruction operations
+  unsigned reconCount_;
+  
 
 private:
   //: constructs an attribute data structure for each 3D curve.
@@ -72,6 +188,9 @@ private:
       a[i].set_views(v_);
     }
   }
+
+  //Anil: Method to read in edge to curve association from a text file
+  void get_edge_to_curve_index();
 };
 
 //: Outputs the concatenation of all inputs from many bmcsd_stereo_filter_e
@@ -168,5 +287,74 @@ public:
   std::vector< bmcsd_curve_3d_attributes_e > attr_;
   std::vector< bmcsd_discrete_corresp_e > corresp_;
 };
+
+void dbmcs_stereo_filter_e::
+get_edge_to_curve_index()
+{
+  std::cout << "Reading in edge-curve index" << std::endl;
+  s_->edge_curve_index_.clear();
+  s_->edge_curve_index_.resize(v_->num_confirmation_views());
+
+  for (unsigned i=0; i < v_->num_confirmation_views(); ++i) {
+    std::string prefix = "./edge-curve/";
+    std::ostringstream filestream;
+    filestream << std::setw(8) << std::setfill('0');
+    filestream << v_->confirmation_view(i);
+
+    std::string filename = prefix + filestream.str() + std::string(".txt");
+
+    std::ifstream file(filename.c_str());
+    std::string line;
+    getline(file,line);
+    std::stringstream buffer(line);
+
+    unsigned numEdges;
+    buffer >> numEdges;
+
+    std::vector<int> curEdges;
+
+    for (unsigned e=0; e<numEdges; ++e)
+    {
+      int ID;
+      buffer >> ID;
+      curEdges.push_back(ID);
+    }
+    s_->edge_curve_index_[i] = curEdges;
+
+  }
+}
+
+//: Runs the filter
+//Anil: Alternative run function that does not work with inputs
+//This is to be used when inputs are given from the mcs executable
+dbpro_signal
+dbmcs_stereo_filter::run(unsigned long timestamp,
+                  dbpro_debug_observer* const debug)
+{
+  // notify the debugger if available
+  if (debug) debug->notify_enter(this, timestamp);
+
+  update_mutex_.lock();
+  
+  if(timestamp > this->timestamp_) {
+    this->timestamp_ = timestamp;
+    this->last_signal_ = DBPRO_VALID;
+    if (debug) {
+      debug->notify_pre_exec(this);
+      this->last_signal_ = this->execute();
+      debug->notify_post_exec(this);
+    }
+    else
+      this->last_signal_ = this->execute();
+    this->notify_observers(this->last_signal_);
+  }
+  
+  update_mutex_.unlock();
+
+  // notify the debugger if available
+  if (debug) debug->notify_exit(this, timestamp);
+
+  return this->last_signal_;
+}
 
 #endif // bmcsdstereo_filter_e_h
