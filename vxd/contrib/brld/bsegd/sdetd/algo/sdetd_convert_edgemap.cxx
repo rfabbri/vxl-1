@@ -111,7 +111,7 @@ sdetd_convert_edgemap_to_image(const sdet_edgemap& edgemap,
 {
   vgl_box_2d<int > bbox;
   bbox.add(vgl_point_2d<int > (0, 0));
-  bbox.add(vgl_point_2d<int > (edgemap.width()-1, edgemap.height()-1) );
+  bbox.add(vgl_point_2d<int > (edgemap.width(), edgemap.height()) );
   return sdetd_convert_edgemap_to_image(edgemap, bw_image, bbox);
 }
 
@@ -188,7 +188,7 @@ sdet_convert_edgemap_to_grayscale_image(const sdet_edgemap& edgemap,
 {
   vgl_box_2d<int > bbox;
   bbox.add(vgl_point_2d<int > (0, 0));
-  bbox.add(vgl_point_2d<int > (edgemap.width()-1, edgemap.height()-1) );
+  bbox.add(vgl_point_2d<int > (edgemap.width(), edgemap.height()) );
   return sdetd_convert_edgemap_to_grayscale_image(edgemap, bw_image, bbox);
 }
 
