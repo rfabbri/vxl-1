@@ -66,6 +66,15 @@ public:
   // tangents in the curve fragments, etc.
   virtual bool init();
 
+
+  //: Anil: Initializes the processing from precomputed data
+  bool init(vcl_vector<dbdif_camera> &cams,
+	    vcl_vector<dbdet_edgemap_sptr> &em,
+	    vcl_vector<vcl_vector< vsol_polyline_2d_sptr > > &curves,
+	    vcl_vector<vcl_vector<vcl_vector<double> > > &tangents,
+	    vcl_vector<vil_image_view<vxl_uint_32> > &dts,
+	    vcl_vector<vil_image_view<unsigned> > &labels);
+
   //: Runs all instances of the 2-view matching and reconstruction
   virtual bool run(unsigned long timestamp=1);
 };

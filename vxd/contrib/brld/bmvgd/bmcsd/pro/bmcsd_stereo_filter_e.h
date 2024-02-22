@@ -32,7 +32,8 @@ public:
   {
   }
 
-  // Anil:
+#if 0
+// In anil's original, but not used
   void load_inputs(const dbmcs_stereo_views_sptr &views,
 		   std::vector<dbdif_camera> &cams,
 		   std::vector<dbdet_edgemap_sptr> &em,
@@ -43,17 +44,17 @@ public:
 		   )
   {
     v_ = views;
-    s_.set_nviews(2 + v_->num_confirmation_views());
+    s_->set_nviews(2 + v_->num_confirmation_views());
 
-    s_.set_cams(cams);
-    s_.set_all_edgemaps(em);
-    s_.set_all_dt_label(dts, labels);
+    s_->set_cams(cams);
+    s_->set_all_edgemaps(em);
+    s_->set_all_dt_label(dts, labels);
 
     //Anil: Record the original sizes of each image curve in each view
     //Also initialize the vector that stored flags for used curve samples
-    std::vector<std::vector<unsigned> > original_sizes(s_.nviews());
+    std::vector<std::vector<unsigned> > original_sizes(s_->nviews());
 
-    for(unsigned v=0; v<s_.nviews(); ++v){    
+    for(unsigned v=0; v<s_->nviews(); ++v){    
       original_sizes[v].resize(curves[v].size());
       for(unsigned c=0; c<curves[v].size(); ++c)
         original_sizes[v][c] = curves[v][c]->size();
@@ -68,40 +69,38 @@ public:
     for(unsigned c=0; c<curves[0].size(); ++c){
       usedSamples[0][c].resize(curves[0][c]->size());
       std::fill(usedSamples[0][c].begin(), usedSamples[0][c].end(), false);
-    }  
+    }
     
     for(unsigned c=0; c<curves[1].size(); ++c){
       usedSamples[1][c].resize(curves[1][c]->size());
       std::fill(usedSamples[1][c].begin(), usedSamples[1][c].end(), false);
-    }  
+    }
 
-    //s_.usedSamples_ = usedSamples;
+    //s_->usedSamples_ = usedSamples;
 
     //std::vector<dbbl_subsequence_set> sseq;
-    s_.set_curves(curves);
-    s_.set_tangents(tangents);
-    s_.set_original_curve_sizes(original_sizes);
-    s_.set_num_image_curves_v0(curves[0].size());
-    //s_.break_into_episegs_and_replace_curve(&sseq);
-    s_.usedSamples_ = usedSamples;
-    //s_.usedCurves_ = this->usedCurves_;
+    s_->set_curves(curves);
+    s_->set_tangents(tangents);
+    s_->set_original_curve_sizes(original_sizes);
+    s_->set_num_image_curves_v0(curves[0].size());
+    //s_->break_into_episegs_and_replace_curve(&sseq);
+    s_->usedSamples_ = usedSamples;
+    //s_->usedCurves_ = this->usedCurves_;
 
     /*std::vector<vsol_spatial_object_2d_sptr> brokenCurves_v0, brokenCurves_v1;
 
-    for(unsigned i=0; i<s_.num_curves(0); ++i)
-        brokenCurves_v0.push_back(dynamic_cast<vsol_spatial_object_2d*>(s_.curves(0,i).ptr()));
+    for(unsigned i=0; i<s_->num_curves(0); ++i)
+        brokenCurves_v0.push_back(dynamic_cast<vsol_spatial_object_2d*>(s_->curves(0,i).ptr()));
     dbsol_save_cem(brokenCurves_v0,std::string("after_breakup_v0.cemv"));
 
-    for(unsigned i=0; i<s_.num_curves(1); ++i)
-        brokenCurves_v1.push_back(dynamic_cast<vsol_spatial_object_2d*>(s_.curves(1,i).ptr()));
+    for(unsigned i=0; i<s_->num_curves(1); ++i)
+        brokenCurves_v1.push_back(dynamic_cast<vsol_spatial_object_2d*>(s_->curves(1,i).ptr()));
         dbsol_save_cem(brokenCurves_v1,std::string("after_breakup_v1.cemv"));  */
 
-    //s_.set_sseq(sseq);
+    //s_->set_sseq(sseq);
   }
+#endif
     
-
-
-
   bprod_signal execute() override
   {
     /* Anil modified this part to be called by load_inputs directly in the
@@ -115,13 +114,13 @@ public:
 
     get_edge_to_curve_index();
 
-    vul_timer breaking;
+    //vul_timer breaking;
     std::vector<dbbl_subsequence_set> sseq;
-    s_.break_into_episegs_and_replace_curve(&sseq);
-    s_.set_sseq(sseq);
-    s_.usedCurves_ = usedCurves_;
-    s_.matchCount_ = 0;
-    s_.reconCount_ = 0;
+    s_->break_into_episegs_and_replace_curve(&sseq);
+    s_->set_sseq(sseq);
+    s_->usedCurves_ = usedCurves_;
+    s_->matchCount_ = 0;
+    s_->reconCount_ = 0;
 
     //--------------------------------------------------------------------------
 
@@ -129,7 +128,7 @@ public:
     std::vector< bmcsd_curve_3d_attributes_e > attr;
     bmcsd_discrete_corresp_e corresp;
 
-    std::cout << "#3a BREAKING: " << breaking.real() << std::endl;
+    // std::cout << "#3a BREAKING: " << breaking.real() << std::endl;
 
     // TODO: set inlier views.
     if (!bmcsd_match_and_reconstruct_all_curves_attr_using_mates(
@@ -145,7 +144,7 @@ public:
     //    std::ofstream test_file;
     //    std::string test_fname = "num_operations.txt";
     //    test_file.open(test_fname.c_str(), std::ofstream::app);
-    //    test_file << v_->stereo0() << " " << v_->stereo1() << " " << s_.matchCount_ << " " << s_.reconCount_ << std::endl;
+    //    test_file << v_->stereo0() << " " << v_->stereo1() << " " << s_->matchCount_ << " " << s_->reconCount_ << std::endl;
     //    test_file.close();
       
 
@@ -172,7 +171,6 @@ public:
   unsigned matchCount_;
   //Anil: Count for the number of curve sample reconstruction operations
   unsigned reconCount_;
-  
 
 private:
   //: constructs an attribute data structure for each 3D curve.
