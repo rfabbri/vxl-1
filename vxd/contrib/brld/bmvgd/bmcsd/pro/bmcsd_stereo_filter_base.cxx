@@ -153,10 +153,9 @@ get_curves_and_tangents()
   tangents[0] = input< view_tangents >(TGT_ID0);
   tangents[1] = input< view_tangents >(TGT_ID1);
 
-  std::vector<bbld_subsequence_set> sseq;
   s_->set_curves(curves);
   s_->set_tangents(tangents);
-  s_->break_into_episegs_and_replace_curve(&sseq);
+  s_->break_into_episegs_and_replace_curve(&sseq_);
 }
 
 

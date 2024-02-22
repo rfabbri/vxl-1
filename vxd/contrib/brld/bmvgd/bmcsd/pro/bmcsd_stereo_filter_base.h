@@ -65,6 +65,7 @@ private:
   unsigned sources_per_confirmation_view_;
   unsigned confirmation_view_input_offset_;
   bool has_cvlet_;
+  std::vector<bbld_subsequence_set> sseq_;
 
   void get_cameras();
   void get_edgemaps();
