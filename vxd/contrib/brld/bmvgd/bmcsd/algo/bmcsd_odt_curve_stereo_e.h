@@ -24,7 +24,7 @@
 // with the provided edge map. The reason is that we want to run this class
 // repeatedly for different pairs of views without having to recompute the DT.
 
-class bmcsd_discrete_corresp;
+class bmcsd_discrete_corresp_e;
 
 class bmcsd_odt_curve_stereo_e : public bmcsd_odt_curve_stereo {
 public:
@@ -178,14 +178,15 @@ public:
   // Anil: Curve IDs that are already used in a previous run
   std::vector<std::vector<unsigned> > usedCurves_;
 
+  // Anil: For each view, we store the ID curve of that each edgel 
+  //Size should be total number of confirmation views used in the stereo instance
+  std::vector<std::vector<int> > edge_curve_index_;
+
 protected:
   bool dummyFlag_;
   unsigned dummyID;
   std::vector<double> lineCoef_;
 
-  // Anil: For each view, we store the ID curve of that each edgel 
-  //Size should be total number of confirmation views used in the stereo instance
-  std::vector<std::vector<int> > edge_curve_index_;
 
   // Anil: Mate curve IDs for a given image curves in v0()
   //Size should be total number of confirmation views used in the stereo instance
@@ -226,7 +227,7 @@ bool bmcsd_match_and_reconstruct_all_curves_attr_e(
 bool bmcsd_match_and_reconstruct_all_curves_attr_using_mates(
     bmcsd_odt_curve_stereo_e &s, 
     std::vector<bdifd_1st_order_curve_3d> *crv3d_ptr,
-    bmcsd_discrete_corresp *corresp_ptr,
+    bmcsd_discrete_corresp_e *corresp_ptr,
     std::vector< bmcsd_curve_3d_attributes_e > *attr_ptr,
     std::vector<std::set<int> > mate_curves_v1,
     bool isFirstRun,
