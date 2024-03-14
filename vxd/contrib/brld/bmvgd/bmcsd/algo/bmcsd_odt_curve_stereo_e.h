@@ -169,6 +169,15 @@ public:
       std::vector<bdifd_1st_order_curve_3d> *crv3d_ptr,    std::vector< bmcsd_curve_3d_attributes_e > *attr_ptr,
       unsigned seed_id);
 
+  // Anil: Count for the number of curve sample matching operations
+  unsigned matchCount_;
+
+  // Anil: Count for the number of curve sample reconstruction operations
+  unsigned reconCount_;
+
+  // Anil: Curve IDs that are already used in a previous run
+  std::vector<std::vector<unsigned> > usedCurves_;
+
 protected:
   bool dummyFlag_;
   unsigned dummyID;
@@ -190,15 +199,6 @@ protected:
 
   // Anil: Buffer for storing the sample IDs on the image curve in v1 that are going to be used in this run
   std::vector<unsigned> curve_samples_v1_;
-
-  // Anil: Curve IDs that are already used in a previous run
-  std::vector<std::vector<unsigned> > usedCurves_;
-
-  // Anil: Count for the number of curve sample matching operations
-  unsigned matchCount_;
-
-  // Anil: Count for the number of curve sample reconstruction operations
-  unsigned reconCount_;
 
 private:
   // Anil: Adding the subsequence set as a member here so we can do

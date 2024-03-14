@@ -115,12 +115,13 @@ public:
     get_edge_to_curve_index();
 
     //vul_timer breaking;
-    std::vector<dbbl_subsequence_set> sseq;
+    std::vector<bbld_subsequence_set> sseq;
     s_->break_into_episegs_and_replace_curve(&sseq);
-    s_->set_sseq(sseq);
-    s_->usedCurves_ = usedCurves_;
-    s_->matchCount_ = 0;
-    s_->reconCount_ = 0;
+    bmcsd_odt_curve_stereo_e *os = dynamic_cast<bmcsd_odt_curve_stereo_e *> (s_);
+    os->set_sseq(sseq);
+    os->usedCurves_ = usedCurves_;
+    os->matchCount_ = 0;
+    os->reconCount_ = 0;
 
     //--------------------------------------------------------------------------
 
@@ -156,8 +157,8 @@ public:
 
   //Anil: Alternative run function that does not work with inputs
   //This is to be used when inputs are given from the mcs executable
-  dbpro_signal run(unsigned long timestamp,
-                   dbpro_debug_observer* const debug = NULL);
+  // bprod_signal run(unsigned long timestamp,
+  //                 bprod_debug_observer* const debug = NULL);
 
   //Anil: Flag indicating whether this is an iteration run for elongation
   //True means it's the first pass, false means it's an iteration run
@@ -322,9 +323,13 @@ get_edge_to_curve_index()
   }
 }
 
+#if 0
 //: Runs the filter
 //Anil: Alternative run function that does not work with inputs
 //This is to be used when inputs are given from the mcs executable
+//
+// this is just the code from bprod_filter::run 
+// but with somethings removed and minor changes such as request_inputs,
 dbpro_signal
 dbmcs_stereo_filter::run(unsigned long timestamp,
                   dbpro_debug_observer* const debug)
@@ -354,5 +359,6 @@ dbmcs_stereo_filter::run(unsigned long timestamp,
 
   return this->last_signal_;
 }
+#endif
 
 #endif // bmcsdstereo_filter_e_h
