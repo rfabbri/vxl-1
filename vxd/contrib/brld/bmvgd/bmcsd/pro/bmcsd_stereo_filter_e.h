@@ -287,12 +287,13 @@ public:
   std::vector< bmcsd_discrete_corresp_e > corresp_;
 };
 
-void dbmcs_stereo_filter_e::
+void bmcsd_stereo_filter_e::
 get_edge_to_curve_index()
 {
   std::cout << "Reading in edge-curve index" << std::endl;
-  s_->edge_curve_index_.clear();
-  s_->edge_curve_index_.resize(v_->num_confirmation_views());
+  bmcsd_odt_curve_stereo_e *os = dynamic_cast<bmcsd_odt_curve_stereo_e *> (s_);
+  os->edge_curve_index_.clear();
+  os->edge_curve_index_.resize(v_->num_confirmation_views());
 
   for (unsigned i=0; i < v_->num_confirmation_views(); ++i) {
     std::string prefix = "./edge-curve/";
@@ -318,7 +319,7 @@ get_edge_to_curve_index()
       buffer >> ID;
       curEdges.push_back(ID);
     }
-    s_->edge_curve_index_[i] = curEdges;
+    os->edge_curve_index_[i] = curEdges;
 
   }
 }
