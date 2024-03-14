@@ -68,8 +68,8 @@ public:
 
 
   //: Anil: Initializes the processing from precomputed data
-  bool init(vcl_vector<dbdif_camera> &cams,
-	    vcl_vector<dbdet_edgemap_sptr> &em,
+  bool init(vcl_vector<bdifd_camera> &cams,
+	    vcl_vector<sdet_edgemap_sptr> &em,
 	    vcl_vector<vcl_vector< vsol_polyline_2d_sptr > > &curves,
 	    vcl_vector<vcl_vector<vcl_vector<double> > > &tangents,
 	    vcl_vector<vil_image_view<vxl_uint_32> > &dts,
