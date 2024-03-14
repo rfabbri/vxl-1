@@ -158,8 +158,8 @@ public:
 
   //Anil: Alternative run function that does not work with inputs
   //This is to be used when inputs are given from the mcs executable
-  // bprod_signal run(unsigned long timestamp,
-  //                 bprod_debug_observer* const debug = NULL);
+  bprod_signal run(unsigned long timestamp,
+                  bprod_debug_observer* const debug = NULL) override;
 
   //Anil: Flag indicating whether this is an iteration run for elongation
   //True means it's the first pass, false means it's an iteration run
