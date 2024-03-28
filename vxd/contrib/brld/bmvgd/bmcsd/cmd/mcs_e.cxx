@@ -5,12 +5,20 @@
 //\author Anil Usumezbas (extensions)
 //
 #include <vul/vul_arg.h>
+#include <vul/vul_timer.h> // Gabriel: Maybe is better explicitly
+#include <vul/vul_file.h>
 #include <iomanip>
+#include <vidpro1/storage/vidpro1_vsol2D_storage.h>
+#include <sdetd/io/sdetd_load_edg.h>
+#include <sdetd/algo/sdetd_convert_edgemap.h>
+#include <bild/algo/bild_exact_distance_transform.h>
 #include <buld/buld_arg.h>
 #include <bmcsd/bmcsd_util.h>
+#include <bmcsd/algo/bmcsd_algo_util.h>
 #include <bmcsd/bmcsd_discrete_corresp_e.h>
 #include <bmcsd/algo/bmcsd_data.h>
 #include <bmcsd/pro/bmcsd_stereo_driver_e.h>
+#include <bsold/bsold_file_io.cxx>
 
 
 #define MY_ASSERT(msg, a, b) if ((a) != (b)) { std::cerr << (msg) << std::endl; exit(1); }
@@ -145,9 +153,9 @@ main(int argc, char **argv)
 
   retval = bmcsd_view_set::read_txt(
       a_prefix() + std::string("/mcs_stereo_instances.txt"), 
-      &frames_to_match);
+      &seed_frames_to_match); // Gabriel: In this context is seed!
   MY_ASSERT("frames to match from file", retval, true);
-  std::cout << "Instances:\n" << frames_to_match << std::endl;
+  std::cout << "Instances:\n" << seed_frames_to_match << std::endl;
 
   if (a_use_curvelets() && !dpath.has_curvelets()) {
     std::cerr << "Error: curvelets requested, but no file names found.\n";
@@ -166,7 +174,7 @@ main(int argc, char **argv)
 
   //Anil: Create storage for all the cam, edge and curve data
   std::vector<bdifd_camera> allCams(numConf+2);
-  std::vector<sdetd_edgemap_sptr> allEdges(numConf+2);
+  std::vector<sdet_edgemap_sptr> allEdges(numConf+2);
   std::vector<vil_image_view<vxl_uint_32> > allDTs(numConf+2);
   std::vector<vil_image_view<unsigned> > allLabels(numConf+2);
   std::vector<std::vector<vsol_polyline_2d_sptr> > allCurves(numConf+2);
@@ -179,7 +187,7 @@ main(int argc, char **argv)
 
      // 1 Cam loader
     vpgl_perspective_camera<double> cam;
-    bool retval = mw_util::read_cam_anytype(dpath[v].cam_full_path(), dpath[v].cam_file_type(), &cam);
+    bool retval = bmcsd_util::read_cam_anytype(dpath[v].cam_full_path(), dpath[v].cam_file_type(), &cam);
     if (!retval)
       return 1;
 
@@ -188,8 +196,8 @@ main(int argc, char **argv)
     // 2 Edge map loader
     static const bool my_bSubPixel = true;
     static const double my_scale=1.0;
-    dbdet_edgemap_sptr edge_map;
-    retval = sbdet_load_edg(dpath[v].edg_full_path(), my_bSubPixel, my_scale, edge_map);
+    sdet_edgemap_sptr edge_map;
+    retval = sdetd_load_edg(dpath[v].edg_full_path(), my_bSubPixel, my_scale, edge_map);
     allEdges[v] = edge_map;
 
     // 3 Curve fragment loader
@@ -204,19 +212,19 @@ main(int argc, char **argv)
       vsl_b_ifstream bp_in(fname.c_str());
       if (!bp_in) {
         std::cout << " Error opening file  " << fname << std::endl;
-        return DBPRO_INVALID;
-      }
+          return BPROD_INVALID;
+        }
 
-      std::cout << "Opened vsl file " << fname <<  " for reading" << std::endl;
+        std::cout << "Opened vsl file " << fname <<  " for reading" << std::endl;
 
-      vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
-      output_vsol->b_read(bp_in);
-      bp_in.close();
-      base = output_vsol->all_data();
-    } else {
-      bool retval = dbsol_load_cem(base, fname);
-      if (!retval) {
-        return DBPRO_INVALID;
+        vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
+        output_vsol->b_read(bp_in);
+        bp_in.close();
+        base = output_vsol->all_data();
+      } else {
+        bool retval = bsold_load_cem(base, fname);
+        if (!retval) {
+        return BPROD_INVALID;
       }
       std::cout << "Opened cemv file " << fname <<  " for reading" << std::endl;
     }
@@ -252,7 +260,7 @@ main(int argc, char **argv)
     vil_image_view<vxl_byte > bw_image;
 
     //: Assumes the conversion maps edges to 255 and others to 0.
-    retval = dbdet_convert_edgemap_to_image(*edge_map, bw_image);
+    retval = sdetd_convert_edgemap_to_image(*edge_map, bw_image);
     if (!retval) return 1;
 
     vil_image_view<vxl_uint_32> dt(bw_image.ni(), bw_image.nj(), 1);
@@ -263,7 +271,7 @@ main(int argc, char **argv)
 
     vil_image_view<unsigned> imlabel(dt.ni(), dt.nj(), 1);
 
-    retval = dbil_exact_distance_transform_maurer_label(dt, imlabel);
+    retval = bild_exact_distance_transform_maurer_label(dt, imlabel);
     if (!retval) return 1;
 
     allDTs[v] = dt;
@@ -412,15 +420,15 @@ main(int argc, char **argv)
 
   //Anil: Create buffer storage for all the cam, edge and curve data
   //The order of data in these containers will be changed to suit each stereo run
-  std::vector<dbdif_camera> curCams(numConf+2);
-  std::vector<dbdet_edgemap_sptr> curEdges(numConf+2);
+  std::vector<bdifd_camera> curCams(numConf+2);
+  std::vector<sdet_edgemap_sptr> curEdges(numConf+2);
   std::vector<vil_image_view<vxl_uint_32> > curDTs(numConf+2);
   std::vector<vil_image_view<unsigned> > curLabels(numConf+2);
   std::vector<std::vector<vsol_polyline_2d_sptr> > curCurves(numConf+2);
   std::vector<std::vector<std::vector<double> > > curTangents(numConf+2);
 
   //Anil: The cumulative curves after the initial subsampling run need to be stored.
-  std::vector<std::vector<std::vector<std::vector<dbdif_1st_order_point_3d> > > > cumulativeCurveBox(numConf+2);
+  std::vector<std::vector<std::vector<std::vector<bdifd_1st_order_point_3d> > > > cumulativeCurveBox(numConf+2);
 
   long file_io_time = file_io.real();
   std::cout << "#1 FILE IO: " << file_io_time << std::endl;
@@ -431,8 +439,8 @@ main(int argc, char **argv)
   for(unsigned ins=0; ins<numInstances; ++ins) {
 
     //Anil: Containers for the reduced 3d curves
-    std::vector<dbdif_1st_order_curve_3d> reducedCurves;
-    std::vector<bmcsd_curve_3d_attributes> reducedAttr;
+    std::vector<bdifd_1st_order_curve_3d> reducedCurves;
+    std::vector<bmcsd_curve_3d_attributes_e> reducedAttr;
     unsigned reducedCurveID = 0;
 
     //STEP #1: Run 2-view stereo with confirmation views
@@ -564,7 +572,7 @@ main(int argc, char **argv)
     }
   }
 
-  s.set_usedCurves(fa_usedCurveIDs);
+  s.set_use_curvelets(fa_usedCurveIDs);
 
 
 
@@ -595,36 +603,36 @@ main(int argc, char **argv)
   //STEP #2: Process the 3D curves to remove the segments that did not gather sufficient edge support
   //A segment is removed only if its size is 3 samples or more
   //A curve segment is created only if its size is 8 samples or more
-  vcl_vector<dbdif_1st_order_curve_3d> fullCurves = csk.curves_3d();
+  vcl_vector<bdifd_1st_order_curve_3d> fullCurves = csk.curves_3d();
 
 
-  vcl_vector<dbdif_1st_order_curve_3d> supportedSegments;
-  vcl_vector<dbmcs_curve_3d_attributes> supportedAttr;
+  vcl_vector<bdifd_1st_order_curve_3d> supportedSegments;
+  vcl_vector<bmcsd_curve_3d_attributes_e> supportedAttr;
 
   vcl_ofstream curve_links("curve_links.txt");
 
   //Anil: Attributes contain mate curve information, get it from the curve sketch data structure 
-  const vcl_vector<dbmcs_curve_3d_attributes> attrVec = csk.attributes();
+  const vcl_vector<bmcsd_curve_3d_attributes_e> attrVec = csk.attributes();
   unsigned seedCurveSize = attrVec.front().origCurveSize_;
 
 
     //Anil: Data structure for stitching 3D curves together at their corresponding samples
     //1st index is the image curve ID, 2nd index is for different 3D curves and 3rd index is for sample IDs 
-    vcl_vector<vcl_vector<vcl_vector<dbdif_1st_order_point_3d> > > cumulativeCurve(2000);
-    vcl_vector<vcl_vector<vcl_vector<dbdif_1st_order_point_3d> > > dmy_cumulativeCurve(2000);
+    vcl_vector<vcl_vector<vcl_vector<bdifd_1st_order_point_3d> > > cumulativeCurve(2000);
+    vcl_vector<vcl_vector<vcl_vector<bdifd_1st_order_point_3d> > > dmy_cumulativeCurve(2000);
     vcl_vector<vcl_vector<vcl_vector<vcl_set<int> > > > cumulativeEdgeIndexChain(2000);
 
     //if(usedViews[fa_views->stereo0()])
     //  cumulativeCurve = cumulativeCurveBox[fa_views->stereo0()];
 
     unsigned numCurves = attrVec.size();
-    dbmcs_curve_3d_attributes seedAttr;
+    bmcsd_curve_3d_attributes_e seedAttr;
     if(numCurves>0)
       seedAttr = attrVec.front();
     for(unsigned c=0; c<fullCurves.size(); ++c)
       {
-	dbdif_1st_order_curve_3d curCurve = fullCurves[c];
-	dbmcs_curve_3d_attributes curAttr = attrVec[c];
+	bdifd_1st_order_curve_3d curCurve = fullCurves[c];
+	bmcsd_curve_3d_attributes_e curAttr = attrVec[c];
 	vcl_vector<unsigned> curSupp = curAttr.edgeSupportCount_;
 	unsigned offset = curAttr.imageCurveOffset_;
 	unsigned offset_v1 = curAttr.imageCurveOffset_v1_;
@@ -668,7 +676,7 @@ main(int argc, char **argv)
 		  {
 		    if(breakPoint>initPoint+7)
 		      {
-			dbdif_1st_order_curve_3d newCurve;
+			bdifd_1st_order_curve_3d newCurve;
 
 			for(int p=initPoint; p<breakPoint; ++p){
 			  newCurve.push_back(curCurve[p]);
@@ -704,7 +712,7 @@ main(int argc, char **argv)
 		  {
 		    if(breakPoint>initPoint+7)
 		      {
-			dbdif_1st_order_curve_3d newCurve;
+			bdifd_1st_order_curve_3d newCurve;
 			for(int p=initPoint; p<breakPoint; ++p){
 
 			  newCurve.push_back(curCurve[p]);
@@ -733,7 +741,7 @@ main(int argc, char **argv)
 		  {
 		    if(s>initPoint+6)
 		      {
-			dbdif_1st_order_curve_3d newCurve;
+			bdifd_1st_order_curve_3d newCurve;
 			for(int p=initPoint; p<s+1; ++p){
 			  newCurve.push_back(curCurve[p]);
 			  cumulativeCurve[origID][p+offset].push_back(curCurve[p]);
@@ -775,7 +783,7 @@ main(int argc, char **argv)
 	unsigned curView = fa_views->confirmation_view(v);
 
 	for(unsigned c=0; c<numCurves; ++c){
-	  dbmcs_curve_3d_attributes curAttr = attrVec[c];
+	  bmcsd_curve_3d_attributes_e curAttr = attrVec[c];
 	  unsigned origID = curAttr.orig_id_v0_;
 	  vcl_set<int> curMates = curAttr.mate_curves_[v];
 
@@ -787,11 +795,11 @@ main(int argc, char **argv)
     //STEP #4: Loop over all the confirmation views to process the cumulative mate curves in each one
     for(unsigned v=0; v<numConf; ++v)
       {
-	dbmcs_curve_3d_sketch csk_elong;
+	bmcsd_curve_3d_sketch csk_elong;
 	unsigned curView = fa_views->confirmation_view(v);
 	vcl_cout << "LOOKING FOR CUES IN VIEW: " << curView << vcl_endl;
-	dbmcs_stereo_instance_views curFrames;
-	dbmcs_stereo_views_sptr curInstance = new dbmcs_stereo_views();
+	bmcsd_stereo_instance_views curFrames;
+	bmcsd_stereo_views_sptr curInstance = new bmcsd_stereo_views();
 	curInstance->set_stereo0(fa_views->stereo0());
 	curInstance->set_stereo1(curView);
 	curInstance->reserve_num_confirmation_views(numConf);
@@ -803,7 +811,7 @@ main(int argc, char **argv)
 	curInstance->add_confirmation_view(fa_views->stereo1());
 	curFrames.add_instance(curInstance);
 
-	dbmcs_concurrent_stereo_driver cur_s(dpath, curFrames);
+	bmcsd_concurrent_stereo_driver cur_s(dpath, curFrames);
 
 	cur_s.set_dtheta_threshold(a_dtheta_threshold());
 	cur_s.set_distance_threshold(a_distance_threshold());
@@ -873,14 +881,14 @@ main(int argc, char **argv)
 	vcl_vector<dbdif_1st_order_curve_3d> cur_fullCurves = csk_elong.curves_3d();
  
 	vcl_vector<dbdif_1st_order_curve_3d> cur_supportedSegments;
-	vcl_vector<dbmcs_curve_3d_attributes> cur_supportedAttr;
+	vcl_vector<bmcsd_curve_3d_attributes_e> cur_supportedAttr;
 
-	const vcl_vector<dbmcs_curve_3d_attributes> cur_attrVec = csk_elong.attributes();
+	const vcl_vector<bmcsd_curve_3d_attributes_e> cur_attrVec = csk_elong.attributes();
 
 	for(unsigned c=0; c<cur_fullCurves.size(); ++c)
 	  {
 	    dbdif_1st_order_curve_3d curCurve = cur_fullCurves[c];
-	    dbmcs_curve_3d_attributes curAttr = cur_attrVec[c];
+	    bmcsd_curve_3d_attributes_e_e curAttr = cur_attrVec[c];
 	    vcl_vector<unsigned> curSupp = curAttr.edgeSupportCount_;
 	    unsigned cur_offset = curAttr.imageCurveOffset_;
 	    unsigned cur_offset_v1 = curAttr.imageCurveOffset_v1_;
@@ -992,7 +1000,7 @@ main(int argc, char **argv)
 
       }
 
-    /*dbmcs_curve_3d_sketch csk_supported(supportedSegments,supportedAttr);
+    /*bmcsd_curve_3d_sketch csk_supported(supportedSegments,supportedAttr);
     //: Write 3D curves and attributes to file.
     retval = csk_supported.write_dir_format(a_prefix() + vcl_string("/") + a_out_dir());
     MW_ASSERT("Error while trying to write file.\n", retval, true);*/
@@ -1026,14 +1034,14 @@ main(int argc, char **argv)
     for(unsigned vi=0; vi<numConf; ++vi) {
       
       //unsigned curView = visitationSchedule[vis];
-      dbmcs_curve_3d_sketch csk_iterate;
+      bmcsd_curve_3d_sketch_e csk_iterate;
       unsigned curView = fa_views->confirmation_view(vi);
       vcl_cout << "FIRST ANCHOR: " << fa_views->stereo0() << vcl_endl;
       vcl_cout << "SWITCHING SECOND ANCHOR TO VIEW: " << curView << vcl_endl;
       vcl_cout << "CONFIRMATION VIEWS: ";
 
-      dbmcs_stereo_instance_views curFrames;
-      dbmcs_stereo_views_sptr curInstance = new dbmcs_stereo_views();
+      bmcsd_stereo_instance_views curFrames;
+      bmcsd_stereo_views_sptr curInstance = new bmcsd_stereo_views();
       curInstance->set_stereo0(fa_views->stereo0());
       curInstance->set_stereo1(curView);
       curInstance->reserve_num_confirmation_views(numConf);
@@ -1105,7 +1113,7 @@ main(int argc, char **argv)
 
       }*/
 
-      dbmcs_concurrent_stereo_driver cur_s(dpath, curFrames);
+      bmcsd_concurrent_stereo_driver_e cur_s(dpath, curFrames);
 
       cur_s.set_dtheta_threshold(a_dtheta_threshold());
       cur_s.set_distance_threshold(a_distance_threshold());
@@ -1135,30 +1143,30 @@ main(int argc, char **argv)
 		      curDTs,
 		      curLabels);
 
-      MW_ASSERT("Stereo driver init return value", retval, true);
+      MY_ASSERT("Stereo driver init return value", retval, true);
 
       //: Run many pairwise stereo programs, as many as
       // frames_to_match.num_instances();
       retval = cur_s.run();
-      MW_ASSERT("Stereo driver run return value", retval, true);
+      MY_ASSERT("Stereo driver run return value", retval, true);
 
       cur_s.get_curve_sketch(&csk_iterate);
 
       //Anil: Same as before - Process the 3D curves to remove the segments that did not gather sufficient edge support
       //A segment is removed only if its size is 3 samples or more
       //A curve segment is created only if its size is 8 samples or more
-      vcl_vector<dbdif_1st_order_curve_3d> cur_fullCurves = csk_iterate.curves_3d();
+      vcl_vector<bdifd_1st_order_curve_3d> cur_fullCurves = csk_iterate.curves_3d();
       unsigned cur_numCurves = cur_fullCurves.size();
  
-      vcl_vector<dbdif_1st_order_curve_3d> cur_supportedSegments;
-      vcl_vector<dbmcs_curve_3d_attributes> cur_supportedAttr;
+      vcl_vector<bdifd_1st_order_curve_3d> cur_supportedSegments;
+      vcl_vector<bmcsd_curve_3d_attributes_e> cur_supportedAttr;
 
-      const vcl_vector<dbmcs_curve_3d_attributes> cur_attrVec = csk_iterate.attributes();
+      const vcl_vector<bmcsd_curve_3d_attributes_e> cur_attrVec = csk_iterate.attributes();
 
       for(unsigned c=0; c<cur_fullCurves.size(); ++c)
 	{
-	  dbdif_1st_order_curve_3d curCurve = cur_fullCurves[c];
-	  dbmcs_curve_3d_attributes curAttr = cur_attrVec[c];
+	  bdifd_1st_order_curve_3d curCurve = cur_fullCurves[c];
+	  bmcsd_curve_3d_attributes_e curAttr = cur_attrVec[c];
 	  vcl_vector<unsigned> curSupp = curAttr.edgeSupportCount_;
 	  unsigned cur_offset = curAttr.imageCurveOffset_;
 	  unsigned cur_offset_v1 = curAttr.imageCurveOffset_v1_;
@@ -1201,7 +1209,7 @@ main(int argc, char **argv)
 		    {
 		      if(breakPoint>initPoint+7)
 			{
-			  dbdif_1st_order_curve_3d newCurve;
+			  bdifd_1st_order_curve_3d newCurve;
 			  for(int p=initPoint; p<breakPoint; ++p){
 			    newCurve.push_back(curCurve[p]);
 			    cumulativeCurve[cur_origID][p+cur_offset].push_back(curCurve[p]);
@@ -1237,7 +1245,7 @@ main(int argc, char **argv)
 		    {
 		      if(breakPoint>initPoint+7)
 			{
-			  dbdif_1st_order_curve_3d newCurve;
+			  bdifd_1st_order_curve_3d newCurve;
 			  for(int p=initPoint; p<breakPoint; ++p){
 			    newCurve.push_back(curCurve[p]);
 			    cumulativeCurve[cur_origID][p+cur_offset].push_back(curCurve[p]);
@@ -1265,7 +1273,7 @@ main(int argc, char **argv)
 		    {
 		      if(s>initPoint+6)
 			{
-			  dbdif_1st_order_curve_3d newCurve;
+			  bdifd_1st_order_curve_3d newCurve;
 			  for(int p=initPoint; p<s+1; ++p){
 			    newCurve.push_back(curCurve[p]);
 			    cumulativeCurve[cur_origID][p+cur_offset].push_back(curCurve[p]);
@@ -1307,7 +1315,7 @@ main(int argc, char **argv)
 	  //unsigned curView = curInstance->confirmation_view(v);
 
 	  for(unsigned c=0; c<cur_numCurves; ++c){
-	    dbmcs_curve_3d_attributes curAttr = cur_attrVec[c];
+	    bmcsd_curve_3d_attributes_e curAttr = cur_attrVec[c];
 	    unsigned origID = curAttr.orig_id_v0_;
 	    vcl_set<int> curMates = curAttr.mate_curves_[v];
 
@@ -1319,11 +1327,11 @@ main(int argc, char **argv)
       //Loop over all the confirmation views to process the cumulative mate curves in each one
       for(unsigned v=0; v<numConf; ++v)
 	{
-	  dbmcs_curve_3d_sketch csk_iter_elong;
+	  bmcsd_curve_3d_sketch csk_iter_elong;
 	  unsigned iterView = curInstance->confirmation_view(v);
 	  vcl_cout << "LOOKING FOR CUES IN VIEW: " << iterView << vcl_endl;
-	  dbmcs_stereo_instance_views iterFrames;
-	  dbmcs_stereo_views_sptr iterInstance = new dbmcs_stereo_views();
+	  bmcsd_stereo_instance_views iterFrames;
+	  bmcsd_stereo_views_sptr iterInstance = new bmcsd_stereo_views();
 	  iterInstance->set_stereo0(curInstance->stereo0());
 	  iterInstance->set_stereo1(iterView);
 	  vcl_cout << curInstance->stereo0() << " " << iterView << vcl_endl;
@@ -1339,7 +1347,7 @@ main(int argc, char **argv)
 	  vcl_cout << curInstance->stereo1() << vcl_endl;
 	  iterFrames.add_instance(iterInstance);
 
-	  dbmcs_concurrent_stereo_driver iter_s(dpath, iterFrames);
+	  bmcsd_concurrent_stereo_driver iter_s(dpath, iterFrames);
 
 	  vcl_vector<vcl_vector<unsigned> > iter_usedCurveIDs(2);
 	  for(unsigned imc=0; imc<usedCurvesAll[curInstance->stereo0()].size(); ++imc){
@@ -1405,14 +1413,14 @@ main(int argc, char **argv)
 	  vcl_vector<dbdif_1st_order_curve_3d> iter_fullCurves = csk_iter_elong.curves_3d();
  
 	  vcl_vector<dbdif_1st_order_curve_3d> iter_supportedSegments;
-	  vcl_vector<dbmcs_curve_3d_attributes> iter_supportedAttr;
+	  vcl_vector<bmcsd_curve_3d_attributes_e> iter_supportedAttr;
 
-	  const vcl_vector<dbmcs_curve_3d_attributes> iter_attrVec = csk_iter_elong.attributes();
+	  const vcl_vector<bmcsd_curve_3d_attributes_e> iter_attrVec = csk_iter_elong.attributes();
 
 	  for(unsigned c=0; c<iter_fullCurves.size(); ++c)
 	    {
 	      dbdif_1st_order_curve_3d curCurve = iter_fullCurves[c];
-	      dbmcs_curve_3d_attributes curAttr = iter_attrVec[c];
+	      bmcsd_curve_3d_attributes_e curAttr = iter_attrVec[c];
 	      vcl_vector<unsigned> curSupp = curAttr.edgeSupportCount_;
 	      unsigned cur_offset = curAttr.imageCurveOffset_;
 	      unsigned cur_offset_v1 = curAttr.imageCurveOffset_v1_;
@@ -1542,9 +1550,9 @@ main(int argc, char **argv)
 
     for(unsigned i=0; i<2000; ++i)
       {
-	vcl_vector<vcl_vector<dbdif_1st_order_point_3d> > cur_cumulativeCurve = cumulativeCurve[i];
+	vcl_vector<vcl_vector<bdifd_1st_order_point_3d> > cur_cumulativeCurve = cumulativeCurve[i];
 	vcl_vector<vcl_vector<vcl_vector<int> > > unionEdgeIndexChain(numConf+2);
-	dbdif_1st_order_curve_3d averageCurve;
+	bdifd_1st_order_curve_3d averageCurve;
 	
 	
 	if(!cur_cumulativeCurve.empty())
@@ -1618,7 +1626,7 @@ main(int argc, char **argv)
 			tySum+=cur_cumulativeCurve[s][p].T[1];
 			tzSum+=cur_cumulativeCurve[s][p].T[2];
 		      }
-		    dbdif_vector_3d avGama,avT,finalAvGama,finalAvT;
+		    bdifd_vector_3d avGama,avT,finalAvGama,finalAvT;
 		    avGama[0] = xSum/numPoints;
 		    avGama[1] = ySum/numPoints;
 		    avGama[2] = zSum/numPoints;
@@ -1667,7 +1675,7 @@ main(int argc, char **argv)
 		      finalAvT[1] = tySum/numSamples;
 		      finalAvT[2] = tzSum/numSamples;
 
-		      dbdif_1st_order_point_3d avPoint;
+		      bdifd_1st_order_point_3d avPoint;
 		      avPoint.Gama = finalAvGama;
 		      avPoint.T = finalAvT;
 
@@ -1795,7 +1803,7 @@ main(int argc, char **argv)
    
 
     vcl_cout << "NUMBER OF REDUCED CURVES: " << reducedCurves.size() << vcl_endl;
-    dbmcs_curve_3d_sketch csk_reduced(reducedCurves,reducedAttr);
+    bmcsd_curve_3d_sketch_e csk_reduced(reducedCurves,reducedAttr);
     //: Write 3D curves and attributes to file.
     vcl_stringstream num_stream;
     num_stream << fa_views->stereo0();
@@ -1808,7 +1816,7 @@ main(int argc, char **argv)
 
 
     curve_links.close();
-    /*dbmcs_curve_3d_sketch supportedCurves(supportedSegments,supportedAttr);
+    /*bmcsd_curve_3d_sketch supportedCurves(supportedSegments,supportedAttr);
     retval = supportedCurves.write_dir_format(a_prefix() + vcl_string("/") + a_out_dir());
     MW_ASSERT("Error while trying to write file.\n", retval, true);//*/
 
@@ -1909,9 +1917,9 @@ main(int argc, char **argv)
 
   }
 
-  dbmcs_curve_3d_sketch csk_second_round;
-  dbmcs_stereo_instance_views frames2;
-  dbmcs_stereo_views_sptr instance2 = new dbmcs_stereo_views();
+  bmcsd_curve_3d_sketch csk_second_round;
+  bmcsd_stereo_instance_views frames2;
+  bmcsd_stereo_views_sptr instance2 = new bmcsd_stereo_views();
   instance2->set_stereo0(12);
   instance2->set_stereo1(14);
   instance2->reserve_num_confirmation_views(numConf);
@@ -1922,7 +1930,7 @@ main(int argc, char **argv)
 
   frames2.add_instance(instance2);
 
-  dbmcs_concurrent_stereo_driver s2(dpath, frames2);
+  bmcsd_concurrent_stereo_driver s2(dpath, frames2);
 
   s2.set_dtheta_threshold(a_dtheta_threshold());
   s2.set_distance_threshold(a_distance_threshold());
