@@ -54,7 +54,7 @@ write_edge_support(std::string prefix, const std::vector<bmcsd_curve_3d_attribut
         //Count how many confirmation views have nonzero support
 
         for (unsigned m=0; m<numConfViews; ++m)
-            if(!supportingEdgels[m].empty())
+            if (!supportingEdgels[m].empty())
                 numSupportingViews++;
 
         attr_file << numSupportingViews << std::endl;
@@ -63,7 +63,7 @@ write_edge_support(std::string prefix, const std::vector<bmcsd_curve_3d_attribut
             unsigned confView = stereoViews->confirmation_view(m);
             std::set<int> edgelList = supportingEdgels[m];
 
-            if(!edgelList.empty()) {
+            if (!edgelList.empty()) {
                 attr_file << confView << " " << edgelList.size() << " ";
 
                 std::set<int>::const_iterator list_it;
@@ -265,8 +265,8 @@ main(int argc, char **argv)
 
     vil_image_view<vxl_uint_32> dt(bw_image.ni(), bw_image.nj(), 1);
 
-    for(unsigned i=0; i<dt.ni(); i++)
-      for(unsigned j=0; j<dt.nj(); j++)
+    for (unsigned i=0; i<dt.ni(); i++)
+      for (unsigned j=0; j<dt.nj(); j++)
         dt(i,j) = static_cast<vxl_uint_32>(bw_image(i,j)<127);
 
     vil_image_view<unsigned> imlabel(dt.ni(), dt.nj(), 1);
@@ -321,8 +321,8 @@ main(int argc, char **argv)
     instance->set_stereo1(nextView+3);
     instance->reserve_num_confirmation_views(numConf);
 
-    for(unsigned cv=0; cv<numConf+2; ++cv)
-      if((cv != nextView) && (cv != nextView+3))
+    for (unsigned cv=0; cv<numConf+2; ++cv)
+      if ((cv != nextView) && (cv != nextView+3))
 	instance->add_confirmation_view(cv);
 
     frames.add_instance(instance);
@@ -330,8 +330,8 @@ main(int argc, char **argv)
     nextView+=3;
   }
 
-  for(unsigned vo=0; vo<numConf+2; ++vo)
-    if(!usedViews[vo])
+  for (unsigned vo=0; vo<numConf+2; ++vo)
+    if (!usedViews[vo])
     firstAnchorOrder.push_back(vo);*/
 
   //ii) Second anchor instance
@@ -341,8 +341,8 @@ main(int argc, char **argv)
   instance->set_stereo1(seedViews->confirmation_view(3));
   instance->reserve_num_confirmation_views(numConf);
 
-  for(unsigned cv=0; cv<numConf; ++cv)
-    if(cv != 3)
+  for (unsigned cv=0; cv<numConf; ++cv)
+    if (cv != 3)
       instance->add_confirmation_view(seedViews->confirmation_view(cv));
 
   instance->add_confirmation_view(seedViews->stereo0());
@@ -350,7 +350,7 @@ main(int argc, char **argv)
   all_frames_to_match.push_back(frames);
 
   //iii) Instances of all but 2 of the confirmation views
-  for(unsigned v=0; v<numConf-2; ++v) {
+  for (unsigned v=0; v<numConf-2; ++v) {
     unsigned curView = seedViews->confirmation_view(v);
     bmcsd_stereo_instance_views curFrames;
     bmcsd_stereo_views_sptr curInstance = new bmcsd_stereo_views();
@@ -358,8 +358,8 @@ main(int argc, char **argv)
     curInstance->set_stereo1(seedViews->confirmation_view(v+2));
     curInstance->reserve_num_confirmation_views(numConf);
 
-    for(unsigned cv=0; cv<numConf; ++cv)
-      if((cv != v) && (cv != (v+2)))
+    for (unsigned cv=0; cv<numConf; ++cv)
+      if ((cv != v) && (cv != (v+2)))
 	curInstance->add_confirmation_view(seedViews->confirmation_view(cv));
 
     curInstance->add_confirmation_view(seedViews->stereo0());
@@ -378,8 +378,8 @@ main(int argc, char **argv)
     curInstance->set_stereo1(view2);
     curInstance->reserve_num_confirmation_views(numConf);
 
-    for(unsigned cv=0; cv<numConf; ++cv)
-      if(cv != (numConf-2))
+    for (unsigned cv=0; cv<numConf; ++cv)
+      if (cv != (numConf-2))
 	curInstance->add_confirmation_view(seedViews->confirmation_view(cv));
 
     curInstance->add_confirmation_view(seedViews->stereo1());
@@ -396,8 +396,8 @@ main(int argc, char **argv)
     curInstance->set_stereo1(view2);
     curInstance->reserve_num_confirmation_views(numConf);
 
-    for(unsigned cv=0; cv<numConf; ++cv)
-      if(cv != numConf-1)
+    for (unsigned cv=0; cv<numConf; ++cv)
+      if (cv != numConf-1)
 	curInstance->add_confirmation_view(seedViews->confirmation_view(cv));
 
     curInstance->add_confirmation_view(seedViews->stereo0());
@@ -413,7 +413,7 @@ main(int argc, char **argv)
   //Anil: Data structure to store the marked portions of each image curve in each view
   std::vector<std::vector<std::vector<bool> > > usedCurvesAll(numConf+2);
 
-  for(unsigned v=0; v<numConf+2; ++v)
+  for (unsigned v=0; v<numConf+2; ++v)
     usedCurvesAll[v].resize(2000);
 
 
@@ -436,7 +436,7 @@ main(int argc, char **argv)
   numInstances = 5;
   std::vector<std::map<unsigned,std::pair<unsigned,unsigned> > > image_to_3d_links(numConf+2);
 
-  for(unsigned ins=0; ins<numInstances; ++ins) {
+  for (unsigned ins=0; ins<numInstances; ++ins) {
 
     //Anil: Containers for the reduced 3d curves
     std::vector<bdifd_1st_order_curve_3d> reducedCurves;
@@ -507,7 +507,7 @@ main(int argc, char **argv)
     std::cout << "SECOND ANCHOR: " << fa_views->stereo1() << std::endl;
     std::cout << "CONFIRMATION VIEWS: ";
 
-    for(unsigned pr=0; pr<numConf; ++pr)
+    for (unsigned pr=0; pr<numConf; ++pr)
       std::cout << fa_views->confirmation_view(pr) << " ";
 
     std::cout << std::endl;
@@ -522,7 +522,7 @@ main(int argc, char **argv)
     curCurves[1] = allCurves[fa_views->stereo1()];
     curTangents[1] = allTangents[fa_views->stereo1()];
 
-    for(unsigned vv=0; vv<numConf; ++vv) {
+    for (unsigned vv=0; vv<numConf; ++vv) {
       curCams[vv+2] = allCams[fa_views->confirmation_view(vv)];
       curEdges[vv+2] = allEdges[fa_views->confirmation_view(vv)];
       curDTs[vv+2] = allDTs[fa_views->confirmation_view(vv)];
@@ -549,25 +549,25 @@ main(int argc, char **argv)
 
   std::vector<std::vector<unsigned> > fa_usedCurveIDs(2);
   if (!startRun) {
-    for(unsigned imc=0; imc<usedCurvesAll[fa_views->stereo0()].size(); ++imc) {
+    for (unsigned imc=0; imc<usedCurvesAll[fa_views->stereo0()].size(); ++imc) {
 	    unsigned numUsed = 0;
-	    for(unsigned s=0; s<usedCurvesAll[fa_views->stereo0()][imc].size(); ++s)
-	      if(usedCurvesAll[fa_views->stereo0()][imc][s])
+	    for (unsigned s=0; s<usedCurvesAll[fa_views->stereo0()][imc].size(); ++s)
+	      if (usedCurvesAll[fa_views->stereo0()][imc][s])
 	        numUsed++;
 
       double ratio = double(numUsed)/double((usedCurvesAll[fa_views->stereo0()][imc].size()));
-      if(ratio >= 0.75)
+      if (ratio >= 0.75)
         fa_usedCurveIDs[0].push_back(imc);
     }
 
-    for(unsigned imc=0; imc<usedCurvesAll[fa_views->stereo1()].size(); ++imc) {
+    for (unsigned imc=0; imc<usedCurvesAll[fa_views->stereo1()].size(); ++imc) {
       unsigned numUsed = 0;
-      for(unsigned s=0; s<usedCurvesAll[fa_views->stereo1()][imc].size(); ++s)
-        if(usedCurvesAll[fa_views->stereo1()][imc][s])
+      for (unsigned s=0; s<usedCurvesAll[fa_views->stereo1()][imc].size(); ++s)
+        if (usedCurvesAll[fa_views->stereo1()][imc][s])
           numUsed++;
 
       double ratio = double(numUsed)/double((usedCurvesAll[fa_views->stereo1()][imc].size()));
-      if(ratio >= 0.75)
+      if (ratio >= 0.75)
         fa_usedCurveIDs[1].push_back(imc);
     }
   }
@@ -622,14 +622,14 @@ main(int argc, char **argv)
     std::vector<std::vector<std::vector<bdifd_1st_order_point_3d> > > dmy_cumulativeCurve(2000);
     std::vector<std::vector<std::vector<std::set<int> > > > cumulativeEdgeIndexChain(2000);
 
-    //if(usedViews[fa_views->stereo0()])
+    //if (usedViews[fa_views->stereo0()])
     //  cumulativeCurve = cumulativeCurveBox[fa_views->stereo0()];
 
     unsigned numCurves = attrVec.size();
     bmcsd_curve_3d_attributes_e seedAttr;
-    if(numCurves>0)
+    if (numCurves>0)
       seedAttr = attrVec.front();
-    for(unsigned c=0; c<fullCurves.size(); ++c)
+    for (unsigned c=0; c<fullCurves.size(); ++c)
       {
 	bdifd_1st_order_curve_3d curCurve = fullCurves[c];
 	bmcsd_curve_3d_attributes_e curAttr = attrVec[c];
@@ -647,10 +647,10 @@ main(int argc, char **argv)
 	
 	std::vector<std::vector<int> > edge_index_chain = curAttr.edge_index_chain_;
 	
-	if(cumulativeCurve[origID].empty()){
+	if (cumulativeCurve[origID].empty()){
 	  cumulativeCurve[origID].resize(origCurveSize);
 	  cumulativeEdgeIndexChain[origID].resize(numConf+2);
-	  for(unsigned ceic=0; ceic<numConf+2; ceic++)
+	  for (unsigned ceic=0; ceic<numConf+2; ceic++)
 	    cumulativeEdgeIndexChain[origID][ceic].resize(origCurveSize);
 	}
 
@@ -658,39 +658,39 @@ main(int argc, char **argv)
 	unsigned initPoint = 0;
 	int breakPoint = -1;
 	
-	for(unsigned s=0; s<curCurve.size(); ++s)
-	  if(!certaintyFlags[s])
+	for (unsigned s=0; s<curCurve.size(); ++s)
+	  if (!certaintyFlags[s])
 	    curSupp[s] = 0;
     
-	for(unsigned s=0; s<curCurve.size(); ++s)
+	for (unsigned s=0; s<curCurve.size(); ++s)
 	  {
-	    if(curSupp[s]<6)
+	    if (curSupp[s]<6)
 	      {
-		if(breakPoint==-1)
+		if (breakPoint==-1)
 		  breakPoint = s;
 		breakLength++;
 	      }
 	    else
 	      {
-		if(breakLength>2)
+		if (breakLength>2)
 		  {
-		    if(breakPoint>initPoint+7)
+		    if (breakPoint>initPoint+7)
 		      {
 			bdifd_1st_order_curve_3d newCurve;
 
-			for(int p=initPoint; p<breakPoint; ++p){
+			for (int p=initPoint; p<breakPoint; ++p){
 			  newCurve.push_back(curCurve[p]);
 			  cumulativeCurve[origID][p+offset].push_back(curCurve[p]);
 
-			  for(unsigned vp=0; vp<numConf; vp++)
-			    if(!edge_index_chain[vp].empty())
-			      if(edge_index_chain[vp][p]!=-1)
+			  for (unsigned vp=0; vp<numConf; vp++)
+			    if (!edge_index_chain[vp].empty())
+			      if (edge_index_chain[vp][p]!=-1)
 				cumulativeEdgeIndexChain[origID][fa_views->confirmation_view(vp)][p+offset].insert(edge_index_chain[vp][p]);
 
-			  if(usedCurvesAll[v0_seed][origID].empty())
+			  if (usedCurvesAll[v0_seed][origID].empty())
 			    usedCurvesAll[v0_seed][origID].resize(origCurveSize);
 
-			  if(usedCurvesAll[v1_seed][origID_v1].empty())
+			  if (usedCurvesAll[v1_seed][origID_v1].empty())
 			    usedCurvesAll[v1_seed][origID_v1].resize(origCurveSize_v1);
 
 			  usedCurvesAll[v0_seed][origID][p+offset]=true;
@@ -706,27 +706,27 @@ main(int argc, char **argv)
 		breakPoint = -1;
 	      }
 
-	    if(s==(curCurve.size()-1))
+	    if (s==(curCurve.size()-1))
 	      {
-		if(curSupp[s]<6)
+		if (curSupp[s]<6)
 		  {
-		    if(breakPoint>initPoint+7)
+		    if (breakPoint>initPoint+7)
 		      {
 			bdifd_1st_order_curve_3d newCurve;
-			for(int p=initPoint; p<breakPoint; ++p){
+			for (int p=initPoint; p<breakPoint; ++p){
 
 			  newCurve.push_back(curCurve[p]);
 			  cumulativeCurve[origID][p+offset].push_back(curCurve[p]);
 
-			  for(unsigned vp=0; vp<numConf; vp++)
-			    if(!edge_index_chain[vp].empty())
-			      if(edge_index_chain[vp][p]!=-1)
+			  for (unsigned vp=0; vp<numConf; vp++)
+			    if (!edge_index_chain[vp].empty())
+			      if (edge_index_chain[vp][p]!=-1)
 				cumulativeEdgeIndexChain[origID][fa_views->confirmation_view(vp)][p+offset].insert(edge_index_chain[vp][p]);
 
-			  if(usedCurvesAll[v0_seed][origID].empty())
+			  if (usedCurvesAll[v0_seed][origID].empty())
 			    usedCurvesAll[v0_seed][origID].resize(origCurveSize);
 
-			  if(usedCurvesAll[v1_seed][origID_v1].empty())
+			  if (usedCurvesAll[v1_seed][origID_v1].empty())
 			    usedCurvesAll[v1_seed][origID_v1].resize(origCurveSize_v1);
 
 			  usedCurvesAll[v0_seed][origID][p+offset]=true;
@@ -739,22 +739,22 @@ main(int argc, char **argv)
 		  }
 		else
 		  {
-		    if(s>initPoint+6)
+		    if (s>initPoint+6)
 		      {
 			bdifd_1st_order_curve_3d newCurve;
-			for(int p=initPoint; p<s+1; ++p){
+			for (int p=initPoint; p<s+1; ++p){
 			  newCurve.push_back(curCurve[p]);
 			  cumulativeCurve[origID][p+offset].push_back(curCurve[p]);
 
-			  for(unsigned vp=0; vp<numConf; vp++)
-			    if(!edge_index_chain[vp].empty())
-			      if(edge_index_chain[vp][p]!=-1)
+			  for (unsigned vp=0; vp<numConf; vp++)
+			    if (!edge_index_chain[vp].empty())
+			      if (edge_index_chain[vp][p]!=-1)
 				cumulativeEdgeIndexChain[origID][fa_views->confirmation_view(vp)][p+offset].insert(edge_index_chain[vp][p]);
 
-			  if(usedCurvesAll[v0_seed][origID].empty())
+			  if (usedCurvesAll[v0_seed][origID].empty())
 			    usedCurvesAll[v0_seed][origID].resize(origCurveSize);
 
-			  if(usedCurvesAll[v1_seed][origID_v1].empty())
+			  if (usedCurvesAll[v1_seed][origID_v1].empty())
 			    usedCurvesAll[v1_seed][origID_v1].resize(origCurveSize_v1);
 
 			  usedCurvesAll[v0_seed][origID][p+offset]=true;
@@ -777,23 +777,23 @@ main(int argc, char **argv)
 
 
     /*//STEP #3: Loop over all the confirmation views to gather all mate curves together
-    for(unsigned v=0; v<numConf; ++v)
+    for (unsigned v=0; v<numConf; ++v)
       {
 	cumulativeMates[v].resize(2000);
 	unsigned curView = fa_views->confirmation_view(v);
 
-	for(unsigned c=0; c<numCurves; ++c){
+	for (unsigned c=0; c<numCurves; ++c){
 	  bmcsd_curve_3d_attributes_e curAttr = attrVec[c];
 	  unsigned origID = curAttr.orig_id_v0_;
 	  std::set<int> curMates = curAttr.mate_curves_[v];
 
-	  for(std::set<int>::iterator mit=curMates.begin(); mit!=curMates.end(); ++mit)
+	  for (std::set<int>::iterator mit=curMates.begin(); mit!=curMates.end(); ++mit)
 	    cumulativeMates[v][origID].insert(*mit);
 	}
       } 
 
     //STEP #4: Loop over all the confirmation views to process the cumulative mate curves in each one
-    for(unsigned v=0; v<numConf; ++v)
+    for (unsigned v=0; v<numConf; ++v)
       {
 	bmcsd_curve_3d_sketch csk_elong;
 	unsigned curView = fa_views->confirmation_view(v);
@@ -804,8 +804,8 @@ main(int argc, char **argv)
 	curInstance->set_stereo1(curView);
 	curInstance->reserve_num_confirmation_views(numConf);
 
-	for(unsigned cv=0; cv<numConf; ++cv)
-	  if(cv != v)
+	for (unsigned cv=0; cv<numConf; ++cv)
+	  if (cv != v)
 	    curInstance->add_confirmation_view(fa_views->confirmation_view(cv));
 
 	curInstance->add_confirmation_view(fa_views->stereo1());
@@ -835,29 +835,29 @@ main(int argc, char **argv)
 	cur_s.set_isFirstRun(false);    
 
 	std::vector<std::vector<unsigned> > cur_usedCurveIDs(2);
-	if(!startRun) {
+	if (!startRun) {
       
-	  for(unsigned imc=0; imc<usedCurvesAll[fa_views->stereo0()].size(); ++imc){
+	  for (unsigned imc=0; imc<usedCurvesAll[fa_views->stereo0()].size(); ++imc){
 	    unsigned numUsed = 0;
-	    for(unsigned s=0; s<usedCurvesAll[fa_views->stereo0()][imc].size(); ++s)
-	      if(usedCurvesAll[fa_views->stereo0()][imc][s])
+	    for (unsigned s=0; s<usedCurvesAll[fa_views->stereo0()][imc].size(); ++s)
+	      if (usedCurvesAll[fa_views->stereo0()][imc][s])
 		numUsed++;
 
 	    double ratio = double(numUsed)/double((usedCurvesAll[fa_views->stereo0()][imc].size()));
-	    if(ratio >= 0.75)
+	    if (ratio >= 0.75)
 	      cur_usedCurveIDs[0].push_back(imc);
 
 	  }
 
-	  for(unsigned imc=0; imc<usedCurvesAll[curView].size(); ++imc){
+	  for (unsigned imc=0; imc<usedCurvesAll[curView].size(); ++imc){
     
 	    unsigned numUsed = 0;
-	    for(unsigned s=0; s<usedCurvesAll[curView][imc].size(); ++s)
-	      if(usedCurvesAll[curView][imc][s])
+	    for (unsigned s=0; s<usedCurvesAll[curView][imc].size(); ++s)
+	      if (usedCurvesAll[curView][imc][s])
 		numUsed++;
 
 	    double ratio = double(numUsed)/double((usedCurvesAll[curView][imc].size()));
-	    if(ratio >= 0.75)
+	    if (ratio >= 0.75)
 	      cur_usedCurveIDs[1].push_back(imc);
 
 	  }
@@ -885,7 +885,7 @@ main(int argc, char **argv)
 
 	const std::vector<bmcsd_curve_3d_attributes_e> cur_attrVec = csk_elong.attributes();
 
-	for(unsigned c=0; c<cur_fullCurves.size(); ++c)
+	for (unsigned c=0; c<cur_fullCurves.size(); ++c)
 	  {
 	    dbdif_1st_order_curve_3d curCurve = cur_fullCurves[c];
 	    bmcsd_curve_3d_attributes_e_e curAttr = cur_attrVec[c];
@@ -905,33 +905,33 @@ main(int argc, char **argv)
 	    unsigned initPoint = 0;
 	    int breakPoint = -1;
 	
-	    for(unsigned s=0; s<curCurve.size(); ++s)
-	      if(!cur_certaintyFlags[s])
+	    for (unsigned s=0; s<curCurve.size(); ++s)
+	      if (!cur_certaintyFlags[s])
 		curSupp[s] = 0;
 
-	    for(unsigned s=0; s<curCurve.size(); ++s)
+	    for (unsigned s=0; s<curCurve.size(); ++s)
 	      {
-		if(curSupp[s]<6)
+		if (curSupp[s]<6)
 		  {
-		    if(breakPoint==-1)
+		    if (breakPoint==-1)
 		      breakPoint = s;
 		    breakLength++;
 		  }
 		else
 		  {
-		    if(breakLength>2)
+		    if (breakLength>2)
 		      {
-			if(breakPoint>initPoint+7)
+			if (breakPoint>initPoint+7)
 			  {
 			    dbdif_1st_order_curve_3d newCurve;
-			    for(int p=initPoint; p<breakPoint; ++p){
+			    for (int p=initPoint; p<breakPoint; ++p){
 			      newCurve.push_back(curCurve[p]);
 			      cumulativeCurve[cur_origID][p+cur_offset].push_back(curCurve[p]);
 
-			      if(usedCurvesAll[cur_v0_seed][cur_origID].empty())
+			      if (usedCurvesAll[cur_v0_seed][cur_origID].empty())
 				usedCurvesAll[cur_v0_seed][cur_origID].resize(cur_origCurveSize);
 
-			      if(usedCurvesAll[cur_v1_seed][cur_origID_v1].empty())
+			      if (usedCurvesAll[cur_v1_seed][cur_origID_v1].empty())
 				usedCurvesAll[cur_v1_seed][cur_origID_v1].resize(cur_origCurveSize_v1);
 
 			      usedCurvesAll[cur_v0_seed][cur_origID][p+cur_offset]=true;
@@ -947,21 +947,21 @@ main(int argc, char **argv)
 		    breakPoint = -1;
 		  }
 
-		if(s==(curCurve.size()-1))
+		if (s==(curCurve.size()-1))
 		  {
-		    if(curSupp[s]<6)
+		    if (curSupp[s]<6)
 		      {
-			if(breakPoint>initPoint+7)
+			if (breakPoint>initPoint+7)
 			  {
 			    dbdif_1st_order_curve_3d newCurve;
-			    for(int p=initPoint; p<breakPoint; ++p){
+			    for (int p=initPoint; p<breakPoint; ++p){
 			      newCurve.push_back(curCurve[p]);
 			      cumulativeCurve[cur_origID][p+cur_offset].push_back(curCurve[p]);
 
-			      if(usedCurvesAll[cur_v0_seed][cur_origID].empty())
+			      if (usedCurvesAll[cur_v0_seed][cur_origID].empty())
 				usedCurvesAll[cur_v0_seed][cur_origID].resize(cur_origCurveSize);
 
-			      if(usedCurvesAll[cur_v1_seed][cur_origID_v1].empty())
+			      if (usedCurvesAll[cur_v1_seed][cur_origID_v1].empty())
 				usedCurvesAll[cur_v1_seed][cur_origID_v1].resize(cur_origCurveSize_v1);
 
 			      usedCurvesAll[cur_v0_seed][cur_origID][p+cur_offset]=true;
@@ -973,17 +973,17 @@ main(int argc, char **argv)
 		      }
 		    else
 		      {
-			if(s>initPoint+6)
+			if (s>initPoint+6)
 			  {
 			    dbdif_1st_order_curve_3d newCurve;
-			    for(int p=initPoint; p<s+1; ++p){
+			    for (int p=initPoint; p<s+1; ++p){
 			      newCurve.push_back(curCurve[p]);
 			      cumulativeCurve[cur_origID][p+cur_offset].push_back(curCurve[p]);
 
-			      if(usedCurvesAll[cur_v0_seed][cur_origID].empty())
+			      if (usedCurvesAll[cur_v0_seed][cur_origID].empty())
 				usedCurvesAll[cur_v0_seed][cur_origID].resize(cur_origCurveSize);
 
-			      if(usedCurvesAll[cur_v1_seed][cur_origID_v1].empty())
+			      if (usedCurvesAll[cur_v1_seed][cur_origID_v1].empty())
 				usedCurvesAll[cur_v1_seed][cur_origID_v1].resize(cur_origCurveSize_v1);
 
 			      usedCurvesAll[cur_v0_seed][cur_origID][p+cur_offset]=true;
@@ -1012,26 +1012,26 @@ main(int argc, char **argv)
     cur_usedViews[fa_views->stereo0()] = true;
     cur_usedViews[fa_views->stereo1()] = true;
 
-    for(unsigned vs=0; vs<modifVec.size(); ++vs) {
-      if(usedViews[fa_views->stereo0()] && modifVec[vs]==3)
+    for (unsigned vs=0; vs<modifVec.size(); ++vs) {
+      if (usedViews[fa_views->stereo0()] && modifVec[vs]==3)
 	continue;
       int curVisit = static_cast<int>(fa_views->stereo0()) + modifVec[vs];
-      if(curVisit<0)
+      if (curVisit<0)
 	curVisit = curVisit + numConf + 2;
-      else if(curVisit >= numConf+2)
+      else if (curVisit >= numConf+2)
 	curVisit = curVisit - (numConf + 2);
 	
       visitationSchedule.push_back(static_cast<unsigned>(curVisit));
       cur_usedViews[static_cast<unsigned>(curVisit)] = true;
     }
 
-    for(unsigned vs=0; vs<numConf+2; ++vs)
-      if(!cur_usedViews[vs])
+    for (unsigned vs=0; vs<numConf+2; ++vs)
+      if (!cur_usedViews[vs])
       visitationSchedule.push_back(vs);*/
 
     //STEP #5: Make each confirmation view the second anchor to try and reconstruct unused curves
-    //for(unsigned vis=0; vis<visitationSchedule.size(); ++vis) {
-    for(unsigned vi=0; vi<numConf; ++vi) {
+    //for (unsigned vis=0; vis<visitationSchedule.size(); ++vis) {
+    for (unsigned vi=0; vi<numConf; ++vi) {
       
       //unsigned curView = visitationSchedule[vis];
       bmcsd_curve_3d_sketch_e csk_iterate;
@@ -1046,9 +1046,9 @@ main(int argc, char **argv)
       curInstance->set_stereo1(curView);
       curInstance->reserve_num_confirmation_views(numConf);
 
-      for(unsigned cv=0; cv<numConf; ++cv){
-	if(fa_views->confirmation_view(cv) != curView){
-	//if(fa_views->confirmation_view(cv) != vi)
+      for (unsigned cv=0; cv<numConf; ++cv){
+	if (fa_views->confirmation_view(cv) != curView){
+	//if (fa_views->confirmation_view(cv) != vi)
 	  curInstance->add_confirmation_view(fa_views->confirmation_view(cv));
 	  std::cout << fa_views->confirmation_view(cv) << " ";
 	}
@@ -1080,7 +1080,7 @@ main(int argc, char **argv)
       curCurves[1] = allCurves[curInstance->stereo1()];
       curTangents[1] = allTangents[curInstance->stereo1()];
 
-      for(unsigned vv=0; vv<numConf; ++vv) {
+      for (unsigned vv=0; vv<numConf; ++vv) {
 	curCams[vv+2] = allCams[curInstance->confirmation_view(vv)];
 	curEdges[vv+2] = allEdges[curInstance->confirmation_view(vv)];
 	curDTs[vv+2] = allDTs[curInstance->confirmation_view(vv)];
@@ -1088,27 +1088,27 @@ main(int argc, char **argv)
       }
 
       std::vector<std::vector<unsigned> > usedCurveIDs(2);
-      /*for(unsigned imc=0; imc<usedCurvesAll[fa_views->stereo0()].size(); ++imc){
+      /*for (unsigned imc=0; imc<usedCurvesAll[fa_views->stereo0()].size(); ++imc){
 	unsigned numUsed = 0;
-	for(unsigned s=0; s<usedCurvesAll[fa_views->stereo0()][imc].size(); ++s)
-	  if(usedCurvesAll[fa_views->stereo0()][imc][s])
+	for (unsigned s=0; s<usedCurvesAll[fa_views->stereo0()][imc].size(); ++s)
+	  if (usedCurvesAll[fa_views->stereo0()][imc][s])
 	    numUsed++;
 
 	double ratio = double(numUsed)/double((usedCurvesAll[fa_views->stereo0()][imc].size()));
-	if(ratio >= 0.75)
+	if (ratio >= 0.75)
 	  usedCurveIDs[0].push_back(imc);
 
       }
 
-      for(unsigned imc=0; imc<usedCurvesAll[curView].size(); ++imc){
+      for (unsigned imc=0; imc<usedCurvesAll[curView].size(); ++imc){
     
 	unsigned numUsed = 0;
-	for(unsigned s=0; s<usedCurvesAll[curView][imc].size(); ++s)
-	  if(usedCurvesAll[curView][imc][s])
+	for (unsigned s=0; s<usedCurvesAll[curView][imc].size(); ++s)
+	  if (usedCurvesAll[curView][imc][s])
 	    numUsed++;
 
 	double ratio = double(numUsed)/double((usedCurvesAll[curView][imc].size()));
-	if(ratio >= 0.75)
+	if (ratio >= 0.75)
 	  usedCurveIDs[1].push_back(imc);
 
       }*/
@@ -1163,7 +1163,7 @@ main(int argc, char **argv)
 
       const std::vector<bmcsd_curve_3d_attributes_e> cur_attrVec = csk_iterate.attributes();
 
-      for(unsigned c=0; c<cur_fullCurves.size(); ++c)
+      for (unsigned c=0; c<cur_fullCurves.size(); ++c)
 	{
 	  bdifd_1st_order_curve_3d curCurve = cur_fullCurves[c];
 	  bmcsd_curve_3d_attributes_e curAttr = cur_attrVec[c];
@@ -1180,10 +1180,10 @@ main(int argc, char **argv)
 	  unsigned cur_v1_seed = curView;
 	  std::vector<std::vector<int> > cur_edge_index_chain = curAttr.edge_index_chain_;
     
-	  if(cumulativeCurve[cur_origID].empty()){
+	  if (cumulativeCurve[cur_origID].empty()){
 	    cumulativeCurve[cur_origID].resize(cur_origCurveSize);
 	    cumulativeEdgeIndexChain[cur_origID].resize(numConf+2);
-	    for(unsigned ceic=0; ceic<numConf+2; ceic++)
+	    for (unsigned ceic=0; ceic<numConf+2; ceic++)
 	      cumulativeEdgeIndexChain[cur_origID][ceic].resize(cur_origCurveSize);
 	  }
 
@@ -1191,38 +1191,38 @@ main(int argc, char **argv)
 	  unsigned initPoint = 0;
 	  int breakPoint = -1;
 	
-	  for(unsigned s=0; s<curCurve.size(); ++s)
-	    if(!cur_certaintyFlags[s])
+	  for (unsigned s=0; s<curCurve.size(); ++s)
+	    if (!cur_certaintyFlags[s])
 	      curSupp[s] = 0;
 
-	  for(unsigned s=0; s<curCurve.size(); ++s)
+	  for (unsigned s=0; s<curCurve.size(); ++s)
 	    {
-	      if(curSupp[s]<6)
+	      if (curSupp[s]<6)
 		{
-		  if(breakPoint==-1)
+		  if (breakPoint==-1)
 		    breakPoint = s;
 		  breakLength++;
 		}
 	      else
 		{
-		  if(breakLength>2)
+		  if (breakLength>2)
 		    {
-		      if(breakPoint>initPoint+7)
+		      if (breakPoint>initPoint+7)
 			{
 			  bdifd_1st_order_curve_3d newCurve;
-			  for(int p=initPoint; p<breakPoint; ++p){
+			  for (int p=initPoint; p<breakPoint; ++p){
 			    newCurve.push_back(curCurve[p]);
 			    cumulativeCurve[cur_origID][p+cur_offset].push_back(curCurve[p]);
 
-			    for(unsigned vp=0; vp<numConf; vp++)
-			      if(!cur_edge_index_chain[vp].empty())
-				if(cur_edge_index_chain[vp][p]!=-1)
+			    for (unsigned vp=0; vp<numConf; vp++)
+			      if (!cur_edge_index_chain[vp].empty())
+				if (cur_edge_index_chain[vp][p]!=-1)
 				  cumulativeEdgeIndexChain[cur_origID][curInstance->confirmation_view(vp)][p+cur_offset].insert(cur_edge_index_chain[vp][p]);
 
-			    if(usedCurvesAll[cur_v0_seed][cur_origID].empty())
+			    if (usedCurvesAll[cur_v0_seed][cur_origID].empty())
 			      usedCurvesAll[cur_v0_seed][cur_origID].resize(cur_origCurveSize);
 
-			    if(usedCurvesAll[cur_v1_seed][cur_origID_v1].empty())
+			    if (usedCurvesAll[cur_v1_seed][cur_origID_v1].empty())
 			      usedCurvesAll[cur_v1_seed][cur_origID_v1].resize(cur_origCurveSize_v1);
 
 			    usedCurvesAll[cur_v0_seed][cur_origID][p+cur_offset]=true;
@@ -1239,26 +1239,26 @@ main(int argc, char **argv)
 		  breakPoint = -1;
 		}
 
-	      if(s==(curCurve.size()-1))
+	      if (s==(curCurve.size()-1))
 		{
-		  if(curSupp[s]<6)
+		  if (curSupp[s]<6)
 		    {
-		      if(breakPoint>initPoint+7)
+		      if (breakPoint>initPoint+7)
 			{
 			  bdifd_1st_order_curve_3d newCurve;
-			  for(int p=initPoint; p<breakPoint; ++p){
+			  for (int p=initPoint; p<breakPoint; ++p){
 			    newCurve.push_back(curCurve[p]);
 			    cumulativeCurve[cur_origID][p+cur_offset].push_back(curCurve[p]);
 
-			    for(unsigned vp=0; vp<numConf; vp++)
-			      if(!cur_edge_index_chain[vp].empty())
-				if(cur_edge_index_chain[vp][p]!=-1)
+			    for (unsigned vp=0; vp<numConf; vp++)
+			      if (!cur_edge_index_chain[vp].empty())
+				if (cur_edge_index_chain[vp][p]!=-1)
 				  cumulativeEdgeIndexChain[cur_origID][curInstance->confirmation_view(vp)][p+cur_offset].insert(cur_edge_index_chain[vp][p]);			    
 
-			    if(usedCurvesAll[cur_v0_seed][cur_origID].empty())
+			    if (usedCurvesAll[cur_v0_seed][cur_origID].empty())
 			      usedCurvesAll[cur_v0_seed][cur_origID].resize(cur_origCurveSize);
 
-			    if(usedCurvesAll[cur_v1_seed][cur_origID_v1].empty())
+			    if (usedCurvesAll[cur_v1_seed][cur_origID_v1].empty())
 			      usedCurvesAll[cur_v1_seed][cur_origID_v1].resize(cur_origCurveSize_v1);
 
 			    usedCurvesAll[cur_v0_seed][cur_origID][p+cur_offset]=true;
@@ -1271,23 +1271,23 @@ main(int argc, char **argv)
 		    }
 		  else
 		    {
-		      if(s>initPoint+6)
+		      if (s>initPoint+6)
 			{
 			  bdifd_1st_order_curve_3d newCurve;
-			  for(int p=initPoint; p<s+1; ++p){
+			  for (int p=initPoint; p<s+1; ++p){
 			    newCurve.push_back(curCurve[p]);
 			    cumulativeCurve[cur_origID][p+cur_offset].push_back(curCurve[p]);
 
-			    for(unsigned vp=0; vp<numConf; vp++)
-			      if(!cur_edge_index_chain[vp].empty())
-				if(cur_edge_index_chain[vp][p]!=-1)
+			    for (unsigned vp=0; vp<numConf; vp++)
+			      if (!cur_edge_index_chain[vp].empty())
+				if (cur_edge_index_chain[vp][p]!=-1)
 				  cumulativeEdgeIndexChain[cur_origID][curInstance->confirmation_view(vp)][p+cur_offset].insert(cur_edge_index_chain[vp][p]);
 			    
 
-			    if(usedCurvesAll[cur_v0_seed][cur_origID].empty())
+			    if (usedCurvesAll[cur_v0_seed][cur_origID].empty())
 			      usedCurvesAll[cur_v0_seed][cur_origID].resize(cur_origCurveSize);
 
-			    if(usedCurvesAll[cur_v1_seed][cur_origID_v1].empty())
+			    if (usedCurvesAll[cur_v1_seed][cur_origID_v1].empty())
 			      usedCurvesAll[cur_v1_seed][cur_origID_v1].resize(cur_origCurveSize_v1);
 
 			    usedCurvesAll[cur_v0_seed][cur_origID][p+cur_offset]=true;
@@ -1309,23 +1309,23 @@ main(int argc, char **argv)
       cur_cumulativeMates.resize(numConf);
 
       /*//Loop over all the confirmation views to gather all mate curves together
-      for(unsigned v=0; v<numConf; ++v)
+      for (unsigned v=0; v<numConf; ++v)
 	{
 	  cur_cumulativeMates[v].resize(2000);
 	  //unsigned curView = curInstance->confirmation_view(v);
 
-	  for(unsigned c=0; c<cur_numCurves; ++c){
+	  for (unsigned c=0; c<cur_numCurves; ++c){
 	    bmcsd_curve_3d_attributes_e curAttr = cur_attrVec[c];
 	    unsigned origID = curAttr.orig_id_v0_;
 	    std::set<int> curMates = curAttr.mate_curves_[v];
 
-	    for(std::set<int>::iterator mit=curMates.begin(); mit!=curMates.end(); ++mit)
+	    for (std::set<int>::iterator mit=curMates.begin(); mit!=curMates.end(); ++mit)
 	      cur_cumulativeMates[v][origID].insert(*mit);
 	  }
 	} 
 
       //Loop over all the confirmation views to process the cumulative mate curves in each one
-      for(unsigned v=0; v<numConf; ++v)
+      for (unsigned v=0; v<numConf; ++v)
 	{
 	  bmcsd_curve_3d_sketch csk_iter_elong;
 	  unsigned iterView = curInstance->confirmation_view(v);
@@ -1337,8 +1337,8 @@ main(int argc, char **argv)
 	  std::cout << curInstance->stereo0() << " " << iterView << std::endl;
 	  iterInstance->reserve_num_confirmation_views(numConf);
 
-	  for(unsigned cv=0; cv<numConf; ++cv)
-	    if(cv != v){
+	  for (unsigned cv=0; cv<numConf; ++cv)
+	    if (cv != v){
 	      iterInstance->add_confirmation_view(curInstance->confirmation_view(cv));
 	      std::cout << curInstance->confirmation_view(cv) << " ";
 	    }
@@ -1350,27 +1350,27 @@ main(int argc, char **argv)
 	  bmcsd_concurrent_stereo_driver iter_s(dpath, iterFrames);
 
 	  std::vector<std::vector<unsigned> > iter_usedCurveIDs(2);
-	  for(unsigned imc=0; imc<usedCurvesAll[curInstance->stereo0()].size(); ++imc){
+	  for (unsigned imc=0; imc<usedCurvesAll[curInstance->stereo0()].size(); ++imc){
 	    unsigned numUsed = 0;
-	    for(unsigned s=0; s<usedCurvesAll[curInstance->stereo0()][imc].size(); ++s)
-	      if(usedCurvesAll[curInstance->stereo0()][imc][s])
+	    for (unsigned s=0; s<usedCurvesAll[curInstance->stereo0()][imc].size(); ++s)
+	      if (usedCurvesAll[curInstance->stereo0()][imc][s])
 		numUsed++;
 
 	    double ratio = double(numUsed)/double((usedCurvesAll[curInstance->stereo0()][imc].size()));
-	    if(ratio >= 0.75)
+	    if (ratio >= 0.75)
 	      iter_usedCurveIDs[0].push_back(imc);
 
 	  }
 
-	  for(unsigned imc=0; imc<usedCurvesAll[iterView].size(); ++imc){
+	  for (unsigned imc=0; imc<usedCurvesAll[iterView].size(); ++imc){
     
 	    unsigned numUsed = 0;
-	    for(unsigned s=0; s<usedCurvesAll[iterView][imc].size(); ++s)
-	      if(usedCurvesAll[iterView][imc][s])
+	    for (unsigned s=0; s<usedCurvesAll[iterView][imc].size(); ++s)
+	      if (usedCurvesAll[iterView][imc][s])
 		numUsed++;
 
 	    double ratio = double(numUsed)/double((usedCurvesAll[iterView][imc].size()));
-	    if(ratio >= 0.75)
+	    if (ratio >= 0.75)
 	      iter_usedCurveIDs[1].push_back(imc);
 
 	  }
@@ -1417,7 +1417,7 @@ main(int argc, char **argv)
 
 	  const std::vector<bmcsd_curve_3d_attributes_e> iter_attrVec = csk_iter_elong.attributes();
 
-	  for(unsigned c=0; c<iter_fullCurves.size(); ++c)
+	  for (unsigned c=0; c<iter_fullCurves.size(); ++c)
 	    {
 	      dbdif_1st_order_curve_3d curCurve = iter_fullCurves[c];
 	      bmcsd_curve_3d_attributes_e curAttr = iter_attrVec[c];
@@ -1437,33 +1437,33 @@ main(int argc, char **argv)
 	      unsigned initPoint = 0;
 	      int breakPoint = -1;
 		
-	      for(unsigned s=0; s<curCurve.size(); ++s)
-		if(!cur_certaintyFlags[s])
+	      for (unsigned s=0; s<curCurve.size(); ++s)
+		if (!cur_certaintyFlags[s])
 		  curSupp[s] = 0;
 
-	      for(unsigned s=0; s<curCurve.size(); ++s)
+	      for (unsigned s=0; s<curCurve.size(); ++s)
 		{
-		  if(curSupp[s]<6)
+		  if (curSupp[s]<6)
 		    {
-		      if(breakPoint==-1)
+		      if (breakPoint==-1)
 			breakPoint = s;
 		      breakLength++;
 		    }
 		  else
 		    {
-		      if(breakLength>2)
+		      if (breakLength>2)
 			{
-			  if(breakPoint>initPoint+7)
+			  if (breakPoint>initPoint+7)
 			    {
 			      dbdif_1st_order_curve_3d newCurve;
-			      for(int p=initPoint; p<breakPoint; ++p){
+			      for (int p=initPoint; p<breakPoint; ++p){
 				newCurve.push_back(curCurve[p]);
 				cumulativeCurve[cur_origID][p+cur_offset].push_back(curCurve[p]);
 
-				if(usedCurvesAll[cur_v0_seed][cur_origID].empty())
+				if (usedCurvesAll[cur_v0_seed][cur_origID].empty())
 				  usedCurvesAll[cur_v0_seed][cur_origID].resize(cur_origCurveSize);
 
-				if(usedCurvesAll[cur_v1_seed][cur_origID_v1].empty())
+				if (usedCurvesAll[cur_v1_seed][cur_origID_v1].empty())
 				  usedCurvesAll[cur_v1_seed][cur_origID_v1].resize(cur_origCurveSize_v1);
 
 				usedCurvesAll[cur_v0_seed][cur_origID][p+cur_offset]=true;
@@ -1479,21 +1479,21 @@ main(int argc, char **argv)
 		      breakPoint = -1;
 		    }
 
-		  if(s==(curCurve.size()-1))
+		  if (s==(curCurve.size()-1))
 		    {
-		      if(curSupp[s]<6)
+		      if (curSupp[s]<6)
 			{
-			  if(breakPoint>initPoint+7)
+			  if (breakPoint>initPoint+7)
 			    {
 			      dbdif_1st_order_curve_3d newCurve;
-			      for(int p=initPoint; p<breakPoint; ++p){
+			      for (int p=initPoint; p<breakPoint; ++p){
 				newCurve.push_back(curCurve[p]);
 				cumulativeCurve[cur_origID][p+cur_offset].push_back(curCurve[p]);
 
-				if(usedCurvesAll[cur_v0_seed][cur_origID].empty())
+				if (usedCurvesAll[cur_v0_seed][cur_origID].empty())
 				  usedCurvesAll[cur_v0_seed][cur_origID].resize(cur_origCurveSize);
 
-				if(usedCurvesAll[cur_v1_seed][cur_origID_v1].empty())
+				if (usedCurvesAll[cur_v1_seed][cur_origID_v1].empty())
 				  usedCurvesAll[cur_v1_seed][cur_origID_v1].resize(cur_origCurveSize_v1);
 
 				usedCurvesAll[cur_v0_seed][cur_origID][p+cur_offset]=true;
@@ -1505,17 +1505,17 @@ main(int argc, char **argv)
 			}
 		      else
 			{
-			  if(s>initPoint+6)
+			  if (s>initPoint+6)
 			    {
 			      dbdif_1st_order_curve_3d newCurve;
-			      for(int p=initPoint; p<s+1; ++p){
+			      for (int p=initPoint; p<s+1; ++p){
 				newCurve.push_back(curCurve[p]);
 				cumulativeCurve[cur_origID][p+cur_offset].push_back(curCurve[p]);
 
-				if(usedCurvesAll[cur_v0_seed][cur_origID].empty())
+				if (usedCurvesAll[cur_v0_seed][cur_origID].empty())
 				  usedCurvesAll[cur_v0_seed][cur_origID].resize(cur_origCurveSize);
 
-				if(usedCurvesAll[cur_v1_seed][cur_origID_v1].empty())
+				if (usedCurvesAll[cur_v1_seed][cur_origID_v1].empty())
 				  usedCurvesAll[cur_v1_seed][cur_origID_v1].resize(cur_origCurveSize_v1);
 
 				usedCurvesAll[cur_v0_seed][cur_origID][p+cur_offset]=true;
@@ -1548,21 +1548,21 @@ main(int argc, char **argv)
     std::ofstream attributes_file(attributes_fname.c_str());
 
 
-    for(unsigned i=0; i<2000; ++i)
+    for (unsigned i=0; i<2000; ++i)
       {
 	std::vector<std::vector<bdifd_1st_order_point_3d> > cur_cumulativeCurve = cumulativeCurve[i];
 	std::vector<std::vector<std::vector<int> > > unionEdgeIndexChain(numConf+2);
 	bdifd_1st_order_curve_3d averageCurve;
 	
 	
-	if(!cur_cumulativeCurve.empty())
+	if (!cur_cumulativeCurve.empty())
 	  {
 	    unsigned startPoint = 0;
-	    for(unsigned s=0; s<cur_cumulativeCurve.size(); ++s)
+	    for (unsigned s=0; s<cur_cumulativeCurve.size(); ++s)
 	      {
-		if(cur_cumulativeCurve[s].empty())
+		if (cur_cumulativeCurve[s].empty())
 		  {
-		    if(!averageCurve.empty())
+		    if (!averageCurve.empty())
 		      {
 			reducedCurves.push_back(averageCurve);
 			unsigned avCurveSize = averageCurve.size();
@@ -1573,22 +1573,22 @@ main(int argc, char **argv)
 
 			
 
-			for(unsigned sav=0; sav<avCurveSize; sav++){
+			for (unsigned sav=0; sav<avCurveSize; sav++){
 			  unsigned num_non_empty=0;
 			  std::vector<unsigned> writeVector;
-			  for(unsigned vp=0; vp<numConf+2; vp++){
-			    if(!unionEdgeIndexChain[vp][sav].empty()){
+			  for (unsigned vp=0; vp<numConf+2; vp++){
+			    if (!unionEdgeIndexChain[vp][sav].empty()){
 			      num_non_empty++;
 			      writeVector.push_back(vp);
 			      writeVector.push_back(unionEdgeIndexChain[vp][sav].size());
-			      for(unsigned evp=0; evp<unionEdgeIndexChain[vp][sav].size(); evp++)
+			      for (unsigned evp=0; evp<unionEdgeIndexChain[vp][sav].size(); evp++)
 				writeVector.push_back(unionEdgeIndexChain[vp][sav][evp]);
 			    }
 			  }
 			
-			  if(!writeVector.empty()){
+			  if (!writeVector.empty()){
 			    attributes_file << num_non_empty << " ";
-			    for(unsigned wv=0; wv<writeVector.size(); wv++)
+			    for (unsigned wv=0; wv<writeVector.size(); wv++)
 			      attributes_file << writeVector[wv] << " ";
 			  }
 			  else{
@@ -1616,7 +1616,7 @@ main(int argc, char **argv)
 		    double txSum=0; 
 		    double tySum=0;
 		    double tzSum=0;
-		    for(unsigned p=0; p<numPoints; ++p)
+		    for (unsigned p=0; p<numPoints; ++p)
 		      {
 			xSum+=cur_cumulativeCurve[s][p].Gama[0];
 			ySum+=cur_cumulativeCurve[s][p].Gama[1];
@@ -1645,14 +1645,14 @@ main(int argc, char **argv)
 
 		    //: Anil: Reject outlier samples - a sample is an outlier if its squared distance from average is more than 0.05
 		    //: TODO: Reject entire curves when one sample is an outlier
-		    for(unsigned p=0; p<numPoints; ++p)
+		    for (unsigned p=0; p<numPoints; ++p)
 		      {
 			double x=cur_cumulativeCurve[s][p].Gama[0];
 			double y=cur_cumulativeCurve[s][p].Gama[1];
 			double z=cur_cumulativeCurve[s][p].Gama[2];
 
 			double distSq = std::pow(x-avGama[0],2) + std::pow(y-avGama[1],2) + std::pow(z-avGama[2],2);
-			if(distSq<0.05)
+			if (distSq<0.05)
 			  {
 			    xSum+=x;
 			    ySum+=y;
@@ -1666,7 +1666,7 @@ main(int argc, char **argv)
 			  }
 		      }
 
-		    if(numSamples > 0){
+		    if (numSamples > 0){
 		      finalAvGama[0] = xSum/numSamples;
 		      finalAvGama[1] = ySum/numSamples;
 		      finalAvGama[2] = zSum/numSamples;
@@ -1679,21 +1679,21 @@ main(int argc, char **argv)
 		      avPoint.Gama = finalAvGama;
 		      avPoint.T = finalAvT;
 
-		      if(averageCurve.empty())
+		      if (averageCurve.empty())
 			startPoint = s;
 			
 		      averageCurve.push_back(avPoint);
-		      for(unsigned vp=0; vp<numConf+2; vp++){
+		      for (unsigned vp=0; vp<numConf+2; vp++){
 			std::vector<int> temp;
 			std::set<int> curSet = cumulativeEdgeIndexChain[i][vp][s];
-			for(std::set<int>::iterator sit=curSet.begin(); sit!=curSet.end(); sit++)
+			for (std::set<int>::iterator sit=curSet.begin(); sit!=curSet.end(); sit++)
 			  temp.push_back(*sit);
 			unionEdgeIndexChain[vp].push_back(temp);
 			
 		      }
 
 		    }
-		    else if(!averageCurve.empty()){
+		    else if (!averageCurve.empty()){
 		      std::cout << "WARNING: All measurements have been rejected for sample " << s << std::endl;
 		      reducedCurves.push_back(averageCurve);
 		      unsigned avCurveSize = averageCurve.size();
@@ -1704,23 +1704,23 @@ main(int argc, char **argv)
 
 		     
 
-		      for(unsigned sav=0; sav<avCurveSize; sav++){
+		      for (unsigned sav=0; sav<avCurveSize; sav++){
 			std::vector<unsigned> writeVector;
 			unsigned num_non_empty=0;
-			for(unsigned vp=0; vp<numConf+2; vp++){
-			  if(!unionEdgeIndexChain[vp][sav].empty()){
+			for (unsigned vp=0; vp<numConf+2; vp++){
+			  if (!unionEdgeIndexChain[vp][sav].empty()){
 			    num_non_empty++;
 			    writeVector.push_back(vp);
 			    writeVector.push_back(unionEdgeIndexChain[vp][sav].size());
-			    for(unsigned evp=0; evp<unionEdgeIndexChain[vp][sav].size(); evp++)
+			    for (unsigned evp=0; evp<unionEdgeIndexChain[vp][sav].size(); evp++)
 			      writeVector.push_back(unionEdgeIndexChain[vp][sav][evp]);
 			  }
 			}
 		      
 			
-			if(!writeVector.empty()){
+			if (!writeVector.empty()){
 			  attributes_file << num_non_empty << " ";
-			  for(unsigned wv=0; wv<writeVector.size(); wv++)
+			  for (unsigned wv=0; wv<writeVector.size(); wv++)
 			    attributes_file << writeVector[wv] << " ";
 			}
 			else{
@@ -1740,7 +1740,7 @@ main(int argc, char **argv)
 
 		  }  
 	      }
-	    if(!averageCurve.empty()){
+	    if (!averageCurve.empty()){
 	      reducedCurves.push_back(averageCurve);
 	      unsigned avCurveSize = averageCurve.size();
 	      averageCurve.clear();
@@ -1748,23 +1748,23 @@ main(int argc, char **argv)
 	      attributes_file << i << " " << reducedCurveID << " " << startPoint << std::endl;
 	      attributes_file << avCurveSize << std::endl;
 
-	      for(unsigned sav=0; sav<avCurveSize; sav++){
+	      for (unsigned sav=0; sav<avCurveSize; sav++){
 		std::vector<unsigned> writeVector;
 		unsigned num_non_empty=0;
-		for(unsigned vp=0; vp<numConf+2; vp++){
-		  if(!unionEdgeIndexChain[vp][sav].empty()){
+		for (unsigned vp=0; vp<numConf+2; vp++){
+		  if (!unionEdgeIndexChain[vp][sav].empty()){
 		    num_non_empty++;
 		    writeVector.push_back(vp);
 		    writeVector.push_back(unionEdgeIndexChain[vp][sav].size());
-		    for(unsigned evp=0; evp<unionEdgeIndexChain[vp][sav].size(); evp++)
+		    for (unsigned evp=0; evp<unionEdgeIndexChain[vp][sav].size(); evp++)
 		      writeVector.push_back(unionEdgeIndexChain[vp][sav][evp]);
 		  }
 		}
 	      
 			
-		if(!writeVector.empty()){
+		if (!writeVector.empty()){
 		  attributes_file << num_non_empty << " ";
-		  for(unsigned wv=0; wv<writeVector.size(); wv++)
+		  for (unsigned wv=0; wv<writeVector.size(); wv++)
 		    attributes_file << writeVector[wv] << " ";
 		}
 		else{
@@ -1847,10 +1847,10 @@ main(int argc, char **argv)
   }
 
   //Anil: Write the edge support to different txt files
-  if(!write_edge_support(a_prefix() + std::string("/") + a_out_dir(), csk.attributes()))
+  if (!write_edge_support(a_prefix() + std::string("/") + a_out_dir(), csk.attributes()))
   std::cout << "Error writing edge support files!" << std::endl;*/
 
-  /*for(unsigned u=0; u<numConf+2; ++u)
+  /*for (unsigned u=0; u<numConf+2; ++u)
   {
     std::stringstream used_stream;
     used_stream << "used_samples_";
@@ -1860,20 +1860,20 @@ main(int argc, char **argv)
     std::ofstream used_file(used_fname.c_str());
 
     unsigned numImageCurvesProcessed = 0;
-    for(unsigned imc=0; imc<usedCurvesAll[u].size(); ++imc)
+    for (unsigned imc=0; imc<usedCurvesAll[u].size(); ++imc)
       {
-	if(!usedCurvesAll[u][imc].empty())
+	if (!usedCurvesAll[u][imc].empty())
 	  numImageCurvesProcessed++;
       }
 
     used_file << numImageCurvesProcessed << std::endl;
 
-    for(unsigned imc=0; imc<usedCurvesAll[u].size(); ++imc)
+    for (unsigned imc=0; imc<usedCurvesAll[u].size(); ++imc)
       {
-	if(!usedCurvesAll[u][imc].empty())
+	if (!usedCurvesAll[u][imc].empty())
 	  {
 	    used_file << imc << " " << usedCurvesAll[u][imc].size() << " ";
-	    for(unsigned s=0; s<usedCurvesAll[u][imc].size(); ++s)
+	    for (unsigned s=0; s<usedCurvesAll[u][imc].size(); ++s)
 	      used_file << usedCurvesAll[u][imc][s] << " ";
       
 	    used_file << std::endl;
@@ -1892,27 +1892,27 @@ main(int argc, char **argv)
 
   /*std::vector<std::vector<unsigned> > usedCurveIDs(2);
 
-  for(unsigned imc=0; imc<usedCurvesAll[12].size(); ++imc){
+  for (unsigned imc=0; imc<usedCurvesAll[12].size(); ++imc){
     unsigned numUsed = 0;
-    for(unsigned s=0; s<usedCurvesAll[12][imc].size(); ++s)
-      if(usedCurvesAll[12][imc][s])
+    for (unsigned s=0; s<usedCurvesAll[12][imc].size(); ++s)
+      if (usedCurvesAll[12][imc][s])
 	numUsed++;
 
     double ratio = double(numUsed)/double((usedCurvesAll[12][imc].size()));
-    if(ratio >= 0.75)
+    if (ratio >= 0.75)
       usedCurveIDs[0].push_back(imc);
 
   }
 
-  for(unsigned imc=0; imc<usedCurvesAll[14].size(); ++imc){
+  for (unsigned imc=0; imc<usedCurvesAll[14].size(); ++imc){
     
     unsigned numUsed = 0;
-    for(unsigned s=0; s<usedCurvesAll[14][imc].size(); ++s)
-      if(usedCurvesAll[14][imc][s])
+    for (unsigned s=0; s<usedCurvesAll[14][imc].size(); ++s)
+      if (usedCurvesAll[14][imc][s])
 	numUsed++;
 
     double ratio = double(numUsed)/double((usedCurvesAll[14][imc].size()));
-    if(ratio >= 0.75)
+    if (ratio >= 0.75)
       usedCurveIDs[1].push_back(imc);
 
   }
@@ -1924,8 +1924,8 @@ main(int argc, char **argv)
   instance2->set_stereo1(14);
   instance2->reserve_num_confirmation_views(numConf);
 
-  for(unsigned cv=0; cv<numConf+2; ++cv)
-    if(cv!=12 && cv!=14)
+  for (unsigned cv=0; cv<numConf+2; ++cv)
+    if (cv!=12 && cv!=14)
       instance2->add_confirmation_view(cv);
 
   frames2.add_instance(instance2);
@@ -1967,7 +1967,7 @@ main(int argc, char **argv)
   MW_ASSERT("Error while trying to write file.\n", retval, true);//*/
 
   //Write out the used curve samples in a text file
-  for(unsigned u=0; u<numConf+2; ++u) {
+  for (unsigned u=0; u<numConf+2; ++u) {
     std::stringstream used_stream;
     used_stream << "used_samples_";
     used_stream << u;
@@ -1976,26 +1976,20 @@ main(int argc, char **argv)
     std::ofstream used_file(used_fname.c_str());
 
     unsigned numImageCurvesProcessed = 0;
-    for(unsigned imc=0; imc<usedCurvesAll[u].size(); ++imc)
-      {
-	if(!usedCurvesAll[u][imc].empty())
-	  numImageCurvesProcessed++;
-      }
+    for (unsigned imc=0; imc<usedCurvesAll[u].size(); ++imc) {
+      if (!usedCurvesAll[u][imc].empty())
+        numImageCurvesProcessed++;
+    }
 
     used_file << numImageCurvesProcessed << std::endl;
-
-    for(unsigned imc=0; imc<usedCurvesAll[u].size(); ++imc)
-      {
-	if(!usedCurvesAll[u][imc].empty())
-	  {
-	    used_file << imc << " " << usedCurvesAll[u][imc].size() << " ";
-	    for(unsigned s=0; s<usedCurvesAll[u][imc].size(); ++s)
-	      used_file << usedCurvesAll[u][imc][s] << " ";
-      
-	    used_file << std::endl;
-	  }
+    for (unsigned imc=0; imc<usedCurvesAll[u].size(); ++imc) {
+      if (!usedCurvesAll[u][imc].empty()) {
+          used_file << imc << " " << usedCurvesAll[u][imc].size() << " ";
+          for (unsigned s=0; s<usedCurvesAll[u][imc].size(); ++s)
+            used_file << usedCurvesAll[u][imc][s] << " ";
+          used_file << std::endl;
       }
-
+    }
     used_file.close();
   }
 
