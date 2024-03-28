@@ -300,8 +300,8 @@ bool bsold_load_cem_ascii(std::vector< vsol_spatial_object_2d_sptr >& contours, 
               &(idir), &(iconf), &(x), &(y), &(dir), &(conf));
 
         //VJ's current CEM is in degrees rather than radians so need to convert
-        dir += 90;
-        dir *= vnl_math::pi/180;
+        // dir += 90;
+        // dir *= vnl_math::pi/180;
 
         vsol_point_2d_sptr newPt = new vsol_point_2d (x,y);
         points.push_back(newPt);
@@ -386,12 +386,12 @@ bool bsold_load_cem_gzip(std::vector< vsol_spatial_object_2d_sptr >& contours, s
       for (int j=0; j< numEdges; j++){
         //the rest should have data that goes into the current contour
         infp.getline(lineBuffer,1024);
-        sscanf(lineBuffer," [%d, %d]\t%f\t%f\t[%f, %f]\t%f\t%f",&(ix), &(iy),
+        sscanf(lineBuffer," [%d, %d]\t%lf\t%lf\t[%f, %f]\t%lf\t%lf",&(ix), &(iy),
               &(idir), &(iconf), &(x), &(y), &(dir), &(conf));
 
         //VJ's current CEM is in degrees rather than radians so need to convert
-        dir += 90;
-        dir *= vnl_math::pi/180;
+        // dir += 90;
+        // dir *= vnl_math::pi/180;
 
         vsol_point_2d_sptr newPt = new vsol_point_2d (x,y);
         points.push_back(newPt);
