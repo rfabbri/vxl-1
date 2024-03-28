@@ -48,6 +48,15 @@ protected:
   bmcsd_curve_3d_sketch_e csk_;
   std::vector< bmcsd_curve_3d_attributes_e > *attr_;
   std::vector<bmcsd_discrete_corresp_e> *corresp_;
+  //Anil: Flag indicating whether this is an iteration run for elongation
+  //True means it's the first pass, false means it's an iteration run
+  bool isFirstRun_;
+
+  //Anil: If this is an iteration run for elongation, mate curve IDs is v1()
+  std::vector<std::set<int> > mate_curves_v1_;
+
+  //Anil: Flags for curves on the anchor views that are already used during a previous run
+  std::vector<std::vector<unsigned> > usedCurves_;
 };
 
 class bmcsd_concurrent_stereo_driver_e : public bmcsd_concurrent_stereo_driver_base, public bmcsd_stereo_driver_e {
@@ -62,18 +71,31 @@ public:
   {
   }
 
+  //: Anil: Setter for the mate curve id set
+  void set_mate_curves_v1(std::vector<std::set<int> > mate_curves_v1)
+  { mate_curves_v1_ = mate_curves_v1; }
+
+  //: Anil: Setter for the used curve sample id vector
+  void set_usedCurves(std::vector<std::vector<unsigned> > usedCurves)
+  { usedCurves_ = usedCurves; }
+
+  //: Anil: Setter for the iteration run flag
+  void set_isFirstRun(bool isFirstRun)
+  { isFirstRun_ = isFirstRun; }
+  
+
   //: Initializes the processing, e.g. setting up a processing graph, computing
   // tangents in the curve fragments, etc.
   virtual bool init();
 
 
   //: Anil: Initializes the processing from precomputed data
-  bool init(vcl_vector<bdifd_camera> &cams,
-	    vcl_vector<sdet_edgemap_sptr> &em,
-	    vcl_vector<vcl_vector< vsol_polyline_2d_sptr > > &curves,
-	    vcl_vector<vcl_vector<vcl_vector<double> > > &tangents,
-	    vcl_vector<vil_image_view<vxl_uint_32> > &dts,
-	    vcl_vector<vil_image_view<unsigned> > &labels);
+  bool init(std::vector<bdifd_camera> &cams,
+	    std::vector<sdet_edgemap_sptr> &em,
+	    std::vector<std::vector< vsol_polyline_2d_sptr > > &curves,
+	    std::vector<std::vector<std::vector<double> > > &tangents,
+	    std::vector<vil_image_view<vxl_uint_32> > &dts,
+	    std::vector<vil_image_view<unsigned> > &labels);
 
   //: Runs all instances of the 2-view matching and reconstruction
   virtual bool run(unsigned long timestamp=1);
