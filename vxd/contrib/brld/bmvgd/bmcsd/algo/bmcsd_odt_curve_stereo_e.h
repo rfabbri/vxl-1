@@ -182,6 +182,10 @@ public:
   //Size should be total number of confirmation views used in the stereo instance
   std::vector<std::vector<int> > edge_curve_index_;
 
+  // Anil: Vector that stores the flags for curve samples used
+  std::vector<std::vector<std::vector<bool> > > usedSamples_;
+
+
 protected:
   bool dummyFlag_;
   unsigned dummyID;
@@ -194,9 +198,6 @@ protected:
 
   // Anil: Key = mate curve ID, Value = weight, indicating level of support given in number of edges
   std::map<unsigned,unsigned> mate_curve_weights_;
-
-  // Anil: Vector that stores the flags for curve samples used
-  std::vector<std::vector<std::vector<bool> > > usedSamples_;
 
   // Anil: Buffer for storing the sample IDs on the image curve in v1 that are going to be used in this run
   std::vector<unsigned> curve_samples_v1_;

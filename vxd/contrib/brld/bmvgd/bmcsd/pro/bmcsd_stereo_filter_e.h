@@ -3,7 +3,7 @@
 #define bmcsdstereo_filter_e_h
 //:
 //\file
-//\brief Dbpro process for curve stereo
+//\brief bprod process for curve stereo
 //\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 09/01/2009 08:31:17 AM PDT
 //
@@ -33,11 +33,9 @@ public:
   {
   }
 
-#if 0
-// In anil's original, but not used
-  void load_inputs(const dbmcs_stereo_views_sptr &views,
-		   std::vector<dbdif_camera> &cams,
-		   std::vector<dbdet_edgemap_sptr> &em,
+  void load_inputs(const bmcsd_stereo_views_sptr &views,
+		   std::vector<bdifd_camera> &cams,
+		   std::vector<sdet_edgemap_sptr> &em,
 		   std::vector<std::vector< vsol_polyline_2d_sptr > > &curves,
 		   std::vector<std::vector<std::vector<double> > > &tangents,
 		   std::vector<vil_image_view<vxl_uint_32> > &dts,
@@ -82,10 +80,11 @@ public:
     //std::vector<dbbl_subsequence_set> sseq;
     s_->set_curves(curves);
     s_->set_tangents(tangents);
-    s_->set_original_curve_sizes(original_sizes);
-    s_->set_num_image_curves_v0(curves[0].size());
+    bmcsd_odt_curve_stereo_e *os = dynamic_cast<bmcsd_odt_curve_stereo_e *> (s_);
+    os->set_original_curve_sizes(original_sizes);
+    os->set_num_image_curves_v0(curves[0].size());
     //s_->break_into_episegs_and_replace_curve(&sseq);
-    s_->usedSamples_ = usedSamples;
+    os->usedSamples_ = usedSamples;
     //s_->usedCurves_ = this->usedCurves_;
 
     /*std::vector<vsol_spatial_object_2d_sptr> brokenCurves_v0, brokenCurves_v1;
@@ -100,7 +99,6 @@ public:
 
     //s_->set_sseq(sseq);
   }
-#endif
     
   bprod_signal execute() override
   {
@@ -325,16 +323,15 @@ get_edge_to_curve_index()
   }
 }
 
-#if 0
 //: Runs the filter
 //Anil: Alternative run function that does not work with inputs
 //This is to be used when inputs are given from the mcs executable
 //
 // this is just the code from bprod_filter::run 
 // but with somethings removed and minor changes such as request_inputs,
-dbpro_signal
-dbmcs_stereo_filter::run(unsigned long timestamp,
-                  dbpro_debug_observer* const debug)
+bprod_signal
+bmcsd_stereo_filter_e::run(unsigned long timestamp,
+                  bprod_debug_observer* const debug)
 {
   // notify the debugger if available
   if (debug) debug->notify_enter(this, timestamp);
@@ -343,7 +340,7 @@ dbmcs_stereo_filter::run(unsigned long timestamp,
   
   if(timestamp > this->timestamp_) {
     this->timestamp_ = timestamp;
-    this->last_signal_ = DBPRO_VALID;
+    this->last_signal_ = BPROD_VALID;
     if (debug) {
       debug->notify_pre_exec(this);
       this->last_signal_ = this->execute();
@@ -361,6 +358,5 @@ dbmcs_stereo_filter::run(unsigned long timestamp,
 
   return this->last_signal_;
 }
-#endif
 
 #endif // bmcsdstereo_filter_e_h

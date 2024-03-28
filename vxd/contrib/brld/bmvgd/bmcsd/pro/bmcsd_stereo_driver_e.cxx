@@ -28,11 +28,10 @@ init()
 }
 
 
-#if 0 
 // In anil's original, but not used
-bool dbmcs_concurrent_stereo_driver_e::
-init(std::vector<dbdif_camera> &cams,
-     std::vector<dbdet_edgemap_sptr> &em,
+bool bmcsd_concurrent_stereo_driver_e::
+init(std::vector<bdifd_camera> &cams,
+     std::vector<sdet_edgemap_sptr> &em,
      std::vector<std::vector< vsol_polyline_2d_sptr > > &curves,
      std::vector<std::vector<std::vector<double> > > &tangents,
      std::vector<vil_image_view<vxl_uint_32> > &dts,
@@ -42,7 +41,7 @@ init(std::vector<dbdif_camera> &cams,
 
   //: Setup nodes that act on multiple frames
   for (unsigned i=0; i < f_.num_instances(); ++i) {
-    dbmcs_stereo_filter_e *p = new dbmcs_stereo_filter_e();
+    bmcsd_stereo_filter_e *p = new bmcsd_stereo_filter_e();
     curve_stereo_.push_back(p);
 
     p->load_inputs(f_.instance(i),
@@ -57,7 +56,6 @@ init(std::vector<dbdif_camera> &cams,
     p->isFirstRun_ = this->isFirstRun_;
     p->mate_curves_v1_ = this->mate_curves_v1_;
     p->usedCurves_ = this->usedCurves_;
-
   }
 
   update_stereo_params();
@@ -70,10 +68,10 @@ init(std::vector<dbdif_camera> &cams,
        = std::min(static_cast<unsigned long>(max_concurrent_matchers_), 
            static_cast<unsigned long>(curve_stereo_.size()-i));
 
-      curve_stereo_jobs_.push_back(new dbmcs_stereo_jobs(num_matchers));
+      curve_stereo_jobs_.push_back(new bmcsd_stereo_jobs_e(num_matchers));
     }
 
-    dbpro_process_sptr p = curve_stereo_jobs_.back();
+    bprod_process_sptr p = curve_stereo_jobs_.back();
     unsigned idx = 3*(i % max_concurrent_matchers_);
     p->connect_input(idx,   curve_stereo_[i], 0);
     p->connect_input(idx+1, curve_stereo_[i], 1);
@@ -81,7 +79,7 @@ init(std::vector<dbdif_camera> &cams,
   }
 
   //: Now connect all curve_stereo_jobs_ into a single output job.
-  output_job_ = new dbmcs_stereo_aggregator_e(curve_stereo_jobs_.size());
+  output_job_ = new bmcsd_stereo_aggregator_e(curve_stereo_jobs_.size());
   for (unsigned i=0; i < curve_stereo_jobs_.size(); ++i) {
     output_job_->connect_input(3*i,   curve_stereo_jobs_[i], 0 /* crv_3d */);
     output_job_->connect_input(3*i+1, curve_stereo_jobs_[i], 1 /* attr */);
@@ -91,8 +89,6 @@ init(std::vector<dbdif_camera> &cams,
   initialized_ = true;
   return true;
 }
-#endif
-
 
 bool bmcsd_concurrent_stereo_driver_e::
 run(unsigned long timestamp)
