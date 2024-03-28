@@ -574,13 +574,6 @@ main(int argc, char **argv)
 
   s.set_use_curvelets(fa_usedCurveIDs);
 
-
-
-
-
-
-
-
   //: How many stereo matchers can run simultaneously
   s.set_max_concurrent_matchers(a_max_concurrent_matchers());
 
