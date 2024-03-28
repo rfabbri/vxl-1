@@ -188,7 +188,7 @@ main(int argc, char **argv)
     // 2 Edge map loader
     static const bool my_bSubPixel = true;
     static const double my_scale=1.0;
-    dbdet_edgemap_sptr edge_map;
+    sdetd_edgemap_sptr edge_map;
     retval = sbdet_load_edg(dpath[v].edg_full_path(), my_bSubPixel, my_scale, edge_map);
     allEdges[v] = edge_map;
 
@@ -252,7 +252,7 @@ main(int argc, char **argv)
     vil_image_view<vxl_byte > bw_image;
 
     //: Assumes the conversion maps edges to 255 and others to 0.
-    retval = dbdet_convert_edgemap_to_image(*edge_map, bw_image);
+    retval = sdetd_convert_edgemap_to_image(*edge_map, bw_image);
     if (!retval) return 1;
 
     vil_image_view<vxl_uint_32> dt(bw_image.ni(), bw_image.nj(), 1);
@@ -413,7 +413,7 @@ main(int argc, char **argv)
   //Anil: Create buffer storage for all the cam, edge and curve data
   //The order of data in these containers will be changed to suit each stereo run
   std::vector<dbdif_camera> curCams(numConf+2);
-  std::vector<dbdet_edgemap_sptr> curEdges(numConf+2);
+  std::vector<sdetd_edgemap_sptr> curEdges(numConf+2);
   std::vector<vil_image_view<vxl_uint_32> > curDTs(numConf+2);
   std::vector<vil_image_view<unsigned> > curLabels(numConf+2);
   std::vector<std::vector<vsol_polyline_2d_sptr> > curCurves(numConf+2);
