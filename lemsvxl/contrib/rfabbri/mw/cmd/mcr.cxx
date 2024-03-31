@@ -12,9 +12,7 @@
 #include <bmcsd/pro/bmcsd_load_camera_source.h>
 #include <bmcsd/pro/bmcsd_load_edg_source.h>
 
-
 #define MW_ASSERT(msg, a, b) if ((a) != (b)) { std::cerr << (msg) << std::endl; abort(); }
-
 
 //: Stores the concatenation of all inputs from many bmcsd_stereo_jobs
 class vcpld_edgemap_cam_aggregator: public bprod_sink {
