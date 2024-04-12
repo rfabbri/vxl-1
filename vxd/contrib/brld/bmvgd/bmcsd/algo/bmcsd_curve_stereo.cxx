@@ -415,7 +415,7 @@ void bmcsd_curve_stereo::
 break_curves_into_episegs_pairwise(
     std::vector<std::vector< vsol_polyline_2d_sptr > > *broken_vsols,
     std::vector<bbld_subsequence_set> *ss_ptr
-    ) const
+    )
 {
 #ifndef NDEBUG
   std::cout << "bmcsd_curve_stereo::break_curves_into_episegs_pairwise" << std::endl;

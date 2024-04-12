@@ -326,7 +326,7 @@ public:
   // \todo find a true multiview way of breaking the curves
   virtual void break_curves_into_episegs_pairwise(
       std::vector<std::vector< vsol_polyline_2d_sptr > > *broken_vsols,
-      std::vector<bbld_subsequence_set> *ss_ptr) const;
+      std::vector<bbld_subsequence_set> *ss_ptr);
 
   //: Stand-alone episeg breaker.
   // \see break_curves_into_episegs_pairwise

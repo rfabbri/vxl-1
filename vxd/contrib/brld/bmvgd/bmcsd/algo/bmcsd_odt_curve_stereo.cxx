@@ -388,7 +388,7 @@ void bmcsd_odt_curve_stereo::
 break_curves_into_episegs_pairwise(
     std::vector<std::vector< vsol_polyline_2d_sptr > > *broken_vsols,
     std::vector<bbld_subsequence_set> *ss_ptr
-    ) const
+    )
 {
   std::cout << "Called ODT episeg breaker with tau_min_epiangle = " 
     << tau_min_epiangle_*180.0/vnl_math::pi << " degrees" << std::endl;

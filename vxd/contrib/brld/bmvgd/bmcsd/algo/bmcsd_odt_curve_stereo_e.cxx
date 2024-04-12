@@ -20,7 +20,7 @@ bmcsd_odt_curve_stereo_e()
 {
 }
 
-bool bmcsd_curve_stereo::
+bool bmcsd_odt_curve_stereo_e::
 set_nviews(unsigned nv)
 {
   if (!bmcsd_odt_curve_stereo::set_nviews(nv))

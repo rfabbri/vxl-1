@@ -33,7 +33,7 @@ public:
   // Setters and Getters ------------------------------------------------------
 
   //: \see base class
-  virtual bool set_nviews(unsigned nviews);
+  virtual bool set_nviews(unsigned nviews) override;
 
   //: set the edgemaps for each view.
   void set_all_edgemaps(const std::vector<sdet_edgemap_sptr> &em);
@@ -192,10 +192,10 @@ public:
   //: This version uses angle from set_min_epiangle to determine
   // keep only the episegs having all point-tangents within an angle of
   // the epipolar line. Such angle is set in set_min_epiangle().
-  virtual void break_curves_into_episegs_pairwise(
+  void break_curves_into_episegs_pairwise(
       std::vector<std::vector< vsol_polyline_2d_sptr > > *broken_vsols,
       std::vector<bbld_subsequence_set> *ss_ptr
-      ) const override;
+      ) override;
 
   //: Stand-alone episeg breaker using tangent angle information.
   // \see break_curves_into_episegs_pairwise
@@ -209,7 +209,7 @@ public:
 
   //: Precondition: set_tangents and set_curve must have been called.
   virtual void break_into_episegs_and_replace_curve(
-      std::vector<bbld_subsequence_set> *curves_ss);
+      std::vector<bbld_subsequence_set> *curves_ss) override;
 
   bool has_sels() { return !sels_.empty(); }
 

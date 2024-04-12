@@ -153,7 +153,7 @@ public:
   //: This version uses angle from set_min_epiangle to determine
   // keep only the episegs having all point-tangents within an angle of
   // the epipolar line. Such angle is set in set_min_epiangle().
-  virtual void break_curves_into_episegs_pairwise(
+  void break_curves_into_episegs_pairwise(
       std::vector<std::vector< vsol_polyline_2d_sptr > > *broken_vsols,
       std::vector<bbld_subsequence_set> *ss_ptr
       ) override;
