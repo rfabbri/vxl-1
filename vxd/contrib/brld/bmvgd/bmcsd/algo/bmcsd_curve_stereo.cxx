@@ -60,7 +60,6 @@ set_nviews(unsigned nv)
   return true;
 }
 
-
 void bmcsd_curve_stereo::
 reconstruct_multiview()
 {

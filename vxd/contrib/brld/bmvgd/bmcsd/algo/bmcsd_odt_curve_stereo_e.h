@@ -48,6 +48,7 @@ public:
   void set_sseq(const std::vector<bbld_subsequence_set> &sseq);
   std::vector<bbld_subsequence_set> get_sseq();
 
+  virtual bool set_nviews(unsigned nviews) override;
 
   // ---------------------------------------------------------------------------
 
@@ -155,7 +156,7 @@ public:
   virtual void break_curves_into_episegs_pairwise(
       std::vector<std::vector< vsol_polyline_2d_sptr > > *broken_vsols,
       std::vector<bbld_subsequence_set> *ss_ptr
-      );
+      ) override;
 
   //: Stand-alone episeg breaker using tangent angle information.
   // \see break_curves_into_episegs_pairwise

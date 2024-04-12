@@ -195,7 +195,7 @@ public:
   virtual void break_curves_into_episegs_pairwise(
       std::vector<std::vector< vsol_polyline_2d_sptr > > *broken_vsols,
       std::vector<bbld_subsequence_set> *ss_ptr
-      ) const;
+      ) const override;
 
   //: Stand-alone episeg breaker using tangent angle information.
   // \see break_curves_into_episegs_pairwise

@@ -20,6 +20,16 @@ bmcsd_odt_curve_stereo_e()
 {
 }
 
+bool bmcsd_curve_stereo::
+set_nviews(unsigned nv)
+{
+  if (!bmcsd_odt_curve_stereo::set_nviews(nv))
+    return false;
+
+  vsol_flags_.resize(nviews());
+  return true;
+}
+
 void bmcsd_odt_curve_stereo_e::
 set_original_curve_sizes(const std::vector<std::vector<unsigned> > &original_curve_sizes)
 {
@@ -752,7 +762,7 @@ break_curves_into_episegs_pairwise(
     std::vector<bbld_subsequence_set> *ss_ptr
     )
 {
-  std::cout << "Called ODT episeg breaker with tau_min_epiangle = " 
+  std::cout << "Called ODT episeg breaker ENHANCED with tau_min_epiangle = " 
     << tau_min_epiangle_*180.0/vnl_math::pi << " degrees" << std::endl;
   assert(has_curve_tangents());
   std::vector<bbld_subsequence_set> &ss = *ss_ptr;
@@ -1408,3 +1418,60 @@ reconstruct_from_corresp_attr_using_mates(
   std::cout << "Done reconstructing curves\n";
   return true;
 }
+
+#if 0
+// Not used in my version of Anil's enhanced curve sketch
+void mw_curve_stereo::
+prune_curves_by_length_with_flags(vcl_vector<dbbl_subsequence_set> *pcurves_ss)
+{
+  vcl_vector<vcl_vector< vsol_polyline_2d_sptr > > curves;
+  vcl_vector<dbbl_subsequence_set> ss_break;
+  //vcl_vector<dbbl_subsequence_set> &ss_break = *pcurves_ss;
+
+  vcl_cout << "Orig   #curves in view 0: " << num_curves(0) << vcl_endl;
+  vcl_cout << "Orig   #curves in view 1: " << num_curves(1) << vcl_endl;
+
+  break_curves_into_episegs_pairwise(&curves, &ss_break);
+
+  vcl_cout << "Broken #curves in view 0: " << curves[0].size() << vcl_endl;
+  vcl_cout << "Broken #curves in view 1: " << curves[1].size() << vcl_endl;
+
+  const unsigned num_curve_sets = curves.size();
+  assert(ss_break.size() == num_curve_sets);
+
+  vcl_vector<dbbl_subsequence_set> &curves_ss = *pcurves_ss;
+  curves_ss.resize(num_curve_sets);
+
+  for (unsigned i=0; i < num_curve_sets; ++i) {
+    assert(ss_break[i].num_subsequences() == curves[i].size());
+    
+    if (prune_by_length_)
+        //mw_util::prune_curves_by_length(tau_min_length_per_curve_frag_, &curves[i], &curves_ss[i]);
+        mw_util::prune_curves_by_length_with_flags(tau_min_length_per_curve_frag_, &curves[i], &curves_ss[i], vsol_flags_[i]);
+    else
+        mw_util::prune_curves(tau_min_samples_per_curve_frag_, &curves[i], &curves_ss[i]);
+    
+    compose_subsequences(ss_break[i], &curves_ss[i]);
+  }
+
+  vcl_cout << "Pruned #curves in view 0: " << curves[0].size() << vcl_endl;
+  vcl_cout << "Pruned #curves in view 1: " << curves[1].size() << vcl_endl;
+  set_curves(curves);
+  vcl_cout << "Final  #curves in view 0: " << num_curves(0) << vcl_endl;
+  vcl_cout << "Final  #curves in view 1: " << num_curves(1) << vcl_endl;
+
+  /*vcl_vector<vsol_spatial_object_2d_sptr> curvesBeforeBreak;
+
+  for (unsigned i=0; i<this->num_curves(this->v0()); ++i)
+      curvesBeforeBreak.push_back(dynamic_cast<vsol_spatial_object_2d*>(this->curves(this->v0(),i).ptr()));
+  
+  dbsol_save_cem(curvesBeforeBreak, vcl_string("after_breakup_v0.cemv"));
+
+  curvesBeforeBreak.clear();
+
+  for (unsigned i=0; i<this->num_curves(this->v1()); ++i)
+      curvesBeforeBreak.push_back(dynamic_cast<vsol_spatial_object_2d*>(this->curves(this->v1(),i).ptr()));
+  
+      dbsol_save_cem(curvesBeforeBreak, vcl_string("after_breakup_v1.cemv"));*/
+}
+#endif
