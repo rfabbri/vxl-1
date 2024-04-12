@@ -48,6 +48,12 @@ public:
   void set_sseq(const std::vector<bbld_subsequence_set> &sseq);
   std::vector<bbld_subsequence_set> get_sseq();
 
+
+  // ---------------------------------------------------------------------------
+
+  //Anil: A version of the above function to compute epipolar candidates on any confirmation view
+  void compute_epipolar_beam_candidates_on_conf_views(unsigned v);
+
   // Anil: A version of the matching function to be used with mate curves
   bool match_mate_curves_using_orientation_dt_extras(unsigned long *votes_ptr, unsigned v, unsigned ic);
 
@@ -185,6 +191,9 @@ public:
   // Anil: Vector that stores the flags for curve samples used
   std::vector<std::vector<std::vector<bool> > > usedSamples_;
 
+  // Anil: Storing the unreliable samples of each curve
+  // Only used in enhanced curve sketch classes with _e suffix
+  std::vector<std::vector<std::vector<bool> > > vsol_flags_;
 
 protected:
   bool dummyFlag_;

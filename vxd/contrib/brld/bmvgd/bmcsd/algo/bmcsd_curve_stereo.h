@@ -382,9 +382,6 @@ public:
   // \param[in]   
   void compute_epipolar_beam_candidates();
 
-  //Anil: A version of the above function to compute epipolar candidates on any confirmation view
-  void compute_epipolar_beam_candidates_on_conf_views(unsigned v);
-
   // A curve in view[v1()] has to intercept at least \p min_intercepts epipolar
   // lines of subcurve() in order to qualify as a candidate.
   void set_min_epipolar_overlap(unsigned m) { tau_min_epipolar_overlap_ = m; }
@@ -416,9 +413,23 @@ protected:
   // The others are optional.
   std::vector<std::vector< vsol_polyline_2d_sptr > > vsols_; 
 
-  // Anil: Storing the unreliable samples of each curve
-  // Only used in enhanced curve sketch classes with _e suffix
-  std::vector<std::vector<std::vector<bool> > > vsol_flags_;
+  //: index into vsols_[i2] of candidate (whole) curves
+  std::vector<unsigned> crv_candidates_;
+
+  //: \see crv_candidates_id() 
+  std::vector<unsigned> crv_candidates_id_;  
+
+  //: is the following really needed?
+  std::vector<vsol_polyline_2d_sptr> crv_candidates_ptrs_;
+
+  //: \see subcurve() 
+  vsol_polyline_2d_sptr subcurve_;
+
+  unsigned tau_min_epipolar_overlap_;
+
+  //: a representation of the points of intersection of curves in view[v1()] with
+  // the beam of epipolar lines of the selected subcurve of view[v0()].
+  becld_intersection_sets  isets_;
 
 private:
   //: cameras for each view
@@ -434,9 +445,6 @@ private:
   //: subcurve endpoints p0 and pn
   unsigned p0_id_;
   unsigned pn_id_;
-
-  //: \see subcurve() 
-  vsol_polyline_2d_sptr subcurve_;
 
   //: \see ep_ini()
   std::vector<vgl_homg_line_2d<double> > ep_ini_;
@@ -457,25 +465,11 @@ private:
   // \see ep_left()
   std::vector<vgl_homg_line_2d<double> > ep_left_; 
 
-  //: index into vsols_[i2] of candidate (whole) curves
-  std::vector<unsigned> crv_candidates_;
-
-  //: \see crv_candidates_id() 
-  std::vector<unsigned> crv_candidates_id_;  
-
-  //: is the following really needed?
-  std::vector<vsol_polyline_2d_sptr> crv_candidates_ptrs_;
-
-  //: a representation of the points of intersection of curves in view[v1()] with
-  // the beam of epipolar lines of the selected subcurve of view[v0()].
-  becld_intersection_sets  isets_;
-
   //: \see set_min_samples_per_curve_frag
   unsigned tau_min_samples_per_curve_frag_;
 
   //: \see set_min_length_per_curve_frag
   double tau_min_length_per_curve_frag_;
-  unsigned tau_min_epipolar_overlap_;
 
   bool prune_by_length_;
 
