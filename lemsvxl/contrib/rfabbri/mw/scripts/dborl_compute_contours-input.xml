@@ -63,7 +63,7 @@ Extract_Contours-k_thresh="0.2"
 Extract_Contours-len_thresh="3"
 Extract_Contours-num_times="1"
 Extract_Contours-psi="1"
-Extract_Contours-smooth_con="on"
+Extract_Contours-smooth_con="off"
 Extract_Contours-strength_thresh="4">
 </Extract_Contours>
 <Prune_Contours Prune_Contours-color_gamma="14"
@@ -89,7 +89,7 @@ save_curvelets="off"
 save_edges="off"
 save_to_object_folder="off"
 trace_contours="off"
-use_existing_edges="off">
+use_existing_edges="on">
 </io>
 <web_directive categorization_file="categorization.xml"
 evaluation_file="evaluation.xml"
