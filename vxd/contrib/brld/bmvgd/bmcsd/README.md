@@ -235,6 +235,12 @@ sg image.png imge.edg                            # I simply use    sg image*
 
 We recommend compute it in parallel by installing GNU Parallel. You can then
 compute the edges for all images of your dataset in parallel:
+Before checking that the dborl_compute_contours-input.xml file options are as follows:
+Edge_Detection_Color-sigma="1"
+Extract_Contours-smooth_con="off"
+use_existing_edges="on">
+These options will ensure the correct relationship between contours and edges
+
 ```
 parallel edge ::: *.png
 ```
