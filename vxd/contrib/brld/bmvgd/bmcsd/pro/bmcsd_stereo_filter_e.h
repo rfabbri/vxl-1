@@ -297,7 +297,7 @@ get_edge_to_curve_index()
   for (unsigned i=0; i < v_->num_confirmation_views(); ++i) {
     std::string prefix = "./edge-curve/";
     std::ostringstream filestream;
-    filestream << std::setw(8) << std::setfill('0');
+    filestream << std::setw(8) << std::setfill('0'); // <view_i>.txt
     filestream << v_->confirmation_view(i);
 
     std::string filename = prefix + filestream.str() + std::string(".txt");
@@ -308,9 +308,9 @@ get_edge_to_curve_index()
     std::stringstream buffer(line);
 
     unsigned numEdges;
-    buffer >> numEdges;
-
-    std::vector<int> curEdges;
+    buffer >> numEdges;              // line i --> confirmation view i [ numEdges edge_id1 edge_id12]
+                                                    
+    std::vector<int> curEdges;       // 
 
     for (unsigned e=0; e<numEdges; ++e)
     {
@@ -318,8 +318,7 @@ get_edge_to_curve_index()
       buffer >> ID;
       curEdges.push_back(ID);
     }
-    os->edge_curve_index_[i] = curEdges;
-
+    os->edge_curve_index_[i] = curEdges; // edge_curve_index[i] = std::std::vector encoding line i of txt
   }
 }
 
