@@ -14,31 +14,33 @@
 
 %Read all the edge support evidence
 disp('READING DATA');
-fileNames = dir('./curves/*.cemv');
+
+%write the path where cemv and png (or jpg) files will be located - line 19
+%and 25
+fileNames = dir('/.../*.cemv');
 for v=1:numViews
-%for v=1:1
     all_views(1,v)
     fileName = fileNames(v,1).name;
     cloc = strfind(fileName,'.cemv');
     viewName = fileName(1,1:(cloc-1));
-    cons = read_cons(['./curves/',viewName,'.cemv'],[viewName,'.jpg'],0,-1);
+    cons = read_cons(['/.../',viewName,'.cemv'],[viewName,'.png'],0,-1);
     num_im_contours = size(cons,2);
     [all_links_3d{all_views(1,v)+1,1}, all_offsets_3d{all_views(1,v)+1,1}, all_edge_support_3d{all_views(1,v)+1,1}] = read_association_attributes_12(all_views(1,v),num_im_contours,all_nR(all_views(1,v)+1,1),numIM);
     all_num_im_contours(all_views(1,v)+1,1) = num_im_contours;
-    
 end
 
 %Process the edge support evidence to map all edges to 3d curve samples
 %they support
 all_edges = cell(numIM,1);
 all_edge_links = cell(numIM,1);
-fileNames = dir('./edges/*.edg');
+
+%write the path where edg files will be located - line 38 and 43
+fileNames = dir('/.../*.edg');
 for v=1:numIM
-    v
     fileName = fileNames(v,1).name;
     eloc = strfind(fileName,'.edg');
     viewName = fileName(1,1:(eloc-1));
-    [edg edgmap] = load_edg(['./edges/',viewName,'.edg']);
+    [edg edgmap] = load_edg(['/.../',viewName,'.edg']);
     num_im_edges = size(edg,1);
     all_edge_links{v,1} = cell(num_im_edges,1);
     all_edges{v,1} = edg;
@@ -49,10 +51,11 @@ end
 
 %Also build a map for 3D curve -> Set of 2D edges
 all_inverse_links_3d = cell(numIM,1);
-fileNames = dir('./curves/*.cemv');
+
+%write the path where cemv and png (or jpg) files will be located - line 56
+%and 68
+fileNames = dir('/.../*.cemv');
 for vv=1:numViews
-    
-    vv
     vview = all_views(1,vv)+1;
     links_3d = all_links_3d{vview,1};
     offsets_3d = all_offsets_3d{vview,1};
@@ -63,11 +66,11 @@ for vv=1:numViews
     
     all_inverse_links_3d{vview,1} = cell(all_nR(vview,1),1);
     
-    cons = read_cons(['./curves/',viewName,'.cemv'],[viewName,'.jpg'],0,-1);
+    cons = read_cons(['/.../',viewName,'.cemv'],[viewName,'.png'],0,-1);
     num_im_contours = size(cons,2);
     
     %Load the image curve-edge links for this view
-    fid = fopen(['./curve-edge/',viewName,'.txt']);
+    fid = fopen(['/.../',viewName,'.txt']);
     
     for ic=1:num_im_contours
         numCurEdges = fscanf(fid,'%d',[1 1]);
@@ -101,7 +104,6 @@ end
 %Process all the edge support data of each curve to fill in the edge link
 %table for all non-anchor views
 for vv=1:numViews
-    vv
     vview = all_views(1,vv)+1;
     other_views = [];
     for ov=1:numViews
@@ -120,7 +122,9 @@ for vv=1:numViews
         querySupport = edge_support_3d{crv,1};
         numSamples = size(queryCurve,1);
         
-        fileNames = dir('./calibration/*.projmatrix');
+        %write the path where projmatrix files will be located - line 126
+        %and 141
+        fileNames = dir('/.../*.projmatrix');
         
         for v=1:numIM
             
@@ -135,7 +139,7 @@ for vv=1:numViews
             edge_support = querySupport{v,1};
             edg = all_edges{v,1};
 
-            fid = fopen(['./calibration/',viewName,'.projmatrix']);
+            fid = fopen(['/.../',viewName,'.projmatrix']);
             curP = (fscanf(fid,'%f',[4 3]))';
             fclose(fid);
             

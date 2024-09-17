@@ -1,12 +1,17 @@
 % Input-specific -------------------------------------------------------------
-numIM = 25;           % OK
+
+% Input number of views in numIM
+numIM = ...;           % OK
 data_id = 12;
+
 % load_pattern_12       already automatically defined by matlab 
 % For a different data_id / dataset you need to change load_pattern and load_pattern_*
 
 %All the views that will be used in the clustering.
 %The first view is where the initial seed/query curve is located.
-all_views = 0:24;
+
+%Input numIM-1
+all_views = 0:%numIM-1;
 numViews = size(all_views,2);
 
 

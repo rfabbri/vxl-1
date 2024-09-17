@@ -8,7 +8,7 @@ for v=1:numIM
     %mypath = load_pattern(v);
     
     %put the path that accesses the .dat files below before crvs
-    mypath = '...';
+    mypath = load_pattern_12(v);
 
     [ret, myfiles] = unix(['ls ' mypath '/crvs/*-3dcurve-*-points*dat | xargs echo']);
     [ret_t, myfiles_t] = unix(['ls ' mypath '/crvs/*-3dcurve-*-tangents*dat | xargs echo']);
