@@ -15,8 +15,8 @@
 %Read all the edge support evidence
 disp('READING DATA');
 
-%write the path where cemv and png (or jpg) files will be located - line 19
-%and 25
+%write the path where cemv and png (or jpg) files will be located - line 20
+%and 26
 fileNames = dir('/.../*.cemv');
 for v=1:numViews
     all_views(1,v)
@@ -52,8 +52,8 @@ end
 %Also build a map for 3D curve -> Set of 2D edges
 all_inverse_links_3d = cell(numIM,1);
 
-%write the path where cemv and png (or jpg) files will be located - line 56
-%and 68
+%write the path where cemv and png (or jpg) files will be located - line 57
+%and 69
 fileNames = dir('/.../*.cemv');
 for vv=1:numViews
     vview = all_views(1,vv)+1;
@@ -69,7 +69,7 @@ for vv=1:numViews
     cons = read_cons(['/.../',viewName,'.cemv'],[viewName,'.png'],0,-1);
     num_im_contours = size(cons,2);
     
-    %Load the image curve-edge links for this view
+    %Load the image curve-edge links for this view - line 73
     fid = fopen(['/.../',viewName,'.txt']);
     
     for ic=1:num_im_contours
@@ -122,8 +122,8 @@ for vv=1:numViews
         querySupport = edge_support_3d{crv,1};
         numSamples = size(queryCurve,1);
         
-        %write the path where projmatrix files will be located - line 126
-        %and 141
+        %write the path where projmatrix files will be located - line 127
+        %and 142
         fileNames = dir('/.../*.projmatrix');
         
         for v=1:numIM

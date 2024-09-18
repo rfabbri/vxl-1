@@ -15,15 +15,16 @@ all_flags = cell(numIM,1);
 all_num_im_contours = zeros(numIM,1);
 
 load_curve_sketch_without_associations
-load edge-curve-index_yuliang_pavilion-mixed.mat;
-load edge-curve-offset_yuliang_pavilion-mixed.mat;
+% mat files are not used nor called in the rest of the code 
+% load edge-curve-index_yuliang_pavilion-mixed.mat;
+% load edge-curve-offset_yuliang_pavilion-mixed.mat;
 load_edge_and_curve_files
 
 % clear all;
 % close all;
 
-%save intermediate-pavilion-mixed-half_12.mat;
-load intermediate-pavilion-mixed-half_12.mat;
+% save intermediate-pavilion-mixed-half_12.mat;
+% load intermediate-pavilion-mixed-half_12.mat;
 % Intermediate consistes of all curves and 3D curve sketch input
 % So actually we can use intermediate-* data as input for the 3D drawing
 % But this main file would only work for _12
@@ -56,7 +57,6 @@ all_junctions = [];
 for fa=1:numViews
     fa_view = all_views(1,fa)+1;
     for crv = 1:all_nR(fa_view,1)
-        crv
         
         %Zero out any flag that did not reach the minimum number of votes
         %required
@@ -106,8 +106,6 @@ for fa=1:numViews
 
             for av=1:numViews
 
-                av
-
                 first_anchor = all_views(1,av);
 
                 other_views = [];
@@ -154,7 +152,10 @@ for fa=1:numViews
 
                     %disp('COMPUTING ASSOCIATIONS');
                     allEdges = [];
-                    fileNames = dir('./calibration/*.projmatrix');
+                    
+                    %write the path where projmatrix files will be located
+                    %- line 158 and 183
+                    fileNames = dir('/.../*.projmatrix');
                     for v=1:numIM
 
                         edge_support = [];
@@ -179,7 +180,7 @@ for fa=1:numViews
                         ploc = strfind(fileName,'.projmatrix');
                         viewName = fileName(1,1:(ploc-1));
                         
-                        fid = fopen(['./calibration/',viewName,'.projmatrix']);
+                        fid = fopen(['/.../',viewName,'.projmatrix']);
                         curP = (fscanf(fid,'%f',[4 3]))';
                         fclose(fid);
 
@@ -692,7 +693,7 @@ for fa=1:numViews
         merging_iterations_done=0;
         cntr = 0;
         while(~merging_iterations_done)
-            cntr = cntr+1
+            cntr = cntr+1;
             
 %             if(cntr>1)
 %                 break;
@@ -706,7 +707,7 @@ for fa=1:numViews
 %             end
 
             for mrv=1:numViews
-                mrv
+                
                 cur_clusters = clusters{all_views(1,mrv)+1,1};
                 if(isempty(cur_clusters))
                     continue;
