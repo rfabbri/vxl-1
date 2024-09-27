@@ -29,13 +29,16 @@ public:
   //: constructor
   dborl_algo_params_base(std::string algo_name) : algo_name_(algo_name) {};
 
-  virtual ~dborl_algo_params_base() { param_list_.clear(); // no allocation with new for the pointers so no need to call delete
+  virtual ~dborl_algo_params_base() { // only for some inherited classes
+                                       for (auto p : params_list_)
+                                         delete p;
                                     }
 
   std::string output_file_postfix();
   std::string output_file_postfix(std::string replacement_algo_name);
  
-  //: if any additional params are defined in the deriving classes, they should be added to the following list in the constructor
+  //: if any additional params are defined in the deriving classes, 
+  // they should be added to the following list in the constructor
   std::vector<dborl_parameter_base*> param_list_;
 };
 

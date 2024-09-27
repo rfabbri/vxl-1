@@ -40,8 +40,8 @@ public:
                                                     // if nothing is written here, nothing gets associated
 
   std::string algo_abbreviation_;
-
-  dborl_third_order_edge_det_params(std::string algo_name) : dborl_algo_params(algo_name) { 
+  
+  dborl_third_order_edge_det_params(std::string algo_name) : dborl_algo_params(algo_name) {
 
     algo_abbreviation_ = "toe";
 
@@ -75,6 +75,9 @@ public:
     }
     
   }
+
+  
+
 /*
   void set_process_parameters(dbdet_third_order_edge_detector_process& pro) {
 
