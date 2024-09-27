@@ -1,6 +1,6 @@
 clear all;%OK
 close all;%OK
-definitions_12
+definitions_12_carlostest
 
 %-------------------------------------------------------------------------------
 % Input data -------------------------------------------------------------------
@@ -14,17 +14,17 @@ all_edge_support_3d = cell(numIM,1);
 all_flags = cell(numIM,1);
 all_num_im_contours = zeros(numIM,1);
 
-load_curve_sketch_without_associations
+load_curve_sketch_without_associations_carlostest
 % mat files are not used nor called in the rest of the code 
 % load edge-curve-index_yuliang_pavilion-mixed.mat;
 % load edge-curve-offset_yuliang_pavilion-mixed.mat;
-load_edge_and_curve_files
+load_edge_and_curve_files_carlostest
 
 % clear all;
 % close all;
 
 %save intermediate-pavilion-mixed-half_12.mat;
-load intermediate-pavilion-mixed-half_12.mat;
+%load intermediate-pavilion-mixed-half_12.mat;
 % Intermediate consistes of all curves and 3D curve sketch input
 % So actually we can use intermediate-* data as input for the 3D drawing
 % But this main file would only work for _12
@@ -57,7 +57,6 @@ all_junctions = [];
 for fa=1:numViews
     fa_view = all_views(1,fa)+1;
     for crv = 1:all_nR(fa_view,1)
-        crv
         
         %Zero out any flag that did not reach the minimum number of votes
         %required
@@ -106,8 +105,6 @@ for fa=1:numViews
         while(keep_processing)
 
             for av=1:numViews
-
-                av
 
                 first_anchor = all_views(1,av);
 
@@ -707,7 +704,7 @@ for fa=1:numViews
 %             end
 
             for mrv=1:numViews
-                mrv
+                
                 cur_clusters = clusters{all_views(1,mrv)+1,1};
                 if(isempty(cur_clusters))
                     continue;
@@ -2476,5 +2473,5 @@ end
 
 all_junctions = [all_junctions; extra_junctions];
 
-save_curve_drawing;
+save_curve_drawing_carlostest;
 visualize_curve_drawing;
