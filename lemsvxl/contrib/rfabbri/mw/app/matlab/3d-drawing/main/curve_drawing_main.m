@@ -2452,6 +2452,7 @@ for fa=1:numViews
 %                 %counter = counter + 1;
 %             end
 %         end
+        all_clusters = [all_clusters; cell(1,1)];
         all_clusters{size(all_clusters,1),1} = clusters;
         complete_curve_graph = [complete_curve_graph; curve_graph];
         complete_lock_map = [complete_lock_map; lock_map];

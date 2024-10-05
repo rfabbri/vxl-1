@@ -16,3 +16,9 @@ from mcs_e are loacted
 
 create a folder named ply inside dataset and put the path in
 wrtite_curve_graph_to_vrml_12.m module line 90 and 124
+
+
+
+
+observação: criar uma pasta chamada export_fig dentro do dataset. chamada pela
+função read_cons
