@@ -1,0 +1,37 @@
+./curve-edge/file.txt  --> we don't know what the file name looks like, it should be named 
+                       --> eg midday-640x-0017.txt for midday-640x-0017.png
+viewName = name of file without .txt  --> thus should be 1 of these .txt file per view
+The edge files are named 
+./edges/file.edg  --> question: is this the same .edg files in the datasets or ./edges
+./curves/file.cemv  --> is this the same cemv as in the datasets or a special folder?
+
+numEdge: number of edges in original .edg
+numContours: number of curves
+
+# file.txt FILE FORMAT: -------------------------------------------
+
+# --- start [Curve i]
+[numCurEdges]  --> suppose is the number of edges in curve i
+[edge id 1] [edge id 2] .... [edge id numCurEdges]
+
+
+# --- start [Curve numContours]
+...
+
+# ----------------------------------------------------------------
+
+Just construct:
+
+curveIndices{view id}(edge id) == curve number having this id
+curveOffsets{view id}(edge id) == index of edge within its curve - 1 
+
+NOTE: edge_ids are the same sas in the files, but +1 since matlab indexing starts at 1
+curve number also starts at 1
+curve offset indices start at 0
+
+Write them out to:
+edge-curve-index_yuliang_pavilion-mixed.mat : curveIndices
+edge-curve-offset_yuliang_pavilion-mixed.mat : curveOffsets
+
+BUT (no code found): 
+Some other code expects other .txt files for this information, not .mat

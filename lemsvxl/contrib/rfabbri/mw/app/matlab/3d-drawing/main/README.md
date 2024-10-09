@@ -20,5 +20,5 @@ wrtite_curve_graph_to_vrml_12.m module line 90 and 124
 
 
 
-observação: criar uma pasta chamada export_fig dentro do dataset. chamada pela
-função read_cons
+obs:create a folder called export_fig inside the dataset which is called by the read_cons function.
+indispensable functions: distinguishable_colors.m, read_cons.m, read_cem_file.m, read_association_attributes_9.m, load_edg.m, get_length.m, find_closest_point_on_curve.m, write_curve_graph_to_vrml_9.m

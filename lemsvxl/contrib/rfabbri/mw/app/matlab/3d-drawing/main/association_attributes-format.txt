@@ -1,0 +1,33 @@
+% 3D curve 1
+[image_curve_index] [link] [offset]
+
+[number samples - 3D curve 1]
+
+% sample 1
+[current support]
+[current view]
+[number of support edges]
+[support edge 1] [supporte edge 2] ... [support edge n1]
+% n1 is number of support edges
+
+% sample 2
+[current support]
+[current view]
+[number of support edges]
+[support edge 1] [supporte edge 2] ... [support edge n2]
+%n2 is number of support edges
+
+...
+
+% sample m: m is number of samples of 3D curve 1
+[current support]
+[current view]
+[number of support edges]
+[support edge 1] [supporte edge 2] ... [support edge nm]
+% nm is number of support edges
+
+% 3D curve 2
+
+and so on until
+
+% 3D curve num_3d_curves
