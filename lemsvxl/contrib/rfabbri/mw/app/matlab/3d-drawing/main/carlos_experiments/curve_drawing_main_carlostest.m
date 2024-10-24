@@ -57,7 +57,7 @@ all_junctions = [];
 for fa=1:numViews
     fa_view = all_views(1,fa)+1;
     for crv = 1:all_nR(fa_view,1)
-        crv
+
         %Zero out any flag that did not reach the minimum number of votes
         %required
 
@@ -105,7 +105,7 @@ for fa=1:numViews
         while(keep_processing)
 
             for av=1:numViews
-                av
+
                 first_anchor = all_views(1,av);
 
                 other_views = [];
@@ -168,7 +168,6 @@ for fa=1:numViews
                     %Now the output should be written to vrml files
 
                     votes
-
                     alignment_curves{first_anchor+1,1}{1,cc} = queryAlignment_dense;
 
                 end
@@ -211,8 +210,6 @@ for fa=1:numViews
         end
 
         for av=1:numViews
-
-            av
 
             cur_clusters = clusters{all_views(1,av)+1,1};
 
