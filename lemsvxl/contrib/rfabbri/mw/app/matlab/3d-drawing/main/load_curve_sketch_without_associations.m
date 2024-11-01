@@ -2,9 +2,7 @@
 % [variaveis definidas abaixo] = f(variaveis ja definidas)
 
 for v=1:numIM
-
-  %put the path that accesses the .dat files below before crvs
-    mypath = load_pattern_12_carlostest(v);
+    
     recs = cell(0,0);
     tangs = cell(0,0);
     %mypath = load_pattern(v);
