@@ -1,17 +1,17 @@
 %build edge-curve link in text files
 %numViews is defined in definitions_12 module
 
-for v=1:363
+for v=1:numIM
     
     %write the path where cemv files will be located
-    fileNames = dir('/home/biao/Downloads/dino_compressed/*.cemv');
+    fileNames = dir('/.../*.cemv');
     fileName = fileNames(v,1).name;
     cloc = strfind(fileName,'.cemv');
     viewName = fileName(1,1:(cloc-1));
 
     %write the path where cemv and edg files are located
-    [Mcemv,Edges_per_curve] = read_cem_file_modified(['/home/biao/Downloads/dino_compressed/',viewName,'.cemv']);
-    Medg = read_edg_file(['/home/biao/Downloads/dino_compressed/',viewName,'.edg']);
+    [Mcemv,Edges_per_curve] = read_cem_file_modified(['/.../',viewName,'.cemv']);
+    Medg = read_edg_file(['/.../',viewName,'.edg']);
     Edges_per_curve;
     total_curves = length(Edges_per_curve);
     total_edges = sum(Edges_per_curve);
@@ -38,9 +38,9 @@ for v=1:363
         end
         found = 0; % reset bool
     end
-    %write the path where txt files will be located
-    writematrix(LocResult,['/home/biao/Downloads/dino_compressed/',viewName,'.txt']);
-    fileID = fopen(['/home/biao/Downloads/dino_compressed/',viewName,'.txt'],'wt');
+    %write the path where txt files will be located like above
+    writematrix(LocResult,['/.../',viewName,'.txt']);
+    fileID = fopen(['/.../',viewName,'.txt'],'wt');
     
     edges_indexing = 1;
     

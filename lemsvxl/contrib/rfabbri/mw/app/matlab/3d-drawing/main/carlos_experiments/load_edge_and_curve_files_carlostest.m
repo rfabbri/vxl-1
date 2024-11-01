@@ -17,13 +17,13 @@ disp('READING DATA'); %it appear after run
 
 %write the path where cemv and png (or jpg) files will be located - line 20
 %and 26
-fileNames = dir('/media/biao/ubuntuSSD/datasets/dino/dino_front/*.cemv');
+fileNames = dir('/.../*.cemv');
 for v=1:numViews
     all_views(1,v);
     fileName = fileNames(v,1).name;
     cloc = strfind(fileName,'.cemv');
     viewName = fileName(1,1:(cloc-1));
-    cons = read_cons(['/media/biao/ubuntuSSD/datasets/dino/dino_front/',viewName,'.cemv'],[viewName,'.png'],0,-1);
+    cons = read_cons(['/.../',viewName,'.cemv'],[viewName,'.jpg'],0,-1);
     num_im_contours = size(cons,2);
     [all_links_3d{all_views(1,v)+1,1}, all_offsets_3d{all_views(1,v)+1,1}, all_edge_support_3d{all_views(1,v)+1,1}] = read_association_attributes_12carlostest(all_views(1,v),num_im_contours,all_nR(all_views(1,v)+1,1),numIM);
     all_num_im_contours(all_views(1,v)+1,1) = num_im_contours;   
@@ -35,12 +35,12 @@ all_edges = cell(numIM,1);
 all_edge_links = cell(numIM,1);
 
 %write the path where edg files will be located - line 38 and 43
-fileNames = dir('/media/biao/ubuntuSSD/datasets/dino/dino_front/*.edg');
+fileNames = dir('/.../*.edg');
 for v=1:numIM
     fileName = fileNames(v,1).name;
     eloc = strfind(fileName,'.edg');
     viewName = fileName(1,1:(eloc-1));
-    [edg edgmap] = load_edg(['/media/biao/ubuntuSSD/datasets/dino/dino_front/',viewName,'.edg']);
+    [edg edgmap] = load_edg(['/.../',viewName,'.edg']);
     num_im_edges = size(edg,1);
     all_edge_links{v,1} = cell(num_im_edges,1);
     all_edges{v,1} = edg;
@@ -54,7 +54,7 @@ all_inverse_links_3d = cell(numIM,1);
 
 %write the path where cemv and png (or jpg) files will be located - line 57
 %and 69
-fileNames = dir('/media/biao/ubuntuSSD/datasets/dino/dino_front/*.cemv');
+fileNames = dir('/.../*.cemv');
 for vv=1:numViews
     vv
     vview = all_views(1,vv)+1;
@@ -67,11 +67,11 @@ for vv=1:numViews
     
     all_inverse_links_3d{vview,1} = cell(all_nR(vview,1),1);
     
-    cons = read_cons(['/media/biao/ubuntuSSD/datasets/dino/dino_front/',viewName,'.cemv'],[viewName,'.png'],0,-1);
+    cons = read_cons(['/.../',viewName,'.cemv'],[viewName,'.jpg'],0,-1);
     num_im_contours = size(cons,2);
     
     %Load the image curve-edge links for this view - line 73
-    fid = fopen(['/media/biao/ubuntuSSD/datasets/dino/dino_front/edge-curve/',viewName,'.txt']);
+    fid = fopen(['/.../edge-curve/',viewName,'.txt']);
     
     for ic=1:num_im_contours
         numCurEdges = fscanf(fid,'%d',[1 1]);
@@ -125,7 +125,7 @@ for vv=1:numViews
         
         %write the path where projmatrix files will be located - line 127
         %and 142
-        fileNames = dir('/media/biao/ubuntuSSD/datasets/dino/dino_front/*.projmatrix');
+        fileNames = dir('/.../*.projmatrix');
         
         for v=1:numIM
             v
@@ -140,7 +140,7 @@ for vv=1:numViews
             edge_support = querySupport{v,1};
             edg = all_edges{v,1};
 
-            fid = fopen(['/media/biao/ubuntuSSD/datasets/dino/dino_front/',viewName,'.projmatrix']);
+            fid = fopen(['/.../,viewName,'.projmatrix']);
             curP = (fscanf(fid,'%f',[4 3]))';
             fclose(fid);
             

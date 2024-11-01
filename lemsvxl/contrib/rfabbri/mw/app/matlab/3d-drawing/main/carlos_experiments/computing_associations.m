@@ -1,6 +1,8 @@
 %disp('COMPUTING ASSOCIATIONS');
 allEdges = [];
-fileNames = dir('/media/biao/ubuntuSSD/datasets/pavilion-midday-half/*.projmatrix');
+%Carlos: write the path where projmatrix files will be located - lines 4
+%and 27
+fileNames = dir('/.../*.projmatrix');
     for v=1:numIM
         edge_support = [];
         in_first_anchor = 0;
@@ -22,7 +24,7 @@ fileNames = dir('/media/biao/ubuntuSSD/datasets/pavilion-midday-half/*.projmatri
         ploc = strfind(fileName,'.projmatrix');
         viewName = fileName(1,1:(ploc-1));
                         
-        fid = fopen(['/media/biao/ubuntuSSD/datasets/pavilion-midday-half/',viewName,'.projmatrix']);
+        fid = fopen(['/.../',viewName,'.projmatrix']);
         curP = (fscanf(fid,'%f',[4 3]))';
         fclose(fid);
 
