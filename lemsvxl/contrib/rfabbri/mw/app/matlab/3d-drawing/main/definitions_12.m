@@ -2,7 +2,7 @@
 
 % Input number of views in numIM
 numIM = ...;           % OK
-data_id = 12;
+%data_id = 12;
 
 % load_pattern_12       already automatically defined by matlab 
 % For a different data_id / dataset you need to change load_pattern and load_pattern_*

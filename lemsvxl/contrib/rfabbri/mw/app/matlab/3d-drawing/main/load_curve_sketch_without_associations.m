@@ -3,6 +3,8 @@
 
 for v=1:numIM
 
+  %put the path that accesses the .dat files below before crvs
+    mypath = load_pattern_12_carlostest(v);
     recs = cell(0,0);
     tangs = cell(0,0);
     %mypath = load_pattern(v);
@@ -13,10 +15,10 @@ for v=1:numIM
     [ret, myfiles] = unix(['ls ' mypath '/crvs/*-3dcurve-*-points*dat | xargs echo']);
     [ret_t, myfiles_t] = unix(['ls ' mypath '/crvs/*-3dcurve-*-tangents*dat | xargs echo']);
 
-    dmy_files = dir([mypath,'crvs/']);
-    if(size(dmy_files,1)<=2)
-        continue;
-    end
+%    dmy_files = dir([mypath,'crvs/']);
+%    if(size(dmy_files,1)<=2)
+%        continue;
+%    end
 
     myfiles;
 
@@ -87,4 +89,3 @@ end
 % all_nR(9,1) = size(recs,2);
 % all_flags{9,1} = zeros(size(recs,2),1);
 % clear recs;
-

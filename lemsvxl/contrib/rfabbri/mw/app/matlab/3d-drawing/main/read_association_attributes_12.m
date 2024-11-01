@@ -1,7 +1,7 @@
 function [links_3d, offsets_3d, edge_support_3d] = read_association_attributes_12(view,num_image_curves,num_3d_curves,num_views)
 
     %write the path where attributes files are located
-    fid=fopen(['/.../attributes/attributes_', num2str(view), '.txt']);
+    fid=fopen(['/.../attributes_', num2str(view), '.txt']);
     
     links_3d = cell(num_image_curves,1);
     offsets_3d = cell(num_image_curves,1);

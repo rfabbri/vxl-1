@@ -1,7 +1,7 @@
 %build edge-curve link in text files
 %numViews is defined in definitions_12 module
 
-for v=1:numIM
+for v=1:numViews
     
     %write the path where cemv files will be located
     fileNames = dir('/.../*.cemv');
@@ -38,7 +38,7 @@ for v=1:numIM
         end
         found = 0; % reset bool
     end
-    %write the path where txt files will be located like above
+    %write the path where txt files will be located
     writematrix(LocResult,['/.../',viewName,'.txt']);
     fileID = fopen(['/.../',viewName,'.txt'],'wt');
     

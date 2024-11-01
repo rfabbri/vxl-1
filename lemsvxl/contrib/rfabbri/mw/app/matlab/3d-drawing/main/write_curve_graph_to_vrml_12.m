@@ -87,7 +87,7 @@ for ccg=1:size(complete_curve_graph,1)
 end
 %CREATE A FOLDER NAMED PLY INSIDE DATASET and put the path of folder
 %Open the file
-fid = fopen('/.../ply/curve_graph_pavilion_mixed_12.ply','w');
+fid = fopen('/.../ply/curve_graph_dataset.ply','w');
 
 num_points = size(points,1);
 num_links = size(links,1);
@@ -121,7 +121,7 @@ end
 fclose(fid);
 
 %Open the file
-fid = fopen('/.../ply/curve_junctions_pavilion_mixed_12.ply','w');
+fid = fopen('/.../ply/curve_junctions_dataset.ply','w');
 
 num_points = size(all_junctions,1);
 

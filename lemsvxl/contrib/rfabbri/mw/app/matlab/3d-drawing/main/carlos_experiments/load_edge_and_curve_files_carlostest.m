@@ -26,7 +26,7 @@ for v=1:numViews
     cons = read_cons(['/.../',viewName,'.cemv'],[viewName,'.jpg'],0,-1);
     num_im_contours = size(cons,2);
     [all_links_3d{all_views(1,v)+1,1}, all_offsets_3d{all_views(1,v)+1,1}, all_edge_support_3d{all_views(1,v)+1,1}] = read_association_attributes_12carlostest(all_views(1,v),num_im_contours,all_nR(all_views(1,v)+1,1),numIM);
-    all_num_im_contours(all_views(1,v)+1,1) = num_im_contours;   
+    all_num_im_contours(all_views(1,v)+1,1) = num_im_contours;
 end
 
 %Process the edge support evidence to map all edges to 3d curve samples
@@ -56,7 +56,6 @@ all_inverse_links_3d = cell(numIM,1);
 %and 69
 fileNames = dir('/.../*.cemv');
 for vv=1:numViews
-    vv
     vview = all_views(1,vv)+1;
     links_3d = all_links_3d{vview,1};
     offsets_3d = all_offsets_3d{vview,1};
@@ -128,7 +127,7 @@ for vv=1:numViews
         fileNames = dir('/.../*.projmatrix');
         
         for v=1:numIM
-            v
+            
             if(v==vview)
                 continue;
             end
@@ -140,7 +139,7 @@ for vv=1:numViews
             edge_support = querySupport{v,1};
             edg = all_edges{v,1};
 
-            fid = fopen(['/.../,viewName,'.projmatrix']);
+            fid = fopen(['/.../',viewName,'.projmatrix']);
             curP = (fscanf(fid,'%f',[4 3]))';
             fclose(fid);
             

@@ -1,7 +1,7 @@
 % Input-specific -------------------------------------------------------------
 
 % Input number of views in numIM
-numIM = ;           % OK
+numIM = ...;           % OK
 %data_id = 12;
 
 % load_pattern_12       already automatically defined by matlab 
@@ -11,7 +11,7 @@ numIM = ;           % OK
 %The first view is where the initial seed/query curve is located.
 
 %Input numIM-1
-all_views = 0:numIM-1;
+all_views = 0:%numIM-1;
 numViews = size(all_views,2);
 
 
