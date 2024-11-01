@@ -6,7 +6,7 @@
 
 
 
-stamp="dino_optimal_100_instances_mininliers_5_new"
+stamp="dataset_optimal_numIM_instances_mininliers_5_new"
 
 # We threshold this after the fact in matlab.
 opts="-mininliers_total 5 -dist 5 -dtheta 1 -minlength 40 -prune_by_length
