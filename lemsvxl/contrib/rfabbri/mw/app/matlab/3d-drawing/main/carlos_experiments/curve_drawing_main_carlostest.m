@@ -183,7 +183,7 @@ for fa=1:numViews
 
         %Flags marking converged samples
         initialize_converge_flags
-
+        
         %Process the query alignment to create boolean correspondence
         %masks for each other curve in the cluster
         correspondence_masks
