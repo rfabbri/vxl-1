@@ -39,11 +39,11 @@ inside load_pattern_12.m module put the path that accesses the .dat files below 
 
 now go to the load_edge_and_curve_files.m module. there you will need to enter the paths where the cemv, edg, projmatrix, txt and png (or jpg) files are located.
 
-in computing_associations.m it will be need enter paths the projmatrix files are
-located in line 5 and 27
-
 in read_association_attributes_12 you need to put the path where attributes
 from mcs_e are located
+
+in computing_associations.m it will be need enter paths the projmatrix files are
+located in line 5 and 27
 
 create a folder named ply inside dataset and put the path in
 write_curve_graph_to_vrml_12.m module line 90 and 124. in these lines replace the word dataset with some reference to the current dataset
