@@ -1,30 +1,31 @@
 % 3D curve 1
 [image_curve_index] [link] [offset]
 
-[number samples - 3D curve 1]
+[number samples = m of the 3D curve 1]
 
 % sample 1
-[current support]
-[current view]
-[number of support edges]
-[support edge 1] [supporte edge 2] ... [support edge n1]
-% n1 is number of support edges
+[curSupport] % It is a number q that determines how many views have support edges.
+[current view 1] [number of support edges = n1] [support edge 1] [supporte edge 2] ... [support edge n1]
+[current view 2] [number of support edges = n2] [support edge 1] [supporte edge 2] ... [support edge n2]
+...
+[current view q] [number of support edges = nq] [support edge 1] [supporte edge 2] ... [support edge nq]
 
 % sample 2
-[current support]
-[current view]
-[number of support edges]
-[support edge 1] [supporte edge 2] ... [support edge n2]
-%n2 is number of support edges
+[curSupport] % It is a number p that determines how many views have support edges.
+[current view 1] [number of support edges = n1] [support edge 1] [supporte edge 2] ... [support edge n1]
+[current view 2] [number of support edges = n2] [support edge 1] [supporte edge 2] ... [support edge n2]
+...
+[current view p] [number of support edges = np] [support edge 1] [supporte edge 2] ... [support edge np]
 
 ...
 
-% sample m: m is number of samples of 3D curve 1
-[current support]
-[current view]
-[number of support edges]
-[support edge 1] [supporte edge 2] ... [support edge nm]
-% nm is number of support edges
+% sample m
+[curSupport] % It is a number r that determines how many views have support edges.
+[current view 1] [number of support edges = n1] [support edge 1] [supporte edge 2] ... [support edge n1]
+[current view 2] [number of support edges = n2] [support edge 1] [supporte edge 2] ... [support edge n2]
+...
+[current view r] [number of support edges = nr] [support edge 1] [supporte edge 2] ... [support edge nr]
+
 
 % 3D curve 2
 
