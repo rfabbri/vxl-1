@@ -66,7 +66,6 @@ for ccg=1:size(complete_curve_graph,1)
             point_index=point_index+1;
         end
             
-        
         points(point_index,:) = [cur_branch(bs,:) round(255*colors(color_index,:))];
         point_index=point_index+1;
 %         points(point_index,:) = [cur_branch(bs,:)+diff_factor round(255*colors(color_index,:))];
@@ -76,15 +75,14 @@ for ccg=1:size(complete_curve_graph,1)
             links(link_index,:) = [point_index-4 point_index-3 point_index-2];
             link_index=link_index+1;
         end
-        
     end
     
     color_index=color_index+1;
     if(color_index>200)
         color_index=2;
     end
-    
 end
+
 %CREATE A FOLDER NAMED PLY INSIDE DATASET and put the path of folder
 %Open the file
 fid = fopen('/.../ply/curve_graph_dataset.ply','w');

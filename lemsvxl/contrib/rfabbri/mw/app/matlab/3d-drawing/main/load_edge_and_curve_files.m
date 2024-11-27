@@ -93,11 +93,8 @@ for vv=1:numViews
                all_inverse_links_3d{vview,1}{curveID,1}{s,1} = cur_edge;
                all_edge_links{vview,1}{cur_edge+1,1} = [all_edge_links{vview,1}{cur_edge+1,1}; [vview curveID s]];
            end
-           
         end
-        
     end
-    
     fclose(fid);
 end
 
@@ -165,11 +162,8 @@ for vv=1:numViews
                     if(edge_dist<=1)
                         all_edge_links{v,1}{edge+1,1} = [all_edge_links{v,1}{edge+1,1}; [vview crv s]];
                     end
-                    
                 end
             end
-            
         end
-        
     end
 end

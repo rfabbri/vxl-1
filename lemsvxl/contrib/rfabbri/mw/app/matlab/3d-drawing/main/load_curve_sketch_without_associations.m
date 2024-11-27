@@ -52,7 +52,6 @@ for v=1:numIM
       end
     end
     
-    
     %At this point, all curves are loaded into recs
     all_recs{v,1} = recs;
     all_nR(v,1) = size(recs,2);

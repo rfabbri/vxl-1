@@ -14,7 +14,6 @@ numIM = ...;           % OK
 all_views = 0:numIM-1;
 numViews = size(all_views,2);
 
-
 % Drawing-specific -------------------------------------------------------------
 
 all_clusters = cell(0,0);

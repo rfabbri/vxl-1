@@ -1,6 +1,6 @@
 %disp('COMPUTING ASSOCIATIONS');
 allEdges = [];
-%Carlos: write the path where projmatrix files will be located - lines 4
+%write the path where projmatrix files will be located - lines 4
 %and 27
 fileNames = dir('/.../*.projmatrix');
     for v=1:numIM
@@ -54,7 +54,6 @@ fileNames = dir('/.../*.projmatrix');
                 if(edge_dist>1)
                     continue;
                 end
-        
             end
 
             cur_edge_links = all_edge_links{v,1}{edge+1,1};
@@ -144,9 +143,7 @@ fileNames = dir('/.../*.projmatrix');
                     queryAlignment_views{s,1} = cell(1,1);
                     queryAlignment_views{s,1}{1,1} = v;
                 end
-
             end
-
         end
     end
 end

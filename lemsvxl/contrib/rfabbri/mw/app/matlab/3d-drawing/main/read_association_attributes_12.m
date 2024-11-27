@@ -33,6 +33,5 @@ function [links_3d, offsets_3d, edge_support_3d] = read_association_attributes_1
             end
         end
     end
-
 end
 

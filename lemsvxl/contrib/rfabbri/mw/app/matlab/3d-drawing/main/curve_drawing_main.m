@@ -174,7 +174,6 @@ for fa=1:numViews
             end  
 
             processing
-
         end
 
         %All correspondence info has been computed, now we need to
@@ -410,31 +409,7 @@ for fa=1:numViews
                              
                              %Insert the current sample into all
                              %relevant branches computed above
-                             num_relevant_branches = size(arr_branch_id_cur,2);
-                             for br=1:num_relevant_branches
-                                 rel_br_id = arr_branch_id_cur(1,br);
-                                 
-                                 %Store the junction index, meaning the
-                                 %index into the branch samples that
-                                 %indicates a junction, for each branch
-                                 
-                                 target_curve = curve_graph{rel_br_id,1};
-                                 target_size = size(target_curve,1);
-                                 if(arr_prev_sample(rel_br_id,1)==1 && arr_outside_init_range(rel_br_id,1))
-                                     curve_graph{rel_br_id,1} = [query_sample; target_curve];
-                                     arr_junction_indices(rel_br_id,1) = 1;
-                                 elseif(arr_next_sample(rel_br_id,1)==target_size && arr_outside_final_range(rel_br_id,1))
-                                     curve_graph{rel_br_id,1} = [target_curve; query_sample];
-                                     arr_junction_indices(rel_br_id,1) = target_size+1;
-                                 else
-                                     curve_graph{rel_br_id,1} = [target_curve(1:arr_prev_sample(rel_br_id,1),:); query_sample; target_curve(arr_next_sample(rel_br_id,1):target_size,:)];
-                                     arr_junction_indices(rel_br_id,1) = arr_prev_sample(rel_br_id,1)+1;
-                                 end
-                                 
-                                 %Adjust the contents of the target
-                                 %branch after this operation
-                                 curve_graph_content{rel_br_id,1} = unique([curve_graph_content{rel_br_id,1}; [all_views(1,mrv)+1 cc]],'rows');
-                             end
+                             relevant_branches
                              
                              %DO (A) AND (B) ATTACH TO DIFFERENT BRANCHES?
                              %Is there a new current branch?
@@ -720,7 +695,6 @@ for fa=1:numViews
 									 %CHECK FOR ELONGATION AT (A): YES
 									 if(num_attachments_last==1 && ~no_init_junction)
 										 
-																					 
 										 %Retrieve target branches and
 										 %curves as if the new branch
 										 %only attach
@@ -771,16 +745,7 @@ for fa=1:numViews
 											 curve_graph{cg_size,1} = other_curve2;
 											 %Set the locks
 											 lock_map = [lock_map; [1 target_lock_final]];
-											 %Set the contents of the new branch
-											 curve_graph_content = [curve_graph_content; cell(1,1)];
-											 curve_graph_content{cg_size,1} = curve_graph_content{rb_id,1};
-											 %Set the correspondence flags for the new branch
-											 merged_corresp_mask_all = [merged_corresp_mask_all; cell(1,1)];
-											 merged_corresp_mask_all{cg_size,1} = merged_corresp_mask_all{rb_id,1};
-											 %Set the equivalence table for the new branch
-											 equiv_table_cur{rb_id,1} = [equiv_table_cur{rb_id,1} cg_size];
-											 equiv_table_cur = [equiv_table_cur; cell(1,1)];
-											 equiv_table_cur{cg_size,1} = [equiv_table_cur{cg_size,1} rb_id];
+											 set_new_relevant_branch
 											 
 											 %TODO: Adjust the content of the merged branch
 											 curve_graph_content{rb_id,1} = unique([curve_graph_content{rb_id,1}; [all_views(1,mrv)+1 cc]],'rows');
@@ -806,20 +771,10 @@ for fa=1:numViews
 											 curve_graph{cg_size,1} = other_curve1;
 											 %Set the locks
 											 lock_map = [lock_map; [target_lock_init 1]];
-											 %Set the contents of the new branch
-											 curve_graph_content = [curve_graph_content; cell(1,1)];
-											 curve_graph_content{cg_size,1} = curve_graph_content{rb_id,1};
-											 %Set the correspondence flags for the new branch
-											 merged_corresp_mask_all = [merged_corresp_mask_all; cell(1,1)];
-											 merged_corresp_mask_all{cg_size,1} = merged_corresp_mask_all{rb_id,1};
-											 %Set the equivalence table for the new branch
-											 equiv_table_cur{rb_id,1} = [equiv_table_cur{rb_id,1} cg_size];
-											 equiv_table_cur = [equiv_table_cur; cell(1,1)];
-											 equiv_table_cur{cg_size,1} = [equiv_table_cur{cg_size,1} rb_id];
+											 set_new_relevant_branch
 											 
 											 %TODO: Adjust the content of the merged branch
 											 curve_graph_content{rb_id,1} = unique([curve_graph_content{rb_id,1}; [all_views(1,mrv)+1 cc]],'rows');
-											 
 										 end
 										 
 										 if(is_elongated)
@@ -857,16 +812,7 @@ for fa=1:numViews
 												 lock_map(rb_id,:) = [cur_lock_init 1];
 												 lock_map = [lock_map; [1 cur_lock_final]];
 
-												 %Set the contents of the new branch
-												 curve_graph_content = [curve_graph_content; cell(1,1)];
-												 curve_graph_content{cg_size,1} = curve_graph_content{rb_id,1};
-												 %Set the correspondence flags for the new branch
-												 merged_corresp_mask_all = [merged_corresp_mask_all; cell(1,1)];
-												 merged_corresp_mask_all{cg_size,1} = merged_corresp_mask_all{rb_id,1};
-												 %Set the equivalence table for the new branch
-												 equiv_table_cur{rb_id,1} = [equiv_table_cur{rb_id,1} cg_size];
-												 equiv_table_cur = [equiv_table_cur; cell(1,1)];
-												 equiv_table_cur{cg_size,1} = [equiv_table_cur{cg_size,1} rb_id];
+												 set_new_relevant_branch
 											 end
 										 end
 									 end
@@ -879,8 +825,6 @@ for fa=1:numViews
 										 %curves as if the new branch
 										 %only attach
 										 rb_id = arr_branch_id_cur(1,1);
-										 
-										 
 										 
 										 target_curve = curve_graph{rb_id,1};
 										 target_size = size(target_curve,1);
@@ -945,16 +889,7 @@ for fa=1:numViews
 												 curve_graph{cg_size,1} = other_curve2;
 												 %Set the locks
 												 lock_map = [lock_map; [1 target_lock_final]];
-												 %Set the contents of the new branch
-												 curve_graph_content = [curve_graph_content; cell(1,1)];
-												 curve_graph_content{cg_size,1} = curve_graph_content{rb_id,1};
-												 %Set the correspondence flags for the new branch
-												 merged_corresp_mask_all = [merged_corresp_mask_all; cell(1,1)];
-												 merged_corresp_mask_all{cg_size,1} = merged_corresp_mask_all{rb_id,1};
-												 %Set the equivalence table for the new branch
-												 equiv_table_cur{rb_id,1} = [equiv_table_cur{rb_id,1} cg_size];
-												 equiv_table_cur = [equiv_table_cur; cell(1,1)];
-												 equiv_table_cur{cg_size,1} = [equiv_table_cur{cg_size,1} rb_id];
+												 set_new_relevant_branch
 											 end
 
 											 %TODO: Adjust the content of the merged branch
@@ -982,29 +917,17 @@ for fa=1:numViews
 												 is_last_junction_saved = 1;
 											 end
 											 
-											 
-
 											 if(~isempty(other_curve1))
 												 curve_graph = [curve_graph; cell(1,1)];
 												 cg_size = size(curve_graph,1);
 												 curve_graph{cg_size,1} = other_curve1;
 												 %Set the locks
 												 lock_map = [lock_map; [target_lock_init 1]];
-												 %Set the contents of the new branch
-												 curve_graph_content = [curve_graph_content; cell(1,1)];
-												 curve_graph_content{cg_size,1} = curve_graph_content{rb_id,1};
-												 %Set the correspondence flags for the new branch
-												 merged_corresp_mask_all = [merged_corresp_mask_all; cell(1,1)];
-												 merged_corresp_mask_all{cg_size,1} = merged_corresp_mask_all{rb_id,1};
-												 %Set the equivalence table for the new branch
-												 equiv_table_cur{rb_id,1} = [equiv_table_cur{rb_id,1} cg_size];
-												 equiv_table_cur = [equiv_table_cur; cell(1,1)];
-												 equiv_table_cur{cg_size,1} = [equiv_table_cur{cg_size,1} rb_id];
+												 set_new_relevant_branch
 											 end
 
 											 %TODO: Adjust the content of the merged branch
 											 curve_graph_content{rb_id,1} = unique([curve_graph_content{rb_id,1}; [all_views(1,mrv)+1 cc]],'rows');
-
 										 end
 										 
 										 if(is_elongated && ~no_init_junction)
@@ -1042,16 +965,7 @@ for fa=1:numViews
 												 lock_map(rb_id,:) = [cur_lock_init 1];
 												 lock_map = [lock_map; [1 cur_lock_final]];
 
-												 %Set the contents of the new branch
-												 curve_graph_content = [curve_graph_content; cell(1,1)];
-												 curve_graph_content{cg_size,1} = curve_graph_content{rb_id,1};
-												 %Set the correspondence flags for the new branch
-												 merged_corresp_mask_all = [merged_corresp_mask_all; cell(1,1)];
-												 merged_corresp_mask_all{cg_size,1} = merged_corresp_mask_all{rb_id,1};
-												 %Set the equivalence table for the new branch
-												 equiv_table_cur{rb_id,1} = [equiv_table_cur{rb_id,1} cg_size];
-												 equiv_table_cur = [equiv_table_cur; cell(1,1)];
-												 equiv_table_cur{cg_size,1} = [equiv_table_cur{cg_size,1} rb_id];
+												 set_new_relevant_branch
 											 
 											 end
 										 end
@@ -1094,7 +1008,6 @@ for fa=1:numViews
 
 									 end
 								 end
-                                 
                              else 
                                  
                                  %If this sample has been merged to a branch that the previous
@@ -1108,7 +1021,6 @@ for fa=1:numViews
 %                                  if(is_last_non_equivalent && (num_attachments_cur>1 || num_attachments_last>1))
 %                                      extra_junctions = unique([extra_junctions; queryCurve(ms-1,:)],'rows');
 %                                  end
-                                 
                              end
                              
                             %Some branches might've changed in the process
@@ -1154,7 +1066,6 @@ for fa=1:numViews
                     end
                     merged
                 end
-
             end
 
             merging_iterations_done = 1;
@@ -1233,8 +1144,6 @@ for fa=1:numViews
         all_clusters{size(all_clusters,1),1} = clusters;
         complete_curve_graph = [complete_curve_graph; curve_graph];
         complete_lock_map = [complete_lock_map; lock_map];
-        %save('curve_graph_amsterdam_half.mat','complete_curve_graph','all_junctions');
-        %save('curve_graph_amsterdam.mat');
     end
 end
 
