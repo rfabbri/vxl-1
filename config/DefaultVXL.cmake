@@ -10,4 +10,4 @@ set(VXL_BUILD_CORE_VIDEO ON CACHE BOOL "Build VIDL for use in VXD")
 set(WITH_FFMPEG OFF CACHE BOOL "Disable FFMPEG suppoert at first in LEMSVPE")
 set(VXL_BUILD_CONTRIB ON CACHE BOOL "Build VXL contrib for LEMSVPE")
 
-message("Try to compile core first. Then Turn on VGUI in CMake and try to build it.")
+message("Tip: Try to compile core first. Then Turn on VGUI in CMake and try to build it.")

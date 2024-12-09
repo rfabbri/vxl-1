@@ -9,4 +9,4 @@ set(VXD_DIR "../vxd-bin" CACHE STRING "Location of VXD build in LEMSVPE")
 
 # can be useful to set USE_BOOST 
 
-message("Try to compile core first, then the libs you need.")
+message("Tip: Try to compile core first, then the libs you need.")

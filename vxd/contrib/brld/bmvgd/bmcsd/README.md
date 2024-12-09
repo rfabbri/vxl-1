@@ -511,11 +511,6 @@ simple Matlab script `mcs_instances.m` for this, located in internal
     although it is not the primary way of visualizing the curve sketch, it is
     useful for relating it to the input data and for debugging.
 
-- The command `mca` prints out in text format the number of curves in the reconstruction file
-  and other attributes. This is useful without compiling GUI code or in a remote cluster environment
-  for quick sanity checks. It is a 3D analogous to `imfinfo` in matlab or `identify` in
-  the commandline that prints stats of an image without GUI.
-
 - I used Matlab to look and interact with the reconstructed curves.
 
 - Meshlab: while Anil used
@@ -527,6 +522,29 @@ simple Matlab script `mcs_instances.m` for this, located in internal
   the edge detector, linker and mcs matcher, then you might have a hard time
   seeing the recontruction because the outlier is so far away. You might want to
   zoom in greatly to see the actual object if your recontruction is "dirty".
+
+### Multiview curve sketch attributes (`mca`)
+The command `mca` prints out in text format the number of curves in the reconstruction file
+and other attributes. This is useful without compiling GUI code or in a remote cluster environment
+for quick sanity checks. It is a 3D analogous to `imfinfo` in matlab or `identify` in
+the commandline that prints stats of an image without GUI.
+
+```
+mca -curvesketch mcs-rec 
+```
+To see exactly what it prints, you can look into `mca.cxx`, it is a simple
+source code. Currently the format is
+```
+[total suppoort][curve size] v: [hypothesiz view 0][hypothesis view 1] c: [confirmation view 0] [confirmation view 1]...
+```
+Optionally you may print inliers
+
+To generate supports file used in some matlab scripts below, do:
+
+```
+mca -curvesketch mcs-rec > attributes # you may pipe
+cut -f 1 -d ' ' attributes > supports
+```
 
 ### Additional Matlab scripts
 
@@ -545,7 +563,7 @@ These reside in `mw/app/matlab`
 `read_curve_sketch.m`
 At the same time, the supports for each curves will be a text file after running mcs or mcd, and this can be loaded as:
 ```
-load supports
+load supports      # see section on mca above on how to generate it
 ```
 This can be used to experiment with *pruning curves based on support or length scores* inside Matlab.
 The input is the file after `mcs/mcd` is run, namely the file with this regexp: `*-3dcurve-*-points*dat`
@@ -573,11 +591,6 @@ using a more customized formula computed in Matlab, if desired, instead of
 manually writing down the anchor and confirmation views, as already mentioned above.
 
 `sexp/mcs_roc` script generates the ROC curves in CVPR'10.
-
-## Multiview curve sketch attributes (`mca`)
-
-This was wexplaineda above. TODO: detailed its use.
-
 
 ## See also
 - Internal lemsvpe/doc/3d-curve-drawing.md
