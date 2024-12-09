@@ -119,7 +119,7 @@ for vv=1:numViews
         querySupport = edge_support_3d{crv,1};
         numSamples = size(queryCurve,1);
         
-        %write the path where projmatrix files will be located - line 127
+        %write the path where projmatrix or extrinsic files will be located - line 127
         %and 142
         fileNames = dir('/.../*.projmatrix');
         

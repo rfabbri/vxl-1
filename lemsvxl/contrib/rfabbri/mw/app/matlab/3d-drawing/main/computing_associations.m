@@ -1,6 +1,6 @@
 %disp('COMPUTING ASSOCIATIONS');
 allEdges = [];
-%write the path where projmatrix files will be located - lines 4
+%write the path where projmatrix or extrinsic files will be located - lines 4
 %and 27
 fileNames = dir('/.../*.projmatrix');
     for v=1:numIM
