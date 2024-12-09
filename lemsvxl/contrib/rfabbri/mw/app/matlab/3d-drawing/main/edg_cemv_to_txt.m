@@ -39,8 +39,8 @@ for v=1:numViews
         found = 0; % reset bool
     end
     %write the path where txt files will be located
-    writematrix(LocResult,['/.../',viewName,'.txt']);
-    fileID = fopen(['/.../',viewName,'.txt'],'wt');
+    writematrix(LocResult,['/.../edge-curve/',viewName,'.txt']);
+    fileID = fopen(['/.../edge-curve/',viewName,'.txt'],'wt');
     
     edges_indexing = 1;
     
