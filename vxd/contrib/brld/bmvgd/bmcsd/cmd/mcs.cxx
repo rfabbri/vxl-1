@@ -22,28 +22,28 @@ main(int argc, char **argv)
   vul_arg<std::string> a_cam_type("-cam_type",
       "camera type: intrinsic_extrinsic or projcamera","intrinsic_extrinsic");
   vul_arg<std::string> a_out_dir("-outdir", "output directory relative to -prefix", "out/");
-  vul_arg<double> a_distance_threshold("-dist", 
+  vul_arg<double> a_distance_threshold("-dist", // paper tau_d
       "(in pixels) threshold for an edgel to be an inlier to the reprojected curve in each view", 10.0);
-  vul_arg<double> a_dtheta_threshold("-dtheta", 
+  vul_arg<double> a_dtheta_threshold("-dtheta", // paper tau_theta
       "(in degrees) threshold in orientation difference for an edgel to be an inlier to reprojected curve in each view", 10.0);
   vul_arg<unsigned> a_min_samples_per_curve_frag("-minsamples", 
       "Used to prune the curves by enforcing a minimum number of samples.", 30);
-  vul_arg<double> a_min_length_per_curve_frag("-minlength", 
+  vul_arg<double> a_min_length_per_curve_frag("-minlength", // paper tau_l
       "Used to prune the curves by enforcing a minimum length (this is xor minsamples).", 40);
   vul_arg<bool> a_prune_by_length("-prune_by_length", 
       "Prune using length? if not, use number of samples", true);
-  vul_arg<double> a_min_epiangle("-minepiangle", 
+  vul_arg<double> a_min_epiangle("-minepiangle", // paper tau_alpha
       "(in degrees) minimum angle between an epipolar line and curve samples to consider", 30.0);
 
-  vul_arg<unsigned> a_min_epipolar_overlap("-min_epipolar_overlap", 
+  vul_arg<unsigned> a_min_epipolar_overlap("-min_epipolar_overlap",  // paper tau_e
       "minimum number of intersections a curve has to have with the epiband to be a candidate", 5);
 
-  vul_arg<unsigned> a_min_inliers_per_view("-mininliers_view", 
+  vul_arg<unsigned> a_min_inliers_per_view("-mininliers_view", // paper tau_v
       "If a view has less than this number of inliers, it will not vote at all towards the curve.", 20);
-  vul_arg<unsigned> a_min_total_inliers("-mininliers_total", 
+  vul_arg<unsigned> a_min_total_inliers("-mininliers_total",   // paper tau_t
       "If a view has less than this number of inliers, it will not vote at all towards the curve.", 5);
 
-  vul_arg<double> a_min_first_to_second_ratio("-first_to_second_ratio", 
+  vul_arg<double> a_min_first_to_second_ratio("-first_to_second_ratio",  // paper tau_r
       "minimum ratio of first to second best to consider as reliable unambiguous match. Set to zero if you always want to keep the best match", 1.5);
 
   vul_arg<unsigned> a_lonely_threshold("-lonely", 
