@@ -30,7 +30,7 @@ public:
   dborl_algo_params_base(std::string algo_name) : algo_name_(algo_name) {};
 
   virtual ~dborl_algo_params_base() { // only for some inherited classes
-                                       for (auto p : params_list_)
+                                       for (auto p : param_list_)
                                          delete p;
                                     }
 

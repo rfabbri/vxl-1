@@ -51,7 +51,7 @@ init(bmcsd_curve_stereo *impl)
 
   color_pn_.r = 1; color_pn_.g = 1; color_pn_.b = 0;
   color_p0_.r = 0; color_p0_.g = 1; color_p0_.b = 0.2;
-  selected_crv_id_view0_ = MW_INVALID_CURVE_ID;
+  selected_crv_id_view0_ = MY_INVALID_CURVE_ID;
 }
 
 
