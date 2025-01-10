@@ -9,8 +9,7 @@
 int test_preprocessor_main(int /*argc*/,char* /*argv*/[])
 {
   constexpr unsigned compiler_count
-      = VXL_COMPILER_IS_Comeau
-        + VXL_COMPILER_IS_Intel
+      = VXL_COMPILER_IS_Intel
         + VXL_COMPILER_IS_PathScale
         + VXL_COMPILER_IS_Embarcadero
         + VXL_COMPILER_IS_Borland
