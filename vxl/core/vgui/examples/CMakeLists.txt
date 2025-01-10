@@ -73,6 +73,8 @@ endif()
 #--------------
 find_package(GLUT)
 if(GLUT_FOUND)
+ target_link_libraries( basic01_display_image ${GLUT_LIBRARIES} )
+ 
  target_link_libraries( click_points ${GLUT_LIBRARIES} )
 
  add_executable( glut1_raw glut1_raw.cxx )
