@@ -32,7 +32,7 @@
 
  c. make sure the lists and instances are ready
 
- d. (imprecise) the enhanced calls the compressed cemv and edg files in gz format and curve drawing calls them uncompressed.
+ d. the enhanced calls the compressed cemv and edg files in gz format and curve drawing calls them uncompressed.
 
  e. if in your dataset there aren't projmatrix files, you will need to generate them, otherwise, move on to 4. To do this, type the command
 
@@ -53,13 +53,13 @@
 
   c. edit load_pattern_12 function: put the path that accesses the .dat files below before mcs-rec folder. It is called in load_curve_sketch_without_associations.m module. 
 
-  d. edit load_edge_and_curve_files module: there you will need to enter the paths where the cemv, edg, projmatrix, txt and png (or jpg) files are located.
+  d. edit load_edge_and_curve_files module: there you will need to enter the paths where the cemv, edg, projmatrix, txt and png (or jpg) files are located. these files must be uncompressed.
 
   e. edit read_association_attributes_12 function: put the path where attributes from mcs_e are located.
 
   f. edit computing_associations module: put paths the projmatrix files are located.
 
-#### 5. create one folder inside datset
+#### 5. create one folder inside dataset
   a. one named ply and put its path in write_curve_graph_to_vrml_12.m module. Replace the word dataset with some reference to the chosen dataset.
 
 #### 6. add the path
@@ -68,6 +68,7 @@
 This will ensure that the distinguishable_colors, read_cons, read_cem_file, load_edg, get_length and find_closest_point_on_curve functions are accessed by the code.
 
 #### 7. run curve_drawing_main.m
+  I recommend saving the curve_drawing.mat file to your dataset.
 
 curve_drawing_main.m is average_curves_final_12 modularized or broken into different files. This code is written in matlab.
 
