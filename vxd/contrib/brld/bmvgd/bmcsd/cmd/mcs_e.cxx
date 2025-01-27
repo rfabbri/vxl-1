@@ -280,7 +280,7 @@ main(int argc, char **argv)
     // 5 Tangent computation
     
     std::cout << "Started tgt computation.\n";
-
+    //std::cout << "Curve size: " << curves.size()<< "\n";
     std::vector<std::vector<double> > tangents(curves.size());
 
     for (unsigned c=0; c < curves.size(); ++c) {
@@ -414,7 +414,7 @@ main(int argc, char **argv)
   std::vector<std::vector<std::vector<bool> > > usedCurvesAll(numConf+2);
 
   for (unsigned v=0; v<numConf+2; ++v)
-    usedCurvesAll[v].resize(2000);
+    usedCurvesAll[v].resize(200000);
 
 
 
@@ -593,6 +593,9 @@ main(int argc, char **argv)
 
   bmcsd_curve_3d_sketch_e csk;
 
+  //Gabriel: Get the curve sketch
+  //
+  s.get_curve_sketch(&csk);
   //STEP #2: Process the 3D curves to remove the segments that did not gather sufficient edge support
   //A segment is removed only if its size is 3 samples or more
   //A curve segment is created only if its size is 8 samples or more
@@ -611,9 +614,9 @@ main(int argc, char **argv)
 
     //Anil: Data structure for stitching 3D curves together at their corresponding samples
     //1st index is the image curve ID, 2nd index is for different 3D curves and 3rd index is for sample IDs 
-    std::vector<std::vector<std::vector<bdifd_1st_order_point_3d> > > cumulativeCurve(2000);
-    std::vector<std::vector<std::vector<bdifd_1st_order_point_3d> > > dmy_cumulativeCurve(2000);
-    std::vector<std::vector<std::vector<std::set<int> > > > cumulativeEdgeIndexChain(2000);
+    std::vector<std::vector<std::vector<bdifd_1st_order_point_3d> > > cumulativeCurve(200000);
+    std::vector<std::vector<std::vector<bdifd_1st_order_point_3d> > > dmy_cumulativeCurve(200000);
+    std::vector<std::vector<std::vector<std::set<int> > > > cumulativeEdgeIndexChain(200000);
 
     //if (usedViews[fa_views->stereo0()])
     //  cumulativeCurve = cumulativeCurveBox[fa_views->stereo0()];
@@ -1541,7 +1544,7 @@ main(int argc, char **argv)
     std::ofstream attributes_file(attributes_fname.c_str());
 
 
-    for (unsigned i=0; i<2000; ++i)
+    for (unsigned i=0; i<200000; ++i)
       {
 	std::vector<std::vector<bdifd_1st_order_point_3d> > cur_cumulativeCurve = cumulativeCurve[i];
 	std::vector<std::vector<std::vector<int> > > unionEdgeIndexChain(numConf+2);
