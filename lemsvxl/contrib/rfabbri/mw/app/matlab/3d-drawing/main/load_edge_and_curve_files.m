@@ -13,13 +13,13 @@
 % end
 
 %Read all the edge support evidence
-disp('READING DATA');
+disp('READING DATA'); %it appear after run
 
 %write the path where cemv and png (or jpg) files will be located - line 20
 %and 26
 fileNames = dir('/.../*.cemv');
 for v=1:numViews
-    all_views(1,v)
+    all_views(1,v);
     fileName = fileNames(v,1).name;
     cloc = strfind(fileName,'.cemv');
     viewName = fileName(1,1:(cloc-1));
@@ -70,11 +70,11 @@ for vv=1:numViews
     num_im_contours = size(cons,2);
     
     %Load the image curve-edge links for this view - line 73
-    fid = fopen(['/.../',viewName,'.txt']);
+    fid = fopen(['/.../edge-curve/',viewName,'.txt']);
     
     for ic=1:num_im_contours
         numCurEdges = fscanf(fid,'%d',[1 1]);
-        edgeIDs = fscanf(fid,'%d',[1 numCurEdges]); 
+        edgeIDs = fscanf(fid,'%d',[1 numCurEdges]);
         
         cur_curves = links_3d{ic,1}+1;
         cur_offsets = offsets_3d{ic,1};
@@ -93,11 +93,8 @@ for vv=1:numViews
                all_inverse_links_3d{vview,1}{curveID,1}{s,1} = cur_edge;
                all_edge_links{vview,1}{cur_edge+1,1} = [all_edge_links{vview,1}{cur_edge+1,1}; [vview curveID s]];
            end
-           
         end
-        
     end
-    
     fclose(fid);
 end
 
@@ -117,12 +114,12 @@ for vv=1:numViews
         continue;
     end
     
-    for crv = 1:all_nR(vview,1)      
+    for crv = 1:all_nR(vview,1)   
         queryCurve = all_recs{vview,1}{1,crv}; 
         querySupport = edge_support_3d{crv,1};
         numSamples = size(queryCurve,1);
         
-        %write the path where projmatrix files will be located - line 127
+        %write the path where projmatrix or extrinsic files will be located - line 127
         %and 142
         fileNames = dir('/.../*.projmatrix');
         
@@ -165,11 +162,8 @@ for vv=1:numViews
                     if(edge_dist<=1)
                         all_edge_links{v,1}{edge+1,1} = [all_edge_links{v,1}{edge+1,1}; [vview crv s]];
                     end
-                    
                 end
             end
-            
         end
-        
     end
 end

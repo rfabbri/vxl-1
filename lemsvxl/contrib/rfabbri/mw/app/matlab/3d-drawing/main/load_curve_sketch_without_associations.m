@@ -2,7 +2,7 @@
 % [variaveis definidas abaixo] = f(variaveis ja definidas)
 
 for v=1:numIM
-
+    
     recs = cell(0,0);
     tangs = cell(0,0);
     %mypath = load_pattern(v);
@@ -13,10 +13,10 @@ for v=1:numIM
     [ret, myfiles] = unix(['ls ' mypath '/crvs/*-3dcurve-*-points*dat | xargs echo']);
     [ret_t, myfiles_t] = unix(['ls ' mypath '/crvs/*-3dcurve-*-tangents*dat | xargs echo']);
 
-    dmy_files = dir([mypath,'crvs/']);
-    if(size(dmy_files,1)<=2)
-        continue;
-    end
+%    dmy_files = dir([mypath,'crvs/']);
+%    if(size(dmy_files,1)<=2)
+%        continue;
+%    end
 
     myfiles;
 
@@ -52,7 +52,6 @@ for v=1:numIM
       end
     end
     
-    
     %At this point, all curves are loaded into recs
     all_recs{v,1} = recs;
     all_nR(v,1) = size(recs,2);
@@ -87,4 +86,3 @@ end
 % all_nR(9,1) = size(recs,2);
 % all_flags{9,1} = zeros(size(recs,2),1);
 % clear recs;
-

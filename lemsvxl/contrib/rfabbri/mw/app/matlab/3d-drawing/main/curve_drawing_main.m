@@ -23,8 +23,8 @@ load_edge_and_curve_files
 % clear all;
 % close all;
 
-% save intermediate-pavilion-mixed-half_12.mat;
-% load intermediate-pavilion-mixed-half_12.mat;
+%save intermediate-pavilion-mixed-half_12.mat;
+%load intermediate-pavilion-mixed-half_12.mat;
 % Intermediate consistes of all curves and 3D curve sketch input
 % So actually we can use intermediate-* data as input for the 3D drawing
 % But this main file would only work for _12
@@ -57,7 +57,7 @@ all_junctions = [];
 for fa=1:numViews
     fa_view = all_views(1,fa)+1;
     for crv = 1:all_nR(fa_view,1)
-        
+
         %Zero out any flag that did not reach the minimum number of votes
         %required
 
@@ -150,165 +150,9 @@ for fa=1:numViews
                     %We use this to eliminate votes from narrow baseline views
                     queryAlignment_views = cell(numSamples,1);
 
-                    %disp('COMPUTING ASSOCIATIONS');
-                    allEdges = [];
-                    
-                    %write the path where projmatrix files will be located
-                    %- line 158 and 183
-                    fileNames = dir('/.../*.projmatrix');
-                    for v=1:numIM
-
-                        edge_support = [];
-                        in_first_anchor = 0;
-
-                        if(v==first_anchor+1)
-
-                            %The first anchor edge support is measured using
-                            %edges grouped into the hypothesis image curve
-
-                            edge_support = all_inverse_links_3d{v,1}{queryID,1};
-                            in_first_anchor = 1;
-                        else
-                            edge_support = querySupport{v,1}; 
-                        end
-
-                        if(isempty(edge_support))
-                            continue;
-                        end
-
-                        fileName = fileNames(v,1).name;
-                        ploc = strfind(fileName,'.projmatrix');
-                        viewName = fileName(1,1:(ploc-1));
-                        
-                        fid = fopen(['/.../',viewName,'.projmatrix']);
-                        curP = (fscanf(fid,'%f',[4 3]))';
-                        fclose(fid);
-
-                        for s=1:numSamples
-
-                            edges = edge_support{s,1};
-
-                            for e=1:size(edges,2)
-
-                                edge = edges(1,e);
-
-                                if(edge>=size(curveIndices{v,1},1))
-                                    disp('WARNING: Weird edge ID!!!');
-                                    continue;
-                                end
-
-                                if(~in_first_anchor)
-
-                                    cur_sample = [queryCurve(s,:)';1];
-                                    imSample = curP*cur_sample;
-                                    imSample = imSample./imSample(3,1);
-                                    im_pixel = imSample(1:2,1)+1;
-
-                                    edg = all_edges{v,1};
-                                    cur_edge = edg(edge+1,1:2)';
-                                    edge_dist = norm(cur_edge - im_pixel);
-
-                                    if(edge_dist>1)
-                                        continue;
-                                    end
-
-                                end
-
-                                cur_edge_links = all_edge_links{v,1}{edge+1,1};
-
-                                for el=1:size(cur_edge_links,1)
-                                    cur_link = cur_edge_links(el,:);
-
-                                    if(cur_link(1,1)==first_anchor+1)
-                                        continue;
-                                    end
-
-%                                     clusters{cur_link(1,1),1} = unique([clusters{cur_link(1,1),1} cur_link(1,2)]);
-%                                     cur_cluster_size = size(clusters{cur_link(1,1),1},2);
-%                                     cur_flag_size = size(process_flags{cur_link(1,1),1},2);
-%                                     if(cur_cluster_size > cur_flag_size)
-%                                         cluster_index = find(clusters{cur_link(1,1),1}==cur_link(1,2));
-%                                         if(size(cluster_index,1)>1)
-%                                             disp('ERROR: There is duplication in the cluster IDs!!');
-%                                         end
-%                                         if(cluster_index==1)
-%                                             process_flags{cur_link(1,1),1} = [0 process_flags{cur_link(1,1),1}];
-%                                             corr_native{cur_link(1,1),1} = [cell(1,1) corr_native{cur_link(1,1),1}];
-%                                             corr_other{cur_link(1,1),1} = [cell(1,1) corr_other{cur_link(1,1),1}];
-%                                             corr_colors{cur_link(1,1),1} = [cell(1,1) corr_colors{cur_link(1,1),1}];
-%                                             %alignment_curves{cur_link(1,1),1} = [cell(1,1) alignment_curves{cur_link(1,1),1}];
-%                                         elseif(cluster_index>cur_flag_size)
-%                                             process_flags{cur_link(1,1),1} = [process_flags{cur_link(1,1),1} 0];
-%                                             corr_native{cur_link(1,1),1} = [corr_native{cur_link(1,1),1} cell(1,1)];
-%                                             corr_other{cur_link(1,1),1} = [corr_other{cur_link(1,1),1} cell(1,1)];
-%                                             corr_colors{cur_link(1,1),1} = [corr_colors{cur_link(1,1),1} cell(1,1)];
-%                                             %alignment_curves{cur_link(1,1),1} = [alignment_curves{cur_link(1,1),1} cell(1,1)];
-%                                         else
-%                                             process_flags{cur_link(1,1),1} = [process_flags{cur_link(1,1),1}(1,1:cluster_index-1) 0 process_flags{cur_link(1,1),1}(1,cluster_index:cur_flag_size)];
-%                                             corr_native{cur_link(1,1),1} = [corr_native{cur_link(1,1),1}(1,1:cluster_index-1) cell(1,1) corr_native{cur_link(1,1),1}(1,cluster_index:cur_flag_size)];
-%                                             corr_other{cur_link(1,1),1} = [corr_other{cur_link(1,1),1}(1,1:cluster_index-1) cell(1,1) corr_other{cur_link(1,1),1}(1,cluster_index:cur_flag_size)];
-%                                             corr_colors{cur_link(1,1),1} = [corr_colors{cur_link(1,1),1}(1,1:cluster_index-1) cell(1,1) corr_colors{cur_link(1,1),1}(1,cluster_index:cur_flag_size)];
-%                                             %alignment_curves{cur_link(1,1),1} = [alignment_curves{cur_link(1,1),1}(1,1:cluster_index-1) cell(1,1) alignment_curves{cur_link(1,1),1}(1,cluster_index:cur_flag_size)];
-%                                         end
-%                                     end
-
-                                    alignmentBefore = queryAlignment{s,1};
-
-                                    if(~isempty(alignmentBefore))
-
-                                        reg_index = find(alignmentBefore(:,1)==cur_link(1,1) & alignmentBefore(:,2)==cur_link(1,2) & alignmentBefore(:,3)==cur_link(1,3));
-
-                                        if(size(reg_index,1)>1)
-                                            disp('ERROR: Duplicate copies of correspondences were added. Votes will be wrong!!');
-                                        elseif(size(reg_index,1)==1)
-                                            %If found, increase vote by 1
-
-                                            %Don't do this if narrow baseline
-                                            prev_views = queryAlignment_views{s,1}{reg_index,1};
-                                            %reg_index
-
-                                            if(isempty(prev_views))
-                                                disp('ERROR: Even though alignment curve is not empty, view data is empty!!');
-                                                continue;
-                                            end
-
-                                            diff_views = abs(prev_views - v);
-
-                                            if(min(diff_views)<1)
-                                                %disp('ERROR: Single view contributing more than 1 vote per link!!');
-                                                continue;
-    %                                         elseif(min(diff_views)==1)
-    %                                             disp('Skipping narrow baseline evidence.');
-    %                                             continue;
-                                            end
-
-                                            alignmentBefore(reg_index,4) = alignmentBefore(reg_index,4)+1;
-                                            queryAlignment{s,1} = alignmentBefore;
-
-                                            prev_views = [prev_views v];
-                                            queryAlignment_views{s,1}{reg_index,1} = prev_views;
-                                        else                                        
-                                            queryAlignment{s,1} = [queryAlignment{s,1}; [cur_link 1]];
-                                            queryAlignment_views{s,1} = [queryAlignment_views{s,1}; cell(1,1)];
-
-                                            num_cells = size(queryAlignment_views{s,1},1);
-                                            queryAlignment_views{s,1}{num_cells,1} = v;
-                                        end
-
-                                    else
-                                        queryAlignment{s,1} = [cur_link 1];
-                                        queryAlignment_views{s,1} = cell(1,1);
-                                        queryAlignment_views{s,1}{1,1} = v;
-                                    end
-
-                                end
-
-                            end
-                        end
-                    end
+                    computing_associations
 
                     queryAlignment_dense = cell(size(queryAlignment,1),1);
-
                     
                     filtering_alignmentCurve
 
@@ -323,294 +167,25 @@ for fa=1:numViews
 
                     %Now the output should be written to vrml files
 
-                    %First gather the corresponding point data
-                    vote_colors(1,:) = [1 0 1];
-                    vote_colors(2,:) = [0 1 0];
-                    vote_colors(3,:) = [0 0 1];
-                    vote_colors(4,:) = [1 1 0];
-                    vote_colors(5,:) = [0 1 1];
-
-                    for ss=1:size(queryAlignment_dense,1)
-                       cur_alignment = queryAlignment_dense{ss,1};
-                       for a=1:size(cur_alignment,1)
-                          cur_corr = cur_alignment(a,:);
-
-                          corr_view = cur_corr(1,1);
-                          corr_curve = cur_corr(1,2);
-                          corr_sample = cur_corr(1,3);
-                          corr_votes = cur_corr(1,4);
-
-                          corr_curve_3d = all_recs{corr_view,1}{1,corr_curve};
-
-                          %Find the index in the clusters
-                          clust_ind = find(clusters{corr_view,1}==corr_curve);
-
-                          if(size(clust_ind,1)>1)
-                              disp('ERROR: Cluster vectors contain duplicate IDs!!');
-                          end
-
-                          if(isempty(clust_ind))
-                             %disp('Cluster candidate with insufficient votes is being ignored');
-                             continue;
-                          end
-
-                          corr_native{corr_view,1}{1,clust_ind} = [corr_native{corr_view,1}{1,clust_ind}; corr_curve_3d(corr_sample,:)];
-                          corr_other{corr_view,1}{1,clust_ind} = [corr_other{corr_view,1}{1,clust_ind}; queryCurve(ss,:)];
-
-                          if(corr_votes>4)
-                              color_index = 5;
-                          elseif(corr_votes>3)
-                              color_index = 4;
-                          elseif(corr_votes>2)
-                              color_index = 3;
-                          elseif(corr_votes>1)
-                              color_index = 2;
-                          else
-                              color_index = 1;
-                          end
-
-                          corr_colors{corr_view,1}{1,clust_ind} = [corr_colors{corr_view,1}{1,clust_ind}; vote_colors(color_index,:)];
-
-                       end
-                    end
-
+                    votes
                     alignment_curves{first_anchor+1,1}{1,cc} = queryAlignment_dense;
 
                 end
             end  
 
-            keep_processing = 0;
-
-            % Check whether you need to keep processing
-            for av=1:numViews
-                cur_flags = process_flags{all_views(1,av)+1,1};
-                if(any(~cur_flags))
-                    keep_processing = 1;
-                    break;
-                end
-            end
-
+            processing
         end
 
         %All correspondence info has been computed, now we need to
         %do the averaging
-
         averaging_iterations_done = 0;
 
         %Flags marking converged samples
-        converge_flags = cell(numIM,1);
-
-        for cv=1:numIM
-            if(isempty(clusters{cv,1}))
-                continue;
-            end
-            converge_flags{cv,1} = cell(1,size(clusters{cv,1},2));
-            for ccrv=1:size(clusters{cv,1},2)
-                cid = clusters{cv,1}(1,ccrv);
-                curve = all_recs{cv,1}{1,cid};
-                curve_size = size(curve,1);
-                converge_flags{cv,1}{1,ccrv} = zeros(curve_size,1);
-            end
-        end
-
+        initialize_converge_flags
+        
         %Process the query alignment to create boolean correspondence
         %masks for each other curve in the cluster
-
-        all_corresp_masks = cell(numIM,1);
-        for acm=1:numIM
-            if(~isempty(clusters{acm,1}))
-                num_clustered_curves = size(clusters{acm,1},2);
-                all_corresp_masks{acm,1} = cell(1,num_clustered_curves);
-            end
-        end
-
-        for av=1:numViews
-
-            cur_clusters = clusters{all_views(1,av)+1,1};
-
-            if(isempty(cur_clusters))
-                continue;
-            end
-
-            num_curves_in_cluster = size(cur_clusters,2);
-
-            for cc=1:num_curves_in_cluster
-
-                curveID = cur_clusters(1,cc);
-                queryCurve = all_recs_iter{all_views(1,av)+1,1}{1,curveID};
-                queryAlignment = alignment_curves{all_views(1,av)+1,1}{1,cc};
-                numSamples = size(queryCurve,1);
-
-                corresp_masks = cell(numIM,1);
-                for vcrsp=1:numIM
-                    if(~isempty(clusters{vcrsp,1}))
-                        corresp_masks{vcrsp,1} = zeros(numSamples,size(clusters{vcrsp,1},2));
-                    end
-                end
-
-                for ss=1:size(queryAlignment,1)
-
-                    cur_alignment = queryAlignment{ss,1};
-
-                    if(isempty(cur_alignment))
-                        continue;
-                    end
-
-                    view_curve = unique(cur_alignment(:,1:2),'rows');
-                    num_corresps = size(view_curve,1);
-
-                    %List of [viewID curveID] that need to be updated
-                    update_map = zeros(num_corresps,2);
-
-                    for crsp=1:num_corresps
-
-                        view = view_curve(crsp,1);
-                        corresp_curveID = view_curve(crsp,2);
-
-                        clust_index = find(clusters{view,1}==corresp_curveID);
-                        if(isempty(clust_index))
-                            continue;
-                        end
-
-                        corresp_masks{view,1}(ss,clust_index) = 1;
-
-                        update_map(crsp,:) = [view corresp_curveID];
-
-                    end
-                end
-
-                new_corresp_masks = corresp_masks;
-
-                %Post process the correspondence masks to fill the gaps
-                for vcl=1:numIM
-                    cur_view = corresp_masks{vcl,1};
-                    if(isempty(cur_view))
-                        continue;
-                    end
-                    for cl=1:size(cur_view,2)
-                        cur_mask = cur_view(:,cl);
-                        new_mask = cur_mask;
-                        for ss=3:numSamples-2
-%                             if(cur_mask(ss-1,1)==1 && cur_mask(ss+1,1)==1)
-%                                 new_mask(ss,1) = 1;
-%                             elseif(cur_mask(ss-2,1)==1 && cur_mask(ss+2,1)==1)
-%                                 new_mask(ss-1,1) = 1;
-%                                 new_mask(ss,1) = 1;
-%                                 new_mask(ss+1,1) = 1;
-%                             end
-                            if(ss==3 || ss==numSamples-2)
-                                mask_size = 2;
-                            elseif(ss==4 || ss==numSamples-3)
-                                mask_size = 3;
-                            elseif(ss==5 || ss==numSamples-4)
-                                mask_size = 4;
-                            else
-                                mask_size = 5;
-                            end
-                          
-                            prev_found = 0;
-                            post_found = 0;
-                            
-                            for sp=mask_size:-1:1
-                                if(cur_mask(ss-sp,1))
-                                    prev_mark = sp;
-                                    prev_found = 1;
-                                    break;
-                                end
-                            end
-                            for sa=mask_size:-1:1
-                                if(cur_mask(ss+sa,1))
-                                    post_mark = sa;
-                                    post_found = 1;
-                                    break;
-                                end
-                            end
-                            
-                            if(prev_found==1 && post_found==1)
-                                new_mask((ss-prev_mark):(ss+post_mark),1) = 1;
-                            end
-                            
-                        end
-                        new_corresp_masks{vcl,1}(:,cl) = new_mask;
-                    end
-                end
-
-                corresp_masks = new_corresp_masks;
-
-                %Post process the correspondence mask once again to remove
-                %outlier correspondences using neighborhood info
-                new_corresp_masks = corresp_masks;
-
-                %Post process the correspondence masks to fill the gaps
-                for vcl=1:numIM
-                    cur_view = corresp_masks{vcl,1};
-                    if(isempty(cur_view))
-                        continue;
-                    end
-                    for cl=1:size(cur_view,2)
-                        cur_mask = cur_view(:,cl);
-                        new_mask = cur_mask;
-                        for ss=3:numSamples-2
-                            
-                            if(ss==3 || ss==numSamples-2)
-                                mask_size = 2;
-                            elseif(ss==4 || ss==numSamples-3)
-                                mask_size = 3;
-                            elseif(ss==5 || ss==numSamples-4)
-                                mask_size = 4;
-                            else
-                                mask_size = 5;
-                            end
-                          
-                            prev_found = 0;
-                            post_found = 0;
-                            
-                            for sp=mask_size:-1:1
-                                if(~cur_mask(ss-sp,1))
-                                    prev_mark = sp;
-                                    prev_found = 1;
-                                    break;
-                                end
-                            end
-                            for sa=mask_size:-1:1
-                                if(~cur_mask(ss+sa,1))
-                                    post_mark = sa;
-                                    post_found = 1;
-                                    break;
-                                end
-                            end
-                            
-                            if(prev_found==1 && post_found==1)
-                                new_mask((ss-prev_mark):(ss+post_mark),1) = 0;
-                            end
-                       
-                        end
-                        new_corresp_masks{vcl,1}(:,cl) = new_mask;
-                    end
-                end
-
-                corresp_masks = new_corresp_masks;
-                all_corresp_masks{all_views(1,av)+1,1}{1,cc} = corresp_masks;
-
-                %Samples that have no correspondence on any other curve in the
-                %cluster, are already converged
-                fused_corresp_masks = zeros(numSamples,1);
-                for vcl=1:numIM
-                    cur_view = corresp_masks{vcl,1};
-                    if(isempty(cur_view))
-                        continue;
-                    end
-                    for cl=1:size(cur_view,2)
-                        cur_mask = cur_view(:,cl);
-                        fused_corresp_masks = fused_corresp_masks | cur_mask;
-                    end
-                end
-                converge_flags{all_views(1,av)+1,1}{1,cc} = ~fused_corresp_masks;
-
-            end
-
-        end
-
+        correspondence_masks
 
         coll_motion1 = [];
         coll_motion2 = [];
@@ -620,75 +195,7 @@ for fa=1:numViews
         %Now that the cluster has converged, we will merge the curves at
         %overlapping segments
 
-        %First we find the longest curve in the cluster
-        longest_curve_size = 0;
-        longest_curve_view = -1;
-        longest_curve_id = -1;
-
-        for lcv=1:numViews
-            cur_clusters = clusters{all_views(1,lcv)+1,1};
-            if(isempty(cur_clusters))
-                continue;
-            end
-            num_curves_in_cluster = size(cur_clusters,2);
-            for cc=1:num_curves_in_cluster
-                curveID = cur_clusters(1,cc);
-                queryCurve = all_recs_iter{all_views(1,lcv)+1,1}{1,curveID};
-                cur_size = size(queryCurve,1);
-                if(cur_size > longest_curve_size)
-                    longest_curve_view = all_views(1,lcv)+1;
-                    longest_curve_view_index = lcv;
-                    longest_curve_id = curveID;
-                    longest_curve_cluster_id = cc;
-                    longest_curve_size = cur_size;
-                end
-            end
-        end
-        
-        %We process the longest curve to break it in discontinuities
-        longest_curve_pieces = [];
-        longest_curve = all_recs_iter{longest_curve_view,1}{1,longest_curve_id};
-        start_point = 1;
-        
-        for lcs=2:size(longest_curve,1)
-            cur_dist = norm(longest_curve(lcs,:)-longest_curve(lcs-1,:));
-            if(cur_dist>sample_break_threshold)
-                current_piece = longest_curve(start_point:lcs-1,:);
-                %Be more lenient here with length threshold
-                if(4*get_length(current_piece)>branch_length_threshold)
-                    longest_curve_pieces = [longest_curve_pieces; cell(1,1)];
-                    lcp_size = size(longest_curve_pieces,1);
-                    longest_curve_pieces{lcp_size,1} = current_piece;
-                end
-                start_point=lcs;
-            end
-            if(lcs==size(longest_curve,1))
-                current_piece = longest_curve(start_point:lcs-1,:);
-                %Be more lenient here with length threshold
-                if(4*get_length(current_piece)>branch_length_threshold)
-                    longest_curve_pieces = [longest_curve_pieces; cell(1,1)];
-                    lcp_size = size(longest_curve_pieces,1);
-                    longest_curve_pieces{lcp_size,1} = current_piece;
-                end
-            end
-        end
-        
-        %We initialize the curve graph with these longest curve pieces
-        curve_graph = longest_curve_pieces;
-        lcp_size = size(longest_curve_pieces,1);
-        %curve_graph{1,1} = all_recs_iter{longest_curve_view,1}{1,longest_curve_id};
-        curve_graph_content = cell(lcp_size,1);
-        for lcp=1:lcp_size
-            curve_graph_content{lcp,1} = [longest_curve_view longest_curve_cluster_id];
-        end
-		%A pair of flags per branch, marking whether endpoints are locked with a junction
-		lock_map = zeros(lcp_size,2);
-        
-        merge_flags = cell(numViews,1);
-        for mfv=1:numViews
-            merge_flags{mfv,1} = zeros(size(clusters{all_views(1,mfv)+1,1}));
-        end
-        merge_flags{longest_curve_view_index,1}(1,longest_curve_cluster_id) = 1;
+        processing_longest_curve
 
         merging_iterations_done=0;
         cntr = 0;
@@ -727,24 +234,8 @@ for fa=1:numViews
                     cur_size = size(queryCurve,1);
 
                     query_corresp_masks = all_corresp_masks{all_views(1,mrv)+1,1}{1,cc};
-                    %For each branch in the graph,
-                    %Grab all the correspondence maps this curve has with all the
-                    %curves contained so far in that branch
-
-                    num_branches = size(curve_graph,1);
-                    merged_corresp_mask_all = cell(num_branches,1);
-                    merged_corresp_mask_cumulative = zeros(cur_size,1);
-                    
-                    for cgbr=1:num_branches
-                        merged_corresp_mask = zeros(cur_size,1);
-                        for cgc=1:size(curve_graph_content{cgbr,1},1)
-                            corr_view = curve_graph_content{cgbr,1}(cgc,1);
-                            corr_curve = curve_graph_content{cgbr,1}(cgc,2);
-                            merged_corresp_mask = (merged_corresp_mask | query_corresp_masks{corr_view,1}(:,corr_curve));
-                            merged_corresp_mask_cumulative = (merged_corresp_mask_cumulative | query_corresp_masks{corr_view,1}(:,corr_curve));
-                        end
-                        merged_corresp_mask_all{cgbr,1} = merged_corresp_mask;
-                    end
+                  
+                    create_merged_corresp_mask
 
                     %Go over each sample, merge overlapping samples, break branches
                     new_branch_start = 0;
@@ -832,107 +323,12 @@ for fa=1:numViews
 
                                  is_elongated = 0;
                                  %CHECK FOR ELONGATION AT (A): YES
-                                 if(num_attachments_last==1 && ~no_init_junction)
-                                     rb_id = arr_branch_id_last(1,1);
+                                 elongation_yes
 
-                                     target_curve = curve_graph{rb_id,1};
-                                     target_size = size(target_curve,1);
-                                     target_lock_init = lock_map(rb_id,1);
-                                     target_lock_final = lock_map(rb_id,2);
-
-                                     size_beginning_branch = arr_junction_indices_last(rb_id,1);
-                                     size_ending_branch = target_size - arr_junction_indices_last(rb_id,1) + 1;
-
-                                     %If we're close to the
-                                     %beginning on this branch and
-                                     %If our native branch is not long 
-                                     %enough, and the new branch attaches to 
-                                     %only 1 existing branch, then elongate
-                                     if(size_beginning_branch<size_ending_branch && ~target_lock_init && (size_beginning_branch<3 || get_length(target_curve(1:arr_junction_indices_last(rb_id,1),:)) < branch_length_threshold))
-                                         target_curve = [flipud(queryCurve(new_branch_start:ms-1,:)); target_curve(arr_junction_indices_last(rb_id,1):target_size,:)];
-                                         curve_graph{rb_id,1} = target_curve; 
-                                         is_elongated = 1;
-                                         %Set the locks
-                                         lock_map(rb_id,1) = 0;
-                                         %TODO: Adjust the content of the merged branch
-                                         curve_graph_content{rb_id,1} = unique([curve_graph_content{rb_id,1}; [all_views(1,mrv)+1 cc]],'rows');
-                                     %If we're close to the ending and      
-                                     %If our native branch is not long 
-                                     %enough, and the new branch attaches to 
-                                     %only 1 existing branch, then elongate
-                                     elseif(size_ending_branch<size_beginning_branch && ~target_lock_final && (size_ending_branch<3 || get_length(target_curve(arr_junction_indices_last(rb_id,1):target_size,:)) < branch_length_threshold))
-                                         target_curve = [target_curve(1:arr_junction_indices_last(rb_id,1),:); queryCurve(new_branch_start:ms-1,:)];
-                                         curve_graph{rb_id,1} = target_curve; 
-                                         is_elongated = 1;
-                                         %Set the locks
-                                         lock_map(rb_id,2) = 0;
-                                         %TODO: Adjust the content of the merged branch
-                                         curve_graph_content{rb_id,1} = unique([curve_graph_content{rb_id,1}; [all_views(1,mrv)+1 cc]],'rows');
-                                     end
-                                 end
                                  %CHECK FOR ELONGATION AT (A): NO
                                  %Otherwise this is a junction     
-                                 if(~is_elongated)
-                                     %Create and add the new branch
-                                     if(no_init_junction)
-                                         new_branch = queryCurve(new_branch_start:ms-1,:);
-                                         all_new_branches = [all_new_branches; cell(1,1)];
-                                         anb_size = size(all_new_branches,1);
-                                         all_new_branches{anb_size,1} = new_branch;
-                                         all_new_locks = [all_new_locks; [0 0]];
-                                     elseif(query_branch_size >= branch_size_threshold && get_length(queryCurve(new_branch_start-1:ms-1,:)) >= branch_length_threshold)
-                                         new_branch = queryCurve(new_branch_start-1:ms-1,:);
-                                         all_new_branches = [all_new_branches; cell(1,1)];
-                                         anb_size = size(all_new_branches,1);
-                                         all_new_branches{anb_size,1} = new_branch; 
-                                         all_new_locks = [all_new_locks; [1 0]];
+                                 elongation_no_junctions
 
-                                         %Add the junction if it's not added already
-                                         if(~is_last_junction_saved)
-                                             all_junctions = [all_junctions; queryCurve(new_branch_start-1,:)];
-                                             is_last_junction_saved = 1;
-                                         end
-
-                                         %Go over each relevant branch to
-                                         %process the junctions of each
-                                         for rb=1:num_attachments_last
-
-                                             rb_id = arr_branch_id_last(1,rb);
-
-                                             target_curve = curve_graph{rb_id,1};
-                                             target_size = size(target_curve,1);
-
-                                             %Junction breaks the existing branch it's
-                                             %being attached to
-                                             target_curve1 = target_curve(1:arr_junction_indices_last(rb_id,1),:);
-                                             target_curve2 = target_curve(arr_junction_indices_last(rb_id,1):target_size,:);
-
-                                             %Add the broken pieces
-                                             curve_graph{rb_id,1} = target_curve1;
-                                             curve_graph = [curve_graph; cell(1,1)];
-                                             cg_size = size(curve_graph,1);
-                                             curve_graph{cg_size,1} = target_curve2;
-                                             %Set the junction locks for the new branches
-                                             cur_locks = lock_map(rb_id,:);
-                                             cur_lock_init = cur_locks(1,1);
-                                             cur_lock_final = cur_locks(1,2);
-                                             lock_map(rb_id,:) = [cur_lock_init 1];
-                                             lock_map = [lock_map; [1 cur_lock_final]];
-
-                                             %Set the contents of the new branch
-                                             curve_graph_content = [curve_graph_content; cell(1,1)];
-                                             curve_graph_content{cg_size,1} = curve_graph_content{rb_id,1};
-                                             %Set the correspondence flags for the new branch
-                                             merged_corresp_mask_all = [merged_corresp_mask_all; cell(1,1)];
-                                             merged_corresp_mask_all{cg_size,1} = merged_corresp_mask_all{rb_id,1};
-                                             %Set the equivalence table for the new branch
-                                             equiv_table_cur{rb_id,1} = [equiv_table_cur{rb_id,1} cg_size];
-                                             equiv_table_cur = [equiv_table_cur; cell(1,1)];
-                                             equiv_table_cur{cg_size,1} = [equiv_table_cur{cg_size,1} rb_id];
-
-                                         end
-                                     end
-                                 end
                              end
                             arr_branch_id_last = [];
                             arr_junction_indices_last = [];
@@ -946,40 +342,7 @@ for fa=1:numViews
                          %Record closest branch distance and ID
                          %If this closest distance is still too far, remove
                          %the correspondence link
-                         if(merged_corresp_mask_cumulative(ms,1))
-                             query_sample = queryCurve(ms,:);
-                             min_branch_dist = 10^10;
-                             
-                             for br=1:num_branches
-                                 %If branch has only 1 point, this
-                                 %operation is not meaningful
-                                 if(size(curve_graph{br,1},1)<=1)
-                                     continue;
-                                 end
-                                 
-                                 %If the current branch has no
-                                 %correspondence, move onto the next one
-                                 if(~merged_corresp_mask_all{br,1}(ms,1))
-                                     continue;
-                                 end
-                                 
-                                 [arr_closest_pt(br,:),arr_outside_init_range(br,1),arr_outside_final_range(br,1),arr_prev_sample(br,1),arr_next_sample(br,1)] = find_closest_point_on_curve(curve_graph{br,1},query_sample);
-                                 arr_branch_dist(br,1) = norm(arr_closest_pt(br,:) - query_sample);
-                                 %Only save the ID of the closest branch,
-                                 %all other attributes are saved.
-                                 if(arr_branch_dist(br,1) < min_branch_dist)
-                                     closest_branch = br;
-                                     min_branch_dist = arr_branch_dist(br,1);
-                                 end
-                             end
-                             if(min_branch_dist > sample_merge_threshold)
-                                merged_corresp_mask_cumulative(ms,1) = 0;
-                             end
-                         end
-                         
-                         if(dist_to_prev_sample>sample_break_threshold && ~merged_corresp_mask_cumulative(ms,1))
-                             no_init_flag = 1;
-                         end
+                         correspondence_validation
                                            
                          %A) If the sample has no link
                          if(~merged_corresp_mask_cumulative(ms,1))
@@ -1014,107 +377,12 @@ for fa=1:numViews
                                  else
                                      is_elongated = 0;
                                      %CHECK FOR ELONGATION AT (A): YES
-                                     if(num_attachments_last==1 && ~no_init_junction)
-                                         rb_id = arr_branch_id_last(1,1);
+                                     elongation_yes
 
-                                         target_curve = curve_graph{rb_id,1};
-                                         target_size = size(target_curve,1);
-                                         target_lock_init = lock_map(rb_id,1);
-                                         target_lock_final = lock_map(rb_id,2);
-
-                                         size_beginning_branch = arr_junction_indices_last(rb_id,1);
-                                         size_ending_branch = target_size - arr_junction_indices_last(rb_id,1) + 1;
-
-                                         %If we're close to the
-                                         %beginning on this branch and
-                                         %If our native branch is not long 
-                                         %enough, and the new branch attaches to 
-                                         %only 1 existing branch, then elongate
-                                         if(size_beginning_branch<size_ending_branch && ~target_lock_init && (size_beginning_branch<3 || get_length(target_curve(1:arr_junction_indices_last(rb_id,1),:)) < branch_length_threshold))
-                                             target_curve = [flipud(queryCurve(new_branch_start:ms-1,:)); target_curve(arr_junction_indices_last(rb_id,1):target_size,:)];
-                                             curve_graph{rb_id,1} = target_curve; 
-                                             is_elongated = 1;
-                                             %Set the locks
-                                             lock_map(rb_id,1) = 0;
-                                             %TODO: Adjust the content of the merged branch
-                                             curve_graph_content{rb_id,1} = unique([curve_graph_content{rb_id,1}; [all_views(1,mrv)+1 cc]],'rows');
-                                         %If we're close to the ending and      
-                                         %If our native branch is not long 
-                                         %enough, and the new branch attaches to 
-                                         %only 1 existing branch, then elongate
-                                         elseif(size_ending_branch<size_beginning_branch && ~target_lock_final && (size_ending_branch<3 || get_length(target_curve(arr_junction_indices_last(rb_id,1):target_size,:)) < branch_length_threshold))
-                                             target_curve = [target_curve(1:arr_junction_indices_last(rb_id,1),:); queryCurve(new_branch_start:ms-1,:)];
-                                             curve_graph{rb_id,1} = target_curve; 
-                                             is_elongated = 1;
-                                             %Set the locks
-                                             lock_map(rb_id,2) = 0;
-                                             %TODO: Adjust the content of the merged branch
-                                             curve_graph_content{rb_id,1} = unique([curve_graph_content{rb_id,1}; [all_views(1,mrv)+1 cc]],'rows');
-                                         end
-                                     end
                                      %CHECK FOR ELONGATION AT (A): NO
                                      %Otherwise this is a junction     
-                                     if(~is_elongated)
-                                         %Create and add the new branch
-                                         if(no_init_junction)
-                                             new_branch = queryCurve(new_branch_start:ms,:);
-                                             all_new_branches = [all_new_branches; cell(1,1)];
-                                             anb_size = size(all_new_branches,1);
-                                             all_new_branches{anb_size,1} = new_branch;
-                                             all_new_locks = [all_new_locks; [0 0]];
-                                         elseif(query_branch_size > branch_size_threshold || get_length(queryCurve(new_branch_start-1:ms,:)) > branch_length_threshold)
-                                             new_branch = queryCurve(new_branch_start-1:ms,:);
-                                             all_new_branches = [all_new_branches; cell(1,1)];
-                                             anb_size = size(all_new_branches,1);
-                                             all_new_branches{anb_size,1} = new_branch; 
-                                             all_new_locks = [all_new_locks; [1 0]];
+                                     elongation_no_junctions
 
-                                             %Add the junction if it's not added already
-                                             if(~is_last_junction_saved)
-                                                 all_junctions = [all_junctions; queryCurve(new_branch_start-1,:)];
-                                                 is_last_junction_saved = 1;
-                                             end
-
-                                             %Go over each relevant branch to
-                                             %process the junctions of each
-                                             for rb=1:num_attachments_last
-
-                                                 rb_id = arr_branch_id_last(1,rb);
-
-                                                 target_curve = curve_graph{rb_id,1};
-                                                 target_size = size(target_curve,1);
-
-                                                 %Junction breaks the existing branch it's
-                                                 %being attached to
-                                                 target_curve1 = target_curve(1:arr_junction_indices_last(rb_id,1),:);
-                                                 target_curve2 = target_curve(arr_junction_indices_last(rb_id,1):target_size,:);
-
-                                                 %Add the broken pieces
-                                                 curve_graph{rb_id,1} = target_curve1;
-                                                 curve_graph = [curve_graph; cell(1,1)];
-                                                 cg_size = size(curve_graph,1);
-                                                 curve_graph{cg_size,1} = target_curve2;
-                                                 %Set the junction locks for the new branches
-                                                 cur_locks = lock_map(rb_id,:);
-                                                 cur_lock_init = cur_locks(1,1);
-                                                 cur_lock_final = cur_locks(1,2);
-                                                 lock_map(rb_id,:) = [cur_lock_init 1];
-                                                 lock_map = [lock_map; [1 cur_lock_final]];
-                                                 
-                                                 %Set the contents of the new branch
-                                                 curve_graph_content = [curve_graph_content; cell(1,1)];
-                                                 curve_graph_content{cg_size,1} = curve_graph_content{rb_id,1};
-                                                 %Set the correspondence flags for the new branch
-                                                 merged_corresp_mask_all = [merged_corresp_mask_all; cell(1,1)];
-                                                 merged_corresp_mask_all{cg_size,1} = merged_corresp_mask_all{rb_id,1};
-                                                 %Set the equivalence table for the new branch
-                                                 equiv_table_cur{rb_id,1} = [equiv_table_cur{rb_id,1} cg_size];
-                                                 equiv_table_cur = [equiv_table_cur; cell(1,1)];
-                                                 equiv_table_cur{cg_size,1} = [equiv_table_cur{cg_size,1} rb_id];
-                                                 
-                                             end
-                                         end
-                                     end
                                  end
                              end
                              %Aiii) Otherwise (if currently traversing a
@@ -1135,56 +403,13 @@ for fa=1:numViews
                              arr_branch_id_cur = [];
                              arr_branch_id_cur = closest_branch;
                              
-                             only_merge_to_single_branch = 0;
-                             %Check to see if we are close to an existing
-                             %junction, avoid merging this sample with
-                             %multiple branches if that's the case
-                             for jn=1:size(all_junctions,1)
-                                 if(norm(queryCurve(ms,:) - all_junctions(jn,:)) < junction_dist_threshold)
-                                     only_merge_to_single_branch=1;
-                                     break;
-                                 end                                     
-                             end
-                             %only_merge_to_single_branch = 0;
-                             if(~only_merge_to_single_branch)
-                                 %Go over each branch with correspondence, then
-                                 %store the IDs of the 'close enough' branches
-                                 for br=1:num_branches
-                                     if(arr_branch_dist(br,1)>-1 && arr_branch_dist(br,1)<dist_threshold && br~=closest_branch)
-                                         arr_branch_id_cur = [arr_branch_id_cur br];
-                                     end
-                                 end
-                             end
+                             merge_to_single_branch
                              
                              num_attachments_cur = size(arr_branch_id_cur,2);
                              
                              %Insert the current sample into all
                              %relevant branches computed above
-                             num_relevant_branches = size(arr_branch_id_cur,2);
-                             for br=1:num_relevant_branches
-                                 rel_br_id = arr_branch_id_cur(1,br);
-                                 
-                                 %Store the junction index, meaning the
-                                 %index into the branch samples that
-                                 %indicates a junction, for each branch
-                                 
-                                 target_curve = curve_graph{rel_br_id,1};
-                                 target_size = size(target_curve,1);
-                                 if(arr_prev_sample(rel_br_id,1)==1 && arr_outside_init_range(rel_br_id,1))
-                                     curve_graph{rel_br_id,1} = [query_sample; target_curve];
-                                     arr_junction_indices(rel_br_id,1) = 1;
-                                 elseif(arr_next_sample(rel_br_id,1)==target_size && arr_outside_final_range(rel_br_id,1))
-                                     curve_graph{rel_br_id,1} = [target_curve; query_sample];
-                                     arr_junction_indices(rel_br_id,1) = target_size+1;
-                                 else
-                                     curve_graph{rel_br_id,1} = [target_curve(1:arr_prev_sample(rel_br_id,1),:); query_sample; target_curve(arr_next_sample(rel_br_id,1):target_size,:)];
-                                     arr_junction_indices(rel_br_id,1) = arr_prev_sample(rel_br_id,1)+1;
-                                 end
-                                 
-                                 %Adjust the contents of the target
-                                 %branch after this operation
-                                 curve_graph_content{rel_br_id,1} = unique([curve_graph_content{rel_br_id,1}; [all_views(1,mrv)+1 cc]],'rows');
-                             end
+                             relevant_branches
                              
                              %DO (A) AND (B) ATTACH TO DIFFERENT BRANCHES?
                              %Is there a new current branch?
@@ -1248,99 +473,11 @@ for fa=1:numViews
 								 if(isempty(arr_branch_id_last))
 									 is_elongated = 0;
 									 %CHECK FOR ELONGATION AT (B): YES
-									 if(num_attachments_cur==1)
-										 rb_id = arr_branch_id_cur(1,1);
-
-										 target_curve = curve_graph{rb_id,1};
-										 target_size = size(target_curve,1);
-										 target_lock_init = lock_map(rb_id,1);
-										 target_lock_final = lock_map(rb_id,2);
-
-										 size_beginning_branch = arr_junction_indices(rb_id,1);
-										 size_ending_branch = target_size - arr_junction_indices(rb_id,1) + 1;
-										 
-										 %If we're close to the
-										 %beginning on this branch and
-										 %If our native branch is not long 
-										 %enough, and the new branch attaches to 
-										 %only 1 existing branch, then elongate
-										 if(size_beginning_branch<size_ending_branch && ~target_lock_init && (size_beginning_branch<3 || get_length(target_curve(1:arr_junction_indices(rb_id,1),:)) < branch_length_threshold))
-											 target_curve = [queryCurve(new_branch_start:ms-1,:); target_curve(arr_junction_indices(rb_id,1):target_size,:)];
-											 curve_graph{rb_id,1} = target_curve; 
-											 is_elongated = 1;
-											 %Set the locks
-											 lock_map(rb_id,1) = 0;
-											 %TODO: Adjust the content of the merged branch
-											 curve_graph_content{rb_id,1} = unique([curve_graph_content{rb_id,1}; [all_views(1,mrv)+1 cc]],'rows');
-										 %If we're close to the ending and      
-										 %If our native branch is not long 
-										 %enough, and the new branch attaches to 
-										 %only 1 existing branch, then elongate
-										 elseif(size_ending_branch<size_beginning_branch && ~target_lock_final && (size_ending_branch<3 || get_length(target_curve(arr_junction_indices(rb_id,1):target_size,:)) < branch_length_threshold))
-											 target_curve = [target_curve(1:arr_junction_indices(rb_id,1),:); flipud(queryCurve(new_branch_start:ms-1,:))];
-											 curve_graph{rb_id,1} = target_curve; 
-											 is_elongated = 1;
-											 %Set the locks
-											 lock_map(rb_id,2) = 0;
-											 %TODO: Adjust the content of the merged branch
-											 curve_graph_content{rb_id,1} = unique([curve_graph_content{rb_id,1}; [all_views(1,mrv)+1 cc]],'rows');
-										 end
-									 end
+									 elongation_B_yes
+                                     
 									 %CHECK FOR ELONGATION AT (B): NO
 									 %Otherwise this is a junction     
-									 if(~is_elongated && (query_branch_size > branch_size_threshold || get_length(queryCurve(new_branch_start:ms,:)) > branch_length_threshold))
-										 %Create and add the new branch
-										 new_branch = queryCurve(new_branch_start:ms,:);
-										 all_new_branches = [all_new_branches; cell(1,1)];
-										 anb_size = size(all_new_branches,1);
-										 all_new_branches{anb_size,1} = new_branch; 
-										 all_new_locks = [all_new_locks; [0 1]];
-										 
-										 %Add the junction if it's not added already
-										 if(~is_junction_saved)
-											all_junctions = [all_junctions; queryCurve(ms,:)];
-											is_junction_saved = 1;
-										 end
-
-										 %Go over each relevant branch to
-										 %process the junctions of each
-										 for rb=1:num_attachments_cur
-
-											 rb_id = arr_branch_id_cur(1,rb);
-
-											 target_curve = curve_graph{rb_id,1};
-											 target_size = size(target_curve,1);
-
-											 %Junction breaks the existing branch it's
-											 %being attached to
-											 target_curve1 = target_curve(1:arr_junction_indices(rb_id,1),:);
-											 target_curve2 = target_curve(arr_junction_indices(rb_id,1):target_size,:);
-
-											 %Add the broken pieces
-											 curve_graph{rb_id,1} = target_curve1;
-											 curve_graph = [curve_graph; cell(1,1)];
-											 cg_size = size(curve_graph,1);
-											 curve_graph{cg_size,1} = target_curve2;
-											 %Set the junction locks for the new branches
-											 cur_locks = lock_map(rb_id,:);
-											 cur_lock_init = cur_locks(1,1);
-											 cur_lock_final = cur_locks(1,2);
-											 lock_map(rb_id,:) = [cur_lock_init 1];
-											 lock_map = [lock_map; [1 cur_lock_final]];
-											 
-											 %Set the contents of the new branch
-											 curve_graph_content = [curve_graph_content; cell(1,1)];
-											 curve_graph_content{cg_size,1} = curve_graph_content{rb_id,1};
-											 %Set the correspondence flags for the new branch
-											 merged_corresp_mask_all = [merged_corresp_mask_all; cell(1,1)];
-											 merged_corresp_mask_all{cg_size,1} = merged_corresp_mask_all{rb_id,1};
-											 %Set the equivalence table for the new branch
-											 equiv_table_cur{rb_id,1} = [equiv_table_cur{rb_id,1} cg_size];
-											 equiv_table_cur = [equiv_table_cur; cell(1,1)];
-											 equiv_table_cur{cg_size,1} = [equiv_table_cur{cg_size,1} rb_id];
-											 
-										 end
-									 end
+									 elongation_B_no
 										 
 								 %(A) AND (B) ATTACH TO DIFFERENT BRANCHES 
 								 elseif(is_cur_different || is_last_different)
@@ -1500,114 +637,15 @@ for fa=1:numViews
 									 %elongated
 									 elseif(~is_init_elongated && is_final_elongated && ~no_init_junction)
 
-										 %Go over each relevant branch to
-										 %process the junctions of each
-										 for rb=1:num_attachments_last
-
-											 rb_id = arr_branch_id_last(1,rb);
-
-											 target_curve = curve_graph{rb_id,1};
-											 target_size = size(target_curve,1);
-											 
-%                                                  %Break only if the
-%                                                  %relevant segment remains
-%                                                  if(arr_junction_indices_last(rb_id,1)<final_target_min || arr_junction_indices_last(rb_id,1)>final_target_max)
-%                                                      continue;
-%                                                  end
-											 at_least_one_branch_broken = 1;
-
-											 %Junction breaks the existing branch it's
-											 %being attached to
-											 target_curve1 = target_curve(1:arr_junction_indices_last(rb_id,1),:);
-											 target_curve2 = target_curve(arr_junction_indices_last(rb_id,1):target_size,:);
-
-											 %Add the broken pieces
-											 curve_graph{rb_id,1} = target_curve1;
-											 curve_graph = [curve_graph; cell(1,1)];
-											 cg_size = size(curve_graph,1);
-											 curve_graph{cg_size,1} = target_curve2;
-											 %Set the junction locks for the new branches
-											 cur_locks = lock_map(rb_id,:);
-											 cur_lock_init = cur_locks(1,1);
-											 cur_lock_final = cur_locks(1,2);
-											 lock_map(rb_id,:) = [cur_lock_init 1];
-											 lock_map = [lock_map; [1 cur_lock_final]];
-											 
-											 %Set the contents of the new branch
-											 curve_graph_content = [curve_graph_content; cell(1,1)];
-											 curve_graph_content{cg_size,1} = curve_graph_content{rb_id,1};
-											 %Set the correspondence flags for the new branch
-											 merged_corresp_mask_all = [merged_corresp_mask_all; cell(1,1)];
-											 merged_corresp_mask_all{cg_size,1} = merged_corresp_mask_all{rb_id,1};
-											 %Set the equivalence table for the new branch
-											 equiv_table_cur{rb_id,1} = [equiv_table_cur{rb_id,1} cg_size];
-											 equiv_table_cur = [equiv_table_cur; cell(1,1)];
-											 equiv_table_cur{cg_size,1} = [equiv_table_cur{cg_size,1} rb_id];
-										 end
+										 branch_junction_processing1
 										 
-										 %Add the junction if it's not added already
-										 if(~is_last_junction_saved && at_least_one_branch_broken)
-											 all_junctions = [all_junctions; queryCurve(new_branch_start-1,:)];
-											 is_last_junction_saved = 1;
-										 end
 									 elseif(is_init_elongated && ~is_final_elongated)
 										 
 										 curve_graph{init_branch_id,1} = appended_curve;
 										 curve_graph_content{init_branch_id,1} = appended_graph_content;
 
-										 %Go over each relevant branch to
-										 %process the junctions of each
-										 for rb=1:num_attachments_cur
+										 branch_junction_processing2
 
-											 rb_id = arr_branch_id_cur(1,rb);
-
-											 target_curve = curve_graph{rb_id,1};
-											 target_size = size(target_curve,1);
-											 
-%                                                  %Break only if the
-%                                                  %relevant segment remains
-%                                                  if(arr_junction_indices(rb_id,1)<init_target_min || arr_junction_indices(rb_id,1)>init_target_max)
-%                                                      continue;
-%                                                  end
-											 at_least_one_branch_broken = 1;
-											 
-											 size_beginning_branch = arr_junction_indices(rb_id,1);
-											 size_ending_branch = target_size - arr_junction_indices(rb_id,1) + 1;
-
-											 %Junction breaks the existing branch it's
-											 %being attached to
-											 target_curve1 = target_curve(1:arr_junction_indices(rb_id,1),:);
-											 target_curve2 = target_curve(arr_junction_indices(rb_id,1):target_size,:);
-
-											 %Add the broken pieces
-											 curve_graph{rb_id,1} = target_curve1;
-											 curve_graph = [curve_graph; cell(1,1)];
-											 cg_size = size(curve_graph,1);
-											 curve_graph{cg_size,1} = target_curve2;
-											 %Set the junction locks for the new branches
-											 cur_locks = lock_map(rb_id,:);
-											 cur_lock_init = cur_locks(1,1);
-											 cur_lock_final = cur_locks(1,2);
-											 lock_map(rb_id,:) = [cur_lock_init 1];
-											 lock_map = [lock_map; [1 cur_lock_final]];
-											 
-											 %Set the contents of the new branch
-											 curve_graph_content = [curve_graph_content; cell(1,1)];
-											 curve_graph_content{cg_size,1} = curve_graph_content{rb_id,1};
-											 %Set the correspondence flags for the new branch
-											 merged_corresp_mask_all = [merged_corresp_mask_all; cell(1,1)];
-											 merged_corresp_mask_all{cg_size,1} = merged_corresp_mask_all{rb_id,1};
-											 %Set the equivalence table for the new branch
-											 equiv_table_cur{rb_id,1} = [equiv_table_cur{rb_id,1} cg_size];
-											 equiv_table_cur = [equiv_table_cur; cell(1,1)];
-											 equiv_table_cur{cg_size,1} = [equiv_table_cur{cg_size,1} rb_id];
-										 end
-										 
-										 %Add the junction if it's not added already
-										 if(~is_junction_saved && at_least_one_branch_broken)
-											all_junctions = [all_junctions; queryCurve(ms,:)];
-											is_junction_saved = 1;
-										 end
 									 elseif(~is_init_elongated && ~is_final_elongated && (query_branch_size > branch_size_threshold || get_length(queryCurve(new_branch_start:ms,:)) > branch_length_threshold))
 									 
 										 if(no_init_junction)
@@ -1636,145 +674,11 @@ for fa=1:numViews
 											is_junction_saved = 1;
 										 end
 
-										 for b=1:num_branches
+                                         %Go over each branch to see if it
+										 %needs to be broken at up to 2
+										 %points
+                                         branch_at_points
 
-											 if(size(curve_graph{b,1})<=1)
-												 continue;
-											 end
-											 
-											 target_curve = curve_graph{b,1};
-											 target_size = size(target_curve,1);
-
-											 ind_last = find(arr_branch_id_last==b);
-											 ind_cur = find(arr_branch_id_cur==b);
-
-											 %If found in both arrays, this
-											 %branch will be broken in two
-											 %places
-											 if((~isempty(ind_last)) && (~isempty(ind_cur)) && (~no_init_junction))
-
-												 target_curve1 = [];
-												 target_curve2 = [];
-												 target_curve3 = [];
-												 %Junction breaks the existing branch it's
-												 %being attached to
-												 if(arr_junction_indices_last(b,1) < arr_junction_indices(b,1))
-													 target_curve1 = target_curve(1:arr_junction_indices_last(b,1),:);
-													 target_curve2 = target_curve(arr_junction_indices_last(b,1):arr_junction_indices(b,1),:);
-													 target_curve3 = target_curve(arr_junction_indices(b,1):target_size,:);
-												 else
-													 target_curve1 = target_curve(1:arr_junction_indices(b,1),:);
-													 target_curve2 = target_curve(arr_junction_indices(b,1):arr_junction_indices_last(b,1),:);
-													 target_curve3 = target_curve(arr_junction_indices_last(b,1):target_size,:);
-												 end
-																									  
-												 cur_locks = lock_map(b,:);
-												 cur_lock_init = cur_locks(1,1);
-												 cur_lock_final = cur_locks(1,2);
-												 
-												 %Add the broken pieces
-												 curve_graph{b,1} = target_curve2;
-												 %Set the junction locks for the new branches
-												 lock_map(rb_id,:) = [1 1];
-
-												 curve_graph = [curve_graph; cell(1,1)];
-												 cg_size = size(curve_graph,1);
-												 curve_graph{cg_size,1} = target_curve1;
-												 %Set the junction locks for the new branches
-												 lock_map = [lock_map; [cur_lock_init 1]];
-												 %Set the contents of the new branch
-												 curve_graph_content = [curve_graph_content; cell(1,1)];
-												 curve_graph_content{cg_size,1} = curve_graph_content{b,1};
-												 %Set the correspondence flags for the new branch
-												 merged_corresp_mask_all = [merged_corresp_mask_all; cell(1,1)];
-												 merged_corresp_mask_all{cg_size,1} = merged_corresp_mask_all{b,1};
-												 %Set the equivalence table for the new branch
-												 equiv_table_cur{b,1} = [equiv_table_cur{b,1} cg_size];
-												 equiv_table_cur = [equiv_table_cur; cell(1,1)];
-												 equiv_table_cur{cg_size,1} = [equiv_table_cur{cg_size,1} b];
-
-												 curve_graph = [curve_graph; cell(1,1)];
-												 cg_size = size(curve_graph,1);
-												 curve_graph{cg_size,1} = target_curve3;
-												 %Set the junction locks for the new branches
-												 lock_map = [lock_map; [1 cur_lock_final]];
-												 %Set the contents of the new branch
-												 curve_graph_content = [curve_graph_content; cell(1,1)];
-												 curve_graph_content{cg_size,1} = curve_graph_content{b,1};
-												 %Set the correspondence flags for the new branch
-												 merged_corresp_mask_all = [merged_corresp_mask_all; cell(1,1)];
-												 merged_corresp_mask_all{cg_size,1} = merged_corresp_mask_all{b,1};
-												 %Set the equivalence table for the new branch
-												 equiv_table_cur{b,1} = [equiv_table_cur{b,1} cg_size];
-												 equiv_table_cur = [equiv_table_cur; cell(1,1)];
-												 equiv_table_cur{cg_size,1} = [equiv_table_cur{cg_size,1} b];
-												 equiv_table_cur{cg_size,1} = [equiv_table_cur{cg_size,1} cg_size-1];
-												 equiv_table_cur{cg_size-1,1} = [equiv_table_cur{cg_size-1,1} cg_size];
-
-											 %Otherwise, break at the only
-											 %existing connection
-											 elseif(~isempty(ind_last) && (~no_init_junction))
-
-												 %Junction breaks the existing branch it's
-												 %being attached to
-												 target_curve1 = target_curve(1:arr_junction_indices_last(b,1),:);
-												 target_curve2 = target_curve(arr_junction_indices_last(b,1):target_size,:);
-
-												 %Add the broken pieces
-												 curve_graph{b,1} = target_curve1;
-												 curve_graph = [curve_graph; cell(1,1)];
-												 cg_size = size(curve_graph,1);
-												 curve_graph{cg_size,1} = target_curve2;
-												 %Set the junction locks for the new branches
-												 cur_locks = lock_map(b,:);
-												 cur_lock_init = cur_locks(1,1);
-												 cur_lock_final = cur_locks(1,2);
-												 lock_map(b,:) = [cur_lock_init 1];
-												 lock_map = [lock_map; [1 cur_lock_final]];
-
-												 %Set the contents of the new branch
-												 curve_graph_content = [curve_graph_content; cell(1,1)];
-												 curve_graph_content{cg_size,1} = curve_graph_content{rb_id,1};
-												 %Set the correspondence flags for the new branch
-												 merged_corresp_mask_all = [merged_corresp_mask_all; cell(1,1)];
-												 merged_corresp_mask_all{cg_size,1} = merged_corresp_mask_all{rb_id,1};
-												 %Set the equivalence table for the new branch
-												 equiv_table_cur{rb_id,1} = [equiv_table_cur{rb_id,1} cg_size];
-												 equiv_table_cur = [equiv_table_cur; cell(1,1)];
-												 equiv_table_cur{cg_size,1} = [equiv_table_cur{cg_size,1} rb_id];
-
-											 elseif(~isempty(ind_cur))
-
-												 %Junction breaks the existing branch it's
-												 %being attached to
-												 target_curve1 = target_curve(1:arr_junction_indices(b,1),:);
-												 target_curve2 = target_curve(arr_junction_indices(b,1):target_size,:);
-
-												 %Add the broken pieces
-												 curve_graph{b,1} = target_curve1;
-												 curve_graph = [curve_graph; cell(1,1)];
-												 cg_size = size(curve_graph,1);
-												 curve_graph{cg_size,1} = target_curve2;
-												 %Set the junction locks for the new branches
-												 cur_locks = lock_map(b,:);
-												 cur_lock_init = cur_locks(1,1);
-												 cur_lock_final = cur_locks(1,2);
-												 lock_map(b,:) = [cur_lock_init 1];
-												 lock_map = [lock_map; [1 cur_lock_final]];
-
-												 %Set the contents of the new branch
-												 curve_graph_content = [curve_graph_content; cell(1,1)];
-												 curve_graph_content{cg_size,1} = curve_graph_content{rb_id,1};
-												 %Set the correspondence flags for the new branch
-												 merged_corresp_mask_all = [merged_corresp_mask_all; cell(1,1)];
-												 merged_corresp_mask_all{cg_size,1} = merged_corresp_mask_all{rb_id,1};
-												 %Set the equivalence table for the new branch
-												 equiv_table_cur{rb_id,1} = [equiv_table_cur{rb_id,1} cg_size];
-												 equiv_table_cur = [equiv_table_cur; cell(1,1)];
-												 equiv_table_cur{cg_size,1} = [equiv_table_cur{cg_size,1} rb_id];
-												 
-											 end
-										 end
 									 end
 								 else       
 									 
@@ -1791,7 +695,6 @@ for fa=1:numViews
 									 %CHECK FOR ELONGATION AT (A): YES
 									 if(num_attachments_last==1 && ~no_init_junction)
 										 
-																					 
 										 %Retrieve target branches and
 										 %curves as if the new branch
 										 %only attach
@@ -1842,16 +745,7 @@ for fa=1:numViews
 											 curve_graph{cg_size,1} = other_curve2;
 											 %Set the locks
 											 lock_map = [lock_map; [1 target_lock_final]];
-											 %Set the contents of the new branch
-											 curve_graph_content = [curve_graph_content; cell(1,1)];
-											 curve_graph_content{cg_size,1} = curve_graph_content{rb_id,1};
-											 %Set the correspondence flags for the new branch
-											 merged_corresp_mask_all = [merged_corresp_mask_all; cell(1,1)];
-											 merged_corresp_mask_all{cg_size,1} = merged_corresp_mask_all{rb_id,1};
-											 %Set the equivalence table for the new branch
-											 equiv_table_cur{rb_id,1} = [equiv_table_cur{rb_id,1} cg_size];
-											 equiv_table_cur = [equiv_table_cur; cell(1,1)];
-											 equiv_table_cur{cg_size,1} = [equiv_table_cur{cg_size,1} rb_id];
+											 set_new_relevant_branch
 											 
 											 %TODO: Adjust the content of the merged branch
 											 curve_graph_content{rb_id,1} = unique([curve_graph_content{rb_id,1}; [all_views(1,mrv)+1 cc]],'rows');
@@ -1877,20 +771,10 @@ for fa=1:numViews
 											 curve_graph{cg_size,1} = other_curve1;
 											 %Set the locks
 											 lock_map = [lock_map; [target_lock_init 1]];
-											 %Set the contents of the new branch
-											 curve_graph_content = [curve_graph_content; cell(1,1)];
-											 curve_graph_content{cg_size,1} = curve_graph_content{rb_id,1};
-											 %Set the correspondence flags for the new branch
-											 merged_corresp_mask_all = [merged_corresp_mask_all; cell(1,1)];
-											 merged_corresp_mask_all{cg_size,1} = merged_corresp_mask_all{rb_id,1};
-											 %Set the equivalence table for the new branch
-											 equiv_table_cur{rb_id,1} = [equiv_table_cur{rb_id,1} cg_size];
-											 equiv_table_cur = [equiv_table_cur; cell(1,1)];
-											 equiv_table_cur{cg_size,1} = [equiv_table_cur{cg_size,1} rb_id];
+											 set_new_relevant_branch
 											 
 											 %TODO: Adjust the content of the merged branch
 											 curve_graph_content{rb_id,1} = unique([curve_graph_content{rb_id,1}; [all_views(1,mrv)+1 cc]],'rows');
-											 
 										 end
 										 
 										 if(is_elongated)
@@ -1928,16 +812,7 @@ for fa=1:numViews
 												 lock_map(rb_id,:) = [cur_lock_init 1];
 												 lock_map = [lock_map; [1 cur_lock_final]];
 
-												 %Set the contents of the new branch
-												 curve_graph_content = [curve_graph_content; cell(1,1)];
-												 curve_graph_content{cg_size,1} = curve_graph_content{rb_id,1};
-												 %Set the correspondence flags for the new branch
-												 merged_corresp_mask_all = [merged_corresp_mask_all; cell(1,1)];
-												 merged_corresp_mask_all{cg_size,1} = merged_corresp_mask_all{rb_id,1};
-												 %Set the equivalence table for the new branch
-												 equiv_table_cur{rb_id,1} = [equiv_table_cur{rb_id,1} cg_size];
-												 equiv_table_cur = [equiv_table_cur; cell(1,1)];
-												 equiv_table_cur{cg_size,1} = [equiv_table_cur{cg_size,1} rb_id];
+												 set_new_relevant_branch
 											 end
 										 end
 									 end
@@ -1950,8 +825,6 @@ for fa=1:numViews
 										 %curves as if the new branch
 										 %only attach
 										 rb_id = arr_branch_id_cur(1,1);
-										 
-										 
 										 
 										 target_curve = curve_graph{rb_id,1};
 										 target_size = size(target_curve,1);
@@ -2016,16 +889,7 @@ for fa=1:numViews
 												 curve_graph{cg_size,1} = other_curve2;
 												 %Set the locks
 												 lock_map = [lock_map; [1 target_lock_final]];
-												 %Set the contents of the new branch
-												 curve_graph_content = [curve_graph_content; cell(1,1)];
-												 curve_graph_content{cg_size,1} = curve_graph_content{rb_id,1};
-												 %Set the correspondence flags for the new branch
-												 merged_corresp_mask_all = [merged_corresp_mask_all; cell(1,1)];
-												 merged_corresp_mask_all{cg_size,1} = merged_corresp_mask_all{rb_id,1};
-												 %Set the equivalence table for the new branch
-												 equiv_table_cur{rb_id,1} = [equiv_table_cur{rb_id,1} cg_size];
-												 equiv_table_cur = [equiv_table_cur; cell(1,1)];
-												 equiv_table_cur{cg_size,1} = [equiv_table_cur{cg_size,1} rb_id];
+												 set_new_relevant_branch
 											 end
 
 											 %TODO: Adjust the content of the merged branch
@@ -2053,29 +917,17 @@ for fa=1:numViews
 												 is_last_junction_saved = 1;
 											 end
 											 
-											 
-
 											 if(~isempty(other_curve1))
 												 curve_graph = [curve_graph; cell(1,1)];
 												 cg_size = size(curve_graph,1);
 												 curve_graph{cg_size,1} = other_curve1;
 												 %Set the locks
 												 lock_map = [lock_map; [target_lock_init 1]];
-												 %Set the contents of the new branch
-												 curve_graph_content = [curve_graph_content; cell(1,1)];
-												 curve_graph_content{cg_size,1} = curve_graph_content{rb_id,1};
-												 %Set the correspondence flags for the new branch
-												 merged_corresp_mask_all = [merged_corresp_mask_all; cell(1,1)];
-												 merged_corresp_mask_all{cg_size,1} = merged_corresp_mask_all{rb_id,1};
-												 %Set the equivalence table for the new branch
-												 equiv_table_cur{rb_id,1} = [equiv_table_cur{rb_id,1} cg_size];
-												 equiv_table_cur = [equiv_table_cur; cell(1,1)];
-												 equiv_table_cur{cg_size,1} = [equiv_table_cur{cg_size,1} rb_id];
+												 set_new_relevant_branch
 											 end
 
 											 %TODO: Adjust the content of the merged branch
 											 curve_graph_content{rb_id,1} = unique([curve_graph_content{rb_id,1}; [all_views(1,mrv)+1 cc]],'rows');
-
 										 end
 										 
 										 if(is_elongated && ~no_init_junction)
@@ -2113,16 +965,7 @@ for fa=1:numViews
 												 lock_map(rb_id,:) = [cur_lock_init 1];
 												 lock_map = [lock_map; [1 cur_lock_final]];
 
-												 %Set the contents of the new branch
-												 curve_graph_content = [curve_graph_content; cell(1,1)];
-												 curve_graph_content{cg_size,1} = curve_graph_content{rb_id,1};
-												 %Set the correspondence flags for the new branch
-												 merged_corresp_mask_all = [merged_corresp_mask_all; cell(1,1)];
-												 merged_corresp_mask_all{cg_size,1} = merged_corresp_mask_all{rb_id,1};
-												 %Set the equivalence table for the new branch
-												 equiv_table_cur{rb_id,1} = [equiv_table_cur{rb_id,1} cg_size];
-												 equiv_table_cur = [equiv_table_cur; cell(1,1)];
-												 equiv_table_cur{cg_size,1} = [equiv_table_cur{cg_size,1} rb_id];
+												 set_new_relevant_branch
 											 
 											 end
 										 end
@@ -2161,149 +1004,10 @@ for fa=1:numViews
 										 %Go over each branch to see if it
 										 %needs to be broken at up to 2
 										 %points
+										 branch_at_points
 
-										 for b=1:num_branches
-											 
-											 if(size(curve_graph{b,1})<=1)
-												 continue;
-											 end
-
-											 target_curve = curve_graph{b,1};
-											 target_size = size(target_curve,1);
-
-											 ind_last = find(arr_branch_id_last==b);
-											 ind_cur = find(arr_branch_id_cur==b);
-
-											 %If found in both arrays, this
-											 %branch will be broken in two
-											 %places
-											 if((~isempty(ind_last)) && (~isempty(ind_cur)) &&(~no_init_junction))
-
-												 target_curve1 = [];
-												 target_curve2 = [];
-												 target_curve3 = [];
-												 %Junction breaks the existing branch it's
-												 %being attached to
-												 if(arr_junction_indices_last(b,1) < arr_junction_indices(b,1))
-													 target_curve1 = target_curve(1:arr_junction_indices_last(b,1),:);
-													 target_curve2 = target_curve(arr_junction_indices_last(b,1):arr_junction_indices(b,1),:);
-													 target_curve3 = target_curve(arr_junction_indices(b,1):target_size,:);
-												 else
-													 target_curve1 = target_curve(1:arr_junction_indices(b,1),:);
-													 target_curve2 = target_curve(arr_junction_indices(b,1):arr_junction_indices_last(b,1),:);
-													 target_curve3 = target_curve(arr_junction_indices_last(b,1):target_size,:);
-												 end
-												 
-												 cur_locks = lock_map(b,:);
-												 cur_lock_init = cur_locks(1,1);
-												 cur_lock_final = cur_locks(1,2);
-												 
-												 %Add the broken pieces
-												 curve_graph{b,1} = target_curve2;
-												 %Set the junction locks for the new branches
-												 lock_map(rb_id,:) = [1 1];
-
-												 curve_graph = [curve_graph; cell(1,1)];
-												 cg_size = size(curve_graph,1);
-												 curve_graph{cg_size,1} = target_curve1;
-												 %Set the junction locks for the new branches
-												 lock_map = [lock_map; [cur_lock_init 1]];
-												 %Set the contents of the new branch
-												 curve_graph_content = [curve_graph_content; cell(1,1)];
-												 curve_graph_content{cg_size,1} = curve_graph_content{b,1};
-												 %Set the correspondence flags for the new branch
-												 merged_corresp_mask_all = [merged_corresp_mask_all; cell(1,1)];
-												 merged_corresp_mask_all{cg_size,1} = merged_corresp_mask_all{b,1};
-												 %Set the equivalence table for the new branch
-												 equiv_table_cur{b,1} = [equiv_table_cur{b,1} cg_size];
-												 equiv_table_cur = [equiv_table_cur; cell(1,1)];
-												 equiv_table_cur{cg_size,1} = [equiv_table_cur{cg_size,1} b];
-
-												 curve_graph = [curve_graph; cell(1,1)];
-												 cg_size = size(curve_graph,1);
-												 curve_graph{cg_size,1} = target_curve3;
-												 %Set the junction locks for the new branches
-												 lock_map = [lock_map; [1 cur_lock_final]];
-												 %Set the contents of the new branch
-												 curve_graph_content = [curve_graph_content; cell(1,1)];
-												 curve_graph_content{cg_size,1} = curve_graph_content{b,1};
-												 %Set the correspondence flags for the new branch
-												 merged_corresp_mask_all = [merged_corresp_mask_all; cell(1,1)];
-												 merged_corresp_mask_all{cg_size,1} = merged_corresp_mask_all{b,1};
-												 %Set the equivalence table for the new branch
-												 equiv_table_cur{b,1} = [equiv_table_cur{b,1} cg_size];
-												 equiv_table_cur = [equiv_table_cur; cell(1,1)];
-												 equiv_table_cur{cg_size,1} = [equiv_table_cur{cg_size,1} b];
-												 equiv_table_cur{cg_size,1} = [equiv_table_cur{cg_size,1} cg_size-1];
-												 equiv_table_cur{cg_size-1,1} = [equiv_table_cur{cg_size-1,1} cg_size];
-
-											 %Otherwise, break at the only
-											 %existing connection
-											 elseif(~isempty(ind_last) && ~no_init_junction)
-
-												 %Junction breaks the existing branch it's
-												 %being attached to
-												 target_curve1 = target_curve(1:arr_junction_indices_last(b,1),:);
-												 target_curve2 = target_curve(arr_junction_indices_last(b,1):target_size,:);
-
-												 %Add the broken pieces
-												 curve_graph{b,1} = target_curve1;
-												 curve_graph = [curve_graph; cell(1,1)];
-												 cg_size = size(curve_graph,1);
-												 curve_graph{cg_size,1} = target_curve2;
-												 %Set the junction locks for the new branches
-												 cur_locks = lock_map(b,:);
-												 cur_lock_init = cur_locks(1,1);
-												 cur_lock_final = cur_locks(1,2);
-												 lock_map(b,:) = [cur_lock_init 1];
-												 lock_map = [lock_map; [1 cur_lock_final]];
-
-												 %Set the contents of the new branch
-												 curve_graph_content = [curve_graph_content; cell(1,1)];
-												 curve_graph_content{cg_size,1} = curve_graph_content{rb_id,1};
-												 %Set the correspondence flags for the new branch
-												 merged_corresp_mask_all = [merged_corresp_mask_all; cell(1,1)];
-												 merged_corresp_mask_all{cg_size,1} = merged_corresp_mask_all{rb_id,1};
-												 %Set the equivalence table for the new branch
-												 equiv_table_cur{rb_id,1} = [equiv_table_cur{rb_id,1} cg_size];
-												 equiv_table_cur = [equiv_table_cur; cell(1,1)];
-												 equiv_table_cur{cg_size,1} = [equiv_table_cur{cg_size,1} rb_id];
-
-											 elseif(~isempty(ind_cur))
-
-												 %Junction breaks the existing branch it's
-												 %being attached to
-												 target_curve1 = target_curve(1:arr_junction_indices(b,1),:);
-												 target_curve2 = target_curve(arr_junction_indices(b,1):target_size,:);
-
-												 %Add the broken pieces
-												 curve_graph{b,1} = target_curve1;
-												 curve_graph = [curve_graph; cell(1,1)];
-												 cg_size = size(curve_graph,1);
-												 curve_graph{cg_size,1} = target_curve2;
-												 %Set the junction locks for the new branches
-												 cur_locks = lock_map(b,:);
-												 cur_lock_init = cur_locks(1,1);
-												 cur_lock_final = cur_locks(1,2);
-												 lock_map(b,:) = [cur_lock_init 1];
-												 lock_map = [lock_map; [1 cur_lock_final]];
-
-												 %Set the contents of the new branch
-												 curve_graph_content = [curve_graph_content; cell(1,1)];
-												 curve_graph_content{cg_size,1} = curve_graph_content{rb_id,1};
-												 %Set the correspondence flags for the new branch
-												 merged_corresp_mask_all = [merged_corresp_mask_all; cell(1,1)];
-												 merged_corresp_mask_all{cg_size,1} = merged_corresp_mask_all{rb_id,1};
-												 %Set the equivalence table for the new branch
-												 equiv_table_cur{rb_id,1} = [equiv_table_cur{rb_id,1} cg_size];
-												 equiv_table_cur = [equiv_table_cur; cell(1,1)];
-												 equiv_table_cur{cg_size,1} = [equiv_table_cur{cg_size,1} rb_id];
-												 
-											 end
-										 end
 									 end
 								 end
-                                 
                              else 
                                  
                                  %If this sample has been merged to a branch that the previous
@@ -2317,7 +1021,6 @@ for fa=1:numViews
 %                                  if(is_last_non_equivalent && (num_attachments_cur>1 || num_attachments_last>1))
 %                                      extra_junctions = unique([extra_junctions; queryCurve(ms-1,:)],'rows');
 %                                  end
-                                 
                              end
                              
                             %Some branches might've changed in the process
@@ -2361,23 +1064,8 @@ for fa=1:numViews
                             
                          end
                     end
-                    
-                    if(is_merged)
-                        %All new branches and their content is added
-                        curve_graph = [curve_graph; all_new_branches];
-                        lock_map = [lock_map; all_new_locks];
-                        new_content = [all_views(1,mrv)+1 cc];
-                        num_new_branches = size(all_new_branches,1);
-                        new_content_set = cell(num_new_branches,1);
-                        for nc=1:num_new_branches
-                            new_content_set{nc,1} = new_content;
-                        end
-                        curve_graph_content = [curve_graph_content; new_content_set];
-                    else
-                        all_flags{all_views(1,mrv)+1,1}(curveID,1) = 0;
-                    end
+                    merged
                 end
-
             end
 
             merging_iterations_done = 1;
@@ -2452,11 +1140,10 @@ for fa=1:numViews
 %                 %counter = counter + 1;
 %             end
 %         end
+        all_clusters = [all_clusters; cell(1,1)];
         all_clusters{size(all_clusters,1),1} = clusters;
         complete_curve_graph = [complete_curve_graph; curve_graph];
         complete_lock_map = [complete_lock_map; lock_map];
-        %save('curve_graph_amsterdam_half.mat','complete_curve_graph','all_junctions');
-        %save('curve_graph_amsterdam.mat');
     end
 end
 
@@ -2477,4 +1164,4 @@ end
 all_junctions = [all_junctions; extra_junctions];
 
 save_curve_drawing;
-visualize_curve_drawing;
+%visualize_curve_drawing;
