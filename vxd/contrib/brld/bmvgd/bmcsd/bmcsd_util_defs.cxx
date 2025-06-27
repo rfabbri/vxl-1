@@ -398,7 +398,6 @@ bool
 read_3x4_matrix_into_cam( std::string img_name1, 
       vpgl_perspective_camera <double> *P1out)
 {
-
    std::string dir, noext;
    if (!bmcsd_get_prefix(img_name1,&dir,&noext)) {
       std::cerr << "Error in read_3x4_matrix_into_cam\n";
@@ -424,11 +423,28 @@ read_3x4_matrix_into_cam( std::string img_name1,
 
    bool stat =
      vpgl_perspective_decomposition( camera_matrix, *P1out);
-
+   
    if (!stat) {
      std::cerr << "read_3x4_matrix_into_cam: could not decompose matrix" << std::endl;
      return false;
    }
+
+   // Apply files .origin and .scale TO TEST
+   {
+   vnl_double_3x3 m;
+   m = P1out->get_calibration().get_matrix();
+   
+   // Try to read offset, if exists
+   if (!bmcsd_read_offset(noext, &m))
+     return false;
+
+   // Try to read scaling, if exists
+   if (!bmcsd_read_scaling(noext, &m))
+     return false;
+
+   P1out->set_calibration(vpgl_calibration_matrix<double>(m));
+   }
+
    return true;
 }
 

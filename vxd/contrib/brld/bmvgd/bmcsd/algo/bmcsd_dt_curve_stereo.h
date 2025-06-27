@@ -30,7 +30,7 @@ public:
       const std::vector<vil_image_view<vxl_uint_32> > &dt,  
       const std::vector<vil_image_view<unsigned> > &label);
 
-  //: sets the threshold for wich an edgel is considered an inlier to the
+  //: sets the threshold for which an edgel is considered an inlier to the
   // reprojected curve in each view.
   void set_tau_distance_squared(double tau) { tau_distance_squared_ = tau; }
   double tau_distance_squared() const { return tau_distance_squared_; }
